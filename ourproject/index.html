@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>星阅伴 · 乡村儿童AI智慧伴读</title>
+    <!-- 字体与图标库 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background-color: #faf7f2;  /* 柔和米白基底 */
+            color: #2e3b3b;
+            line-height: 1.5;
+        }
+
+        :root {
+            --primary-orange: #FF9A5A;
+            --primary-green: #8CC084;
+            --bg-soft: #f8f5f0;
+            --card-bg: #ffffff;
+            --text-dark: #2e3b3b;
+            --text-soft: #5a6b6b;
+            --shadow: 0 12px 28px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.02);
+            --radius-card: 32px;
+            --radius-btn: 40px;
+        }
+
+        h1, h2, h3 {
+            font-weight: 600;
+            color: #1f2e2e;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* 导航 */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-orange);
+            letter-spacing: -0.02em;
+        }
+        .logo span {
+            color: var(--primary-green);
+            font-weight: 500;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+            flex-wrap: wrap;
+            font-weight: 500;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: color 0.2s;
+            font-size: 1.1rem;
+        }
+        .nav-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .btn {
+            background-color: var(--primary-orange);
+            color: white !important;
+            padding: 8px 22px;
+            border-radius: var(--radius-btn);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 6px 12px rgba(255, 154, 90, 0.3);
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-green {
+            background-color: var(--primary-green);
+            box-shadow: 0 6px 12px rgba(140, 192, 132, 0.3);
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-orange) !important;
+            border: 2px solid var(--primary-orange);
+            box-shadow: none;
+            padding: 6px 20px;
+        }
+        .btn-sm {
+            padding: 6px 18px;
+            font-size: 0.95rem;
+        }
+
+        /* hero */
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            padding: 40px 0 60px;
+            flex-wrap: wrap;
+        }
+        .hero-text {
+            flex: 1 1 400px;
+        }
+        .hero-text h1 {
+            font-size: 3.2rem;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #1f2e2e;
+        }
+        .hero-highlight {
+            color: var(--primary-orange);
+            position: relative;
+            display: inline-block;
+        }
+        .hero-highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 154, 90, 0.2);
+            z-index: -1;
+        }
+        .hero-sub {
+            font-size: 1.3rem;
+            color: var(--text-soft);
+            margin-bottom: 32px;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .hero-image {
+            flex: 1 1 300px;
+            background: linear-gradient(145deg, #ffe1cc, #d9f0d4);
+            border-radius: 60px 60px 60px 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .avatar-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .avatar {
+            background: white;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 18px rgba(0,0,0,0.1);
+            font-size: 3.5rem;
+        }
+        .bubble {
+            background: white;
+            padding: 18px 22px;
+            border-radius: 40px 40px 40px 10px;
+            max-width: 240px;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            border: 2px solid var(--primary-green);
+        }
+        .bubble i {
+            color: var(--primary-orange);
+            margin-right: 8px;
+        }
+
+        /* 通用section */
+        .section-title {
+            font-size: 2.4rem;
+            margin: 60px 0 30px;
+            position: relative;
+            display: inline-block;
+        }
+        .section-title span {
+            background: var(--primary-green);
+            color: white;
+            padding: 4px 14px;
+            border-radius: 60px;
+            font-size: 1rem;
+            margin-left: 12px;
+            vertical-align: middle;
+        }
+
+        /* 功能网格 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 28px;
+            margin: 40px 0;
+        }
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-card);
+            padding: 28px 20px;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+            border: 1px solid rgba(140,192,132,0.2);
+        }
+        .feature-card:hover {
+            transform: translateY(-6px);
+        }
+        .feature-icon {
+            font-size: 2.8rem;
+            color: var(--primary-orange);
+            margin-bottom: 16px;
+        }
+        .feature-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+        }
+        .feature-card p {
+            color: var(--text-soft);
+            font-size: 1rem;
+        }
+        .tag {
+            background: rgba(255,154,90,0.1);
+            color: var(--primary-orange);
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 40px;
+            display: inline-block;
+            margin-top: 16px;
+            font-size: 0.85rem;
+        }
+
+        /* 情感陪伴特色板块 */
+        .companion-showcase {
+            background: white;
+            border-radius: 60px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            align-items: center;
+            border: 2px solid var(--primary-green);
+        }
+        .chat-demo {
+            flex: 2 1 300px;
+        }
+        .chat-bubble-left, .chat-bubble-right {
+            background: #f0f7ee;
+            padding: 18px 24px;
+            border-radius: 30px 30px 30px 8px;
+            margin-bottom: 20px;
+            max-width: 80%;
+            border: 1px solid var(--primary-green);
+        }
+        .chat-bubble-right {
+            background: #ffefe4;
+            border-radius: 30px 30px 8px 30px;
+            margin-left: auto;
+            border-color: var(--primary-orange);
+        }
+        .chat-name {
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+        .chat-name.orange {
+            color: var(--primary-orange);
+        }
+
+        /* 价格卡片 */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 28px;
+            margin: 40px 0;
+        }
+        .pricing-card {
+            background: var(--card-bg);
+            border-radius: 48px;
+            padding: 32px 24px;
+            box-shadow: var(--shadow);
+            border: 2px solid transparent;
+            transition: border 0.2s;
+            position: relative;
+        }
+        .pricing-card.popular {
+            border-color: var(--primary-orange);
+            background: #fffbf5;
+        }
+        .popular-badge {
+            position: absolute;
+            top: -12px;
+            right: 24px;
+            background: var(--primary-orange);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .price {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin: 20px 0;
+        }
+        .price small {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-soft);
+        }
+        .pricing-feature {
+            list-style: none;
+            margin: 24px 0;
+        }
+        .pricing-feature li {
+            margin: 12px 0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .pricing-feature i {
+            color: var(--primary-green);
+        }
+
+        /* 数据卡片 */
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 20px;
+            background: white;
+            border-radius: 80px;
+            padding: 40px 30px;
+            margin: 40px 0;
+            box-shadow: var(--shadow);
+        }
+        .stat-item {
+            text-align: center;
+            flex: 1 1 160px;
+        }
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--primary-orange);
+        }
+        .stat-label {
+            color: var(--text-soft);
+            font-weight: 500;
+        }
+
+        /* 合作伙伴 */
+        .partner-logos {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0 60px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 80px;
+            padding: 30px;
+        }
+        .partner-item {
+            background: white;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: var(--text-soft);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.02);
+            border: 1px solid #eee;
+        }
+
+        /* 页脚 */
+        .footer {
+            background: #2e3b3b;
+            color: #e0e0e0;
+            padding: 50px 0 30px;
+            border-radius: 60px 60px 0 0;
+            margin-top: 80px;
+        }
+        .footer-inner {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+        }
+        .footer-col p {
+            margin: 16px 0;
+        }
+        .footer a {
+            color: #dddddd;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: white;
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 700px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .companion-showcase {
+                padding: 24px;
+            }
+        }
+        /* 报告卡片示例 */
+        .report-card {
+            background: #eef5ec;
+            border-radius: 40px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px dashed var(--primary-green);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="logo">星阅伴<span>.</span></div>
+            <div class="nav-links">
+                <a href="#">首页</a>
+                <a href="#">产品功能</a>
+                <a href="#">价格与合作</a>
+                <a href="#">影响故事</a>
+                <a href="#">关于我们</a>
+                <a href="#" class="btn-outline btn-sm">登录</a>
+                <a href="#" class="btn btn-sm">14天免费体验</a>
+            </div>
+        </nav>
+
+        <!-- Hero 主视觉 -->
+        <section class="hero">
+            <div class="hero-text">
+                <h1>每个孩子，<br>都该拥有一个<span class="hero-highlight">温暖的阅读伙伴</span></h1>
+                <p class="hero-sub">用AI连接情感与知识，为乡村儿童提供专业、个性化、有温度的智慧伴读。</p>
+                <div class="hero-buttons">
+                    <a href="#" class="btn">立即体验公益版</a>
+                    <a href="#" class="btn btn-green">邀请学校或机构合作</a>
+                </div>
+                <!-- 阅读报告小卡片 撬动家长 -->
+                <div class="report-card" style="max-width: 340px; margin-top: 30px;">
+                    <i class="fas fa-chart-line" style="color: #FF9A5A; font-size: 1.8rem; margin-right: 10px;"></i>
+                    <strong>小乐的阅读周报：</strong>识字量超过全县85%同龄人，逻辑表达再加强！ <a href="#" style="color: #FF9A5A;">解锁进阶会员→</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="avatar-group">
+                    <div class="avatar"><i class="fas fa-smile-wink"></i></div>
+                    <div class="avatar" style="background: #8CC084;"><i class="fas fa-child" style="color: white;"></i></div>
+                </div>
+                <div class="bubble" style="margin-top: 20px;">
+                    <i class="fas fa-comment-dots"></i> 今天读了什么故事呀？
+                </div>
+                <p style="margin-top: 20px; font-weight: 600;">✨ 小阅 · 永远在线的伙伴</p>
+            </div>
+        </section>
+
+        <!-- 核心功能 grid (8项) -->
+        <h2 class="section-title">智慧伴读，不止于听 <span>反中介化</span></h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-book-open"></i></div>
+                <h3>分级阅读</h3>
+                <p>5000+册图书多维度定级，词汇·句式·主题精准匹配，游戏化测评定位能力。</p>
+                <span class="tag">动态画像</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-heart"></i></div>
+                <h3>情感陪伴</h3>
+                <p>虚拟形象“小阅”温暖共情，感知情绪，低落时主动关怀，守护心理健康。</p>
+                <span class="tag">情绪预警</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                <h3>智能伴读</h3>
+                <p>苏格拉底式提问，开放式对话，不概括原著，引导孩子回归文本深度思考。</p>
+                <span class="tag">支架式辅助</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-users"></i></div>
+                <h3>轻社交圈</h3>
+                <p>班级共读圈、主题广场，AI以平等参与者身份加入，安全分享阅读收获。</p>
+                <span class="tag">分层空间</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-pencil-alt"></i></div>
+                <h3>阅读拓展</h3>
+                <p>读写结合、创意表达，从输入走向输出，共读计划与主题阅读激发表达欲。</p>
+                <span class="tag">输出引导</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                <h3>健康守护</h3>
+                <p>用眼提醒、防沉迷设计，家长守护端实时查看，内容先审后发安全纯净。</p>
+                <span class="tag">隐私保护</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-home"></i></div>
+                <h3>家校联动</h3>
+                <p>家长/教师守护端，接收阅读报告，打通学校与家庭阅读教育链路。</p>
+                <span class="tag">双端互通</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-tree"></i></div>
+                <h3>线下联动</h3>
+                <p>与农家书屋、公益组织合作，AI+真人混合伴读，温暖加倍。</p>
+                <span class="tag">混合模式</span>
+            </div>
+        </div>
+
+        <!-- 情感陪伴深度展示 + 对话气泡 -->
+        <div class="companion-showcase">
+            <div class="chat-demo">
+                <h3 style="font-size: 2rem; margin-bottom: 20px;">随时倾听 · 从不评判</h3>
+                <div class="chat-bubble-left">
+                    <span class="chat-name">小阅 <i class="fas fa-robot" style="color: #8CC084;"></i></span>
+                    <p>嘿，今天你看上去有点不开心，要和我聊聊吗？</p>
+                </div>
+                <div class="chat-bubble-right">
+                    <span class="chat-name orange">小杰 <i class="fas fa-child"></i></span>
+                    <p>嗯…爸爸妈妈又去打工了，我好想他们。</p>
+                </div>
+                <div class="chat-bubble-left">
+                    <span class="chat-name">小阅</span>
+                    <p>我在这儿陪着你呢。我们一起读一个关于勇敢的小英雄的故事，你想听冒险的还是温暖的呢？</p>
+                </div>
+                <p style="margin-top: 20px;"><i class="fas fa-microphone-alt" style="color: #FF9A5A;"></i> 语音识别 + 情感计算，感知你的快乐与低落</p>
+            </div>
+            <div style="flex:1; min-width:200px;">
+                <div style="background: white; border-radius: 40px; padding: 20px; border: 2px solid #FF9A5A;">
+                    <i class="fas fa-bell" style="color:#FF9A5A;"></i> <strong>情绪预警</strong>
+                    <p style="margin-top: 8px;">持续识别到情绪低落时，会向家长端发送温和提醒，悄悄守护。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 定价与合作 -->
+        <h2 class="section-title">灵活合作 · 公益永免费</h2>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <h3>基础公益版</h3>
+                <div class="price">¥0 <small>永久免费</small></div>
+                <ul class="pricing-feature">
+                    <li><i class="fas fa-check-circle"></i> 核心伴读功能</li>
+                    <li><i class="fas fa-check-circle"></i> 分级阅读基础库</li>
+                    <li><i class="fas fa-check-circle"></i> 情感陪伴日常对话</li>
+                    <li><i class="fas fa-check-circle"></i> 班级共读圈</li>
+                </ul>
+                <p style="color: var(--text-soft);">由政府/公益资助，乡村儿童永久免费</p>
+                <a href="#" class="btn-outline btn-sm" style="margin-top: 16px; display: inline-block;">立即使用</a>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">✨ 热销</div>
+                <h3>进阶家庭版</h3>
+                <div class="price">¥98 <small>/年</small></div>
+                <ul class="pricing-feature">
+                    <li><i class="fas fa-check-circle"></i> 个性化阅读计划</li>
+                    <li><i class="fas fa-check-circle"></i> 深度思维训练游戏</li>
+                    <li><i class="fas fa-check-circle"></i> 每月阅读报告（对比全县）</li>
+                    <li><i class="fas fa-check-circle"></i> 1对1阅读策略引导</li>
+                </ul>
+                <a href="#" class="btn btn-sm" style="margin-top: 8px;">14天免费体验</a>
+            </div>
+            <div class="pricing-card">
+                <h3>政府采购/公益合作</h3>
+                <div class="price">30-50 <small>元/生/年</small></div>
+                <ul class="pricing-feature">
+                    <li><i class="fas fa-check-circle"></i> 批量账号开通</li>
+                    <li><i class="fas fa-check-circle"></i> 教师/社工守护端</li>
+                    <li><i class="fas fa-check-circle"></i> 影响力评估报告</li>
+                    <li><i class="fas fa-check-circle"></i> 线下活动支持</li>
+                </ul>
+                <p style="color: var(--text-soft);">可按项目打包，公益采购一口价</p>
+                <a href="#" class="btn-outline btn-sm">咨询合作</a>
+            </div>
+        </div>
+
+        <!-- 企业CSR 特别说明 -->
+        <div style="background: #d9f0d4; border-radius: 60px; padding: 24px 30px; margin: 30px 0; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;">
+            <span><i class="fas fa-hand-holding-heart" style="color: #FF9A5A; font-size: 2rem;"></i> 企业CSR合作 · “筑梦逐光”计划，为乡村学校捐赠一年服务</span>
+            <a href="#" class="btn-outline btn-sm">成为合作伙伴</a>
+        </div>
+
+        <!-- 影响力数据 -->
+        <h2 class="section-title">看得见的影响</h2>
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-number">23万+</div>
+                <div class="stat-label">乡村儿童受益</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">1200+</div>
+                <div class="stat-label">学校/社区覆盖</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">45+</div>
+                <div class="stat-label">公益基金会</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">87%</div>
+                <div class="stat-label">周阅读时长提升</div>
+            </div>
+        </div>
+        <!-- 阅读焦虑下降 额外 -->
+        <p style="text-align: center; font-weight: 500; margin-bottom: 40px;"><i class="fas fa-chart-line" style="color: #8CC084;"></i> 儿童阅读焦虑指数平均下降42% (基于阅读焦虑量表)</p>
+
+        <!-- 合作伙伴 -->
+        <div class="partner-logos">
+            <span class="partner-item">中国儿童少年基金会</span>
+            <span class="partner-item">新公民计划</span>
+            <span class="partner-item">微澜图书馆</span>
+            <span class="partner-item">腾讯公益</span>
+            <span class="partner-item">北师大教育学部</span>
+            <span class="partner-item">西部阳光基金会</span>
+        </div>
+
+        <!-- 产品故事 / 团队简要 -->
+        <div style="display: flex; gap: 30px; flex-wrap: wrap; background: white; border-radius: 60px; padding: 40px; margin: 40px 0;">
+            <div style="flex: 1 1 250px;">
+                <h3><i class="fas fa-leaf" style="color: #8CC084;"></i> 来自乡村，回到乡村</h3>
+                <p>团队核心成员均有支教或教育公益经历，跨学科背景（教育学、AI、经济学、汉语言文学），将实证研究（林江泽等2021）转化为有温度的AI陪伴。</p>
+            </div>
+            <div style="flex: 1 1 250px;">
+                <h3><i class="fas fa-star" style="color: #FF9A5A;"></i> 反中介化 · 捍卫思考</h3>
+                <p>AI不概括原著，通过苏格拉底式提问引导孩子直接与文本对话，培养批判性思维与想象力。</p>
+            </div>
+            <div style="flex: 1 1 250px;">
+                <h3><i class="fas fa-shield-heart"></i> 安全设计</h3>
+                <p>防沉迷、家长密码退出、内容先审后发，通过ISO隐私认证，全方位守护。</p>
+            </div>
+        </div>
+
+        <!-- 最后的行动呼唤 -->
+        <div style="text-align: center; padding: 40px 20px;">
+            <h2 style="font-size: 2.5rem;">让每一个乡村孩子都有一个 AI 伙伴</h2>
+            <p style="font-size: 1.3rem; margin: 20px;">公益版永久免费，即刻开启智慧伴读</p>
+            <a href="#" class="btn" style="font-size: 1.4rem; padding: 16px 48px;">扫码体验小程序</a>
+            <p style="margin-top: 20px;"><i class="fas fa-mobile-alt"></i> 无需下载，微信打开即用 | 适配所有手机</p>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container footer-inner">
+            <div class="footer-col">
+                <div class="logo" style="color: white;">星阅伴<span style="color:#8CC084;">.</span></div>
+                <p>乡村儿童AI智慧伴读平台</p>
+                <p><i class="fas fa-envelope"></i> hello@xingyueban.cn</p>
+                <p><i class="fas fa-phone"></i> 010-8888 1234</p>
+            </div>
+            <div class="footer-col">
+                <h4>产品</h4>
+                <p><a href="#">功能详情</a></p>
+                <p><a href="#">定价与合作</a></p>
+                <p><a href="#">公益案例</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>支持我们</h4>
+                <p><a href="#">捐赠</a></p>
+                <p><a href="#">志愿者申请</a></p>
+                <p><a href="#">企业CSR</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>关于</h4>
+                <p><a href="#">团队介绍</a></p>
+                <p><a href="#">导师：胡定荣</a></p>
+                <p><a href="#">隐私政策</a></p>
+                <p><a href="#">儿童安全承诺</a></p>
+            </div>
+        </div>
+        <div class="container" style="text-align: center; margin-top: 40px; font-size: 0.9rem; opacity: 0.7;">
+            © 2026 星阅伴 · “青创北京”挑战杯项目  |  教育学部 黄天媛等
+        </div>
+    </footer>
+</body>
+</html>
