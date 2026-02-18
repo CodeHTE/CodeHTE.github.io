@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>星阅伴读 - 乡村儿童AI智慧伴读平台</title>
+    <!-- 引入Font Awesome免费图标库（解决图标显示问题，国内CDN稳定） -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 全局样式：轻量化、适配低端设备，温暖配色 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", 宋体, sans-serif;
+        }
+        body {
+            background-color: #fff9f2;
+            color: #333;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        /* 头部导航：大字体、高对比度，适配儿童/祖辈操作 */
+        header {
+            background-color: #ff7e5f;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            width: 95%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            background-color: #fff;
+            border-radius: 50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23ff7e5f'/%3E%3Ctext x='50' y='55' text-anchor='middle' fill='white' font-size='20' font-weight='bold'%3E星阅%3C/text%3E%3C/svg%3E");
+            background-size: cover;
+        }
+        .logo-text {
+            font-size: 22px;
+            color: #fff;
+            font-weight: bold;
+        }
+        .nav-menu {
+            display: flex;
+            gap: 15px;
+        }
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .nav-menu a:hover {
+            background-color: #ff6b4a;
+        }
+        /* 核心容器：适配移动端+电脑端，95%宽度降低边距 */
+        .container {
+            width: 95%;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        /* 首页轮播/欢迎区：卡通风格、简洁文案 */
+        .welcome {
+            background: linear-gradient(120deg, #ffecd2, #fcb69f);
+            border-radius: 10px;
+            padding: 30px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .welcome h1 {
+            font-size: 28px;
+            color: #ff6b4a;
+            margin-bottom: 15px;
+        }
+        .welcome p {
+            font-size: 19px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            background-color: #ff7e5f;
+            color: #fff;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background-color: #ff6b4a;
+        }
+        /* 功能板块：卡片式设计，大图标、少文字，易点击 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .feature-card {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        /* 图标容器：适配Font Awesome，统一大小和样式 */
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            background-color: #ffecd2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            color: #ff7e5f;
+        }
+        .feature-card h3 {
+            font-size: 22px;
+            color: #ff6b4a;
+            margin-bottom: 10px;
+        }
+        .feature-card p {
+            color: #666;
+        }
+        /* 分级阅读/智能伴读板块：列表式，适配离线缓存提示 */
+        .read-section {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+        }
+        .read-section h2 {
+            font-size: 24px;
+            color: #ff6b4a;
+            margin-bottom: 20px;
+            border-left: 5px solid #ff7e5f;
+            padding-left: 15px;
+        }
+        .book-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+        }
+        .book-card {
+            text-align: center;
+        }
+        .book-cover {
+            width: 120px;
+            height: 160px;
+            background-color: #ffecd2;
+            border-radius: 5px;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff7e5f;
+            font-weight: bold;
+            border: 2px solid #fcb69f;
+        }
+        .book-card p {
+            font-weight: 500;
+        }
+        .offline-tip {
+            font-size: 14px;
+            color: #999;
+            margin-top: 10px;
+            padding: 5px;
+            background-color: #f8f8f8;
+            border-radius: 5px;
+        }
+        /* 情感陪伴卡通形象：固定侧边，温和互动 */
+        .ai-companion {
+            position: fixed;
+            bottom: 30px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(255,126,95,0.3);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%23ffecd2' stroke='%23ff7e5f' stroke-width='2'/%3E%3Ccircle cx='35' cy='40' r='5' fill='%23333'/%3E%3Ccircle cx='65' cy='40' r='5' fill='%23333'/%3E%3Cpath d='M30 65 Q50 80 70 65' stroke='%23333' stroke-width='4' fill='none'/%3E%3C/svg%3E");
+            background-size: cover;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .ai-companion:hover {
+            transform: scale(1.1);
+        }
+        /* 底部：简洁信息，公益声明+家校联动入口 */
+        footer {
+            background-color: #ff7e5f;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .footer-link {
+            color: #fff;
+            text-decoration: underline;
+            margin: 0 10px;
+        }
+        /* 弹窗：AI伴读互动窗口，简洁对话界面 */
+        .modal {
+            display: none;
+            position: fixed;
+            bottom: 120px;
+            right: 20px;
+            width: 300px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            padding: 20px;
+        }
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff6b4a;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .dialog-box {
+            height: 150px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+            overflow-y: auto;
+            background-color: #f8f8f8;
+        }
+        .ai-msg {
+            background-color: #ffecd2;
+            padding: 8px 12px;
+            border-radius: 15px 15px 15px 0;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+        .user-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            outline: none;
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+        }
+        /* 响应式：适配手机端，简化布局 */
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 8px;
+            }
+            .nav-menu a {
+                font-size: 16px;
+                padding: 5px 8px;
+            }
+            .welcome h1 {
+                font-size: 24px;
+            }
+            .welcome p {
+                font-size: 17px;
+            }
+            .modal {
+                width: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部导航：logo+核心功能菜单 -->
+    <header>
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-img"></div>
+                <div class="logo-text">星阅伴读</div>
+            </div>
+            <nav class="nav-menu">
+                <a href="index.html"><i class="fas fa-home"></i> 首页</a>
+                <a href="#grade-read"><i class="fas fa-book-open"></i> 分级阅读</a>
+                <a href="#ai-read"><i class="fas fa-robot"></i> 智能伴读</a>
+                <a href="#community"><i class="fas fa-users"></i> 阅读社区</a>
+                <a href="#school-family"><i class="fas fa-school"></i> 家校联动</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 核心内容容器 -->
+    <div class="container" id="home">
+        <!-- 首页欢迎区 -->
+        <section class="welcome">
+            <h1>乡村儿童的AI阅读小伙伴</h1>
+            <p>分级阅读·个性推荐·情感陪伴·智能引导</p>
+            <a href="#grade-read" class="btn"><i class="fas fa-arrow-right"></i> 开始阅读</a>
+        </section>
+
+        <!-- 核心功能板块（图标全部替换为Font Awesome） -->
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-book-reader"></i></div>
+                <h3>分级阅读</h3>
+                <p>5000+册优质书籍，按阅读能力精准定级，匹配专属书目</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-comments"></i></div>
+                <h3>智能伴读</h3>
+                <p>同伴式互动，开放式提问，引导深度思考，不替代原著阅读</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-heart"></i></div>
+                <h3>情感陪伴</h3>
+                <p>感知情绪，耐心倾听，做孩子的专属暖心小伙伴</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fas fa-handshake"></i></div>
+                <h3>家校联动</h3>
+                <p>阅读数据同步，家长老师共同守护孩子阅读成长</p>
+            </div>
+        </section>
+
+        <!-- 分级阅读板块 -->
+        <section class="read-section" id="grade-read">
+            <h2><i class="fas fa-layer-group"></i> 分级阅读库</h2>
+            <div class="book-list">
+                <div class="book-card">
+                    <div class="book-cover">一年级<br/>童话</div>
+                    <p>小猪唏哩呼噜</p>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">二年级<br/>寓言</div>
+                    <p>伊索寓言精选</p>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">三年级<br/>科普</div>
+                    <p>昆虫记（少儿版）</p>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">四年级<br/>名著</div>
+                    <p>西游记（青少版）</p>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">五年级<br/>散文</div>
+                    <p>繁星·春水</p>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">六年级<br/>小说</div>
+                    <p>草房子</p>
+                </div>
+            </div>
+            <p class="offline-tip"><i class="fas fa-wifi-slash"></i> 所有书籍支持离线缓存，无网络也能读</p>
+        </section>
+
+        <!-- 智能伴读板块 -->
+        <section class="read-section" id="ai-read">
+            <h2><i class="fas fa-microphone"></i> 智能伴读室</h2>
+            <p style="margin-bottom: 20px; color: #666;">选择书籍，开启AI同伴式阅读，随时提问、交流感悟～</p>
+            <div class="book-list">
+                <div class="book-card">
+                    <div class="book-cover">亲子共读</div>
+                    <p>猜猜我有多爱你</p>
+                    <a href="javascript:openModal()" class="btn" style="margin-top: 10px; padding: 8px 15px; font-size: 14px;"><i class="fas fa-play"></i> 开始伴读</a>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">自主阅读</div>
+                    <p>没头脑和不高兴</p>
+                    <a href="javascript:openModal()" class="btn" style="margin-top: 10px; padding: 8px 15px; font-size: 14px;"><i class="fas fa-play"></i> 开始伴读</a>
+                </div>
+                <div class="book-card">
+                    <div class="book-cover">科普阅读</div>
+                    <p>神奇的大自然</p>
+                    <a href="javascript:openModal()" class="btn" style="margin-top: 10px; padding: 8px 15px; font-size: 14px;"><i class="fas fa-play"></i> 开始伴读</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 阅读社区板块 -->
+        <section class="read-section" id="community">
+            <h2><i class="fas fa-comments-alt"></i> 星阅阅读社区</h2>
+            <p style="margin-bottom: 20px; color: #666;">班级共读圈·书籍分享区·主题阅读广场，安全轻社交～</p>
+            <div class="feature-card" style="max-width: 600px; margin: 0 auto;">
+                <div class="feature-icon"><i class="fas fa-user-friends"></i></div>
+                <h3>我的班级共读圈</h3>
+                <p>三年级（2）班 · 本周共读《稻草人》· 28人参与</p>
+                <a href="#" class="btn" style="margin-top: 15px; padding: 8px 20px; font-size: 16px;"><i class="fas fa-door-open"></i> 进入圈子</a>
+            </div>
+        </section>
+
+        <!-- 家校联动板块 -->
+        <section class="read-section" id="school-family">
+            <h2><i class="fas fa-link"></i> 家校联动守护端</h2>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+                <div class="feature-card" style="flex: 1; min-width: 250px;">
+                    <div class="feature-icon"><i class="fas fa-user-circle"></i></div>
+                    <h3>家长端</h3>
+                    <p>查看孩子阅读数据，接收情绪提醒，参与亲子共读</p>
+                    <a href="#" class="btn" style="margin-top: 15px;"><i class="fas fa-sign-in-alt"></i> 家长入口</a>
+                </div>
+                <div class="feature-card" style="flex: 1; min-width: 250px;">
+                    <div class="feature-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <h3>教师端</h3>
+                    <p>布置阅读任务，查看班级阅读报告，定制阅读计划</p>
+                    <a href="#" class="btn" style="margin-top: 15px;"><i class="fas fa-sign-in-alt"></i> 教师入口</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 右侧固定AI情感陪伴形象 -->
+    <div class="ai-companion" onclick="openModal()"></div>
+
+    <!-- AI伴读互动弹窗 -->
+    <div class="modal" id="aiModal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <div class="modal-title"><i class="fas fa-smile"></i> 星阅小伴读</div>
+        <div class="dialog-box" id="dialogBox">
+            <div class="ai-msg">你好呀～我是星阅小伴读，今天想读什么书呀？😜</div>
+        </div>
+        <input type="text" class="user-input" id="userInput" placeholder="和我聊聊阅读吧...">
+        <button class="btn" style="width: 100%;" onclick="sendMsg()"><i class="fas fa-paper-plane"></i> 发送</button>
+    </div>
+
+    <!-- 底部信息 -->
+    <footer>
+        <p><i class="fas fa-star"></i> 星阅伴读 - 乡村儿童AI智慧伴读平台 | 公益先行·科技向善</p>
+        <p style="margin-top: 10px;">
+            <a href="#" class="footer-link"><i class="fas fa-shield-alt"></i> 隐私保护</a>
+            <a href="#" class="footer-link"><i class="fas fa-hand-holding-heart"></i> 公益合作</a>
+            <a href="#" class="footer-link"><i class="fas fa-mobile-alt"></i> 设备适配指南</a>
+        </p>
+        <p style="margin-top: 10px; font-size: 14px;">©2026 星阅伴读 版权所有 | 适配乡村低配置设备/低网络环境</p>
+    </footer>
+
+    <script>
+        // AI伴读弹窗开关
+        function openModal() {
+            document.getElementById("aiModal").style.display = "block";
+        }
+        function closeModal() {
+            document.getElementById("aiModal").style.display = "none";
+        }
+        // 发送对话消息
+        function sendMsg() {
+            const input = document.getElementById("userInput");
+            const msg = input.value.trim();
+            const dialogBox = document.getElementById("dialogBox");
+            if (msg === "") return;
+            // 模拟用户消息（简化版，实际对接AI接口）
+            const userDiv = document.createElement("div");
+            userDiv.style.textAlign = "right";
+            userDiv.style.marginBottom = "10px";
+            const userMsg = document.createElement("span");
+            userMsg.className = "ai-msg";
+            userMsg.style.background = "#ff7e5f";
+            userMsg.style.color = "#fff";
+            userMsg.style.borderRadius = "15px 15px 0 15px";
+            userMsg.innerText = msg;
+            userDiv.appendChild(userMsg);
+            dialogBox.appendChild(userDiv);
+            // 模拟AI回复
+            setTimeout(() => {
+                const aiDiv = document.createElement("div");
+                const aiMsg = document.createElement("span");
+                aiMsg.className = "ai-msg";
+                // 简单回复语料，实际对接NLP模型
+                const replies = [
+                    "哇，这个问题好棒！我们一起在书里找找答案吧～",
+                    "你读得真认真！能和我说说你最喜欢这个故事的哪个部分吗？",
+                    "这个想法太有趣啦！继续读下去，还有更多惊喜哦～",
+                    "我也超喜欢这本书的！我们一起来聊聊你的感悟吧～"
+                ];
+                aiMsg.innerText = replies[Math.floor(Math.random() * replies.length)];
+                aiDiv.appendChild(aiMsg);
+                dialogBox.appendChild(aiDiv);
+                // 滚动到底部
+                dialogBox.scrollTop = dialogBox.scrollHeight;
+            }, 800);
+            // 清空输入框
+            input.value = "";
+            // 滚动到底部
+            dialogBox.scrollTop = dialogBox.scrollHeight;
+        }
+        // 回车发送消息
+        document.getElementById("userInput").addEventListener("keydown", function(e) {
+            if (e.key === "Enter") sendMsg();
+        });
+        // 点击空白处关闭弹窗（简化版）
+        window.addEventListener("click", function(e) {
+            const modal = document.getElementById("aiModal");
+            if (e.target === modal) closeModal();
+        });
+    </script>
+</body>
+</html>
