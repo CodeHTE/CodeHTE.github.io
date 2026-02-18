@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>熊熊Land-相册</title>
+    <style>
+        /* 全局样式（和 index.html 保持一致，保持网站统一风格） */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;      /* 相册可以更宽一些 */
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        /* 导航菜单（与首页一致） */
+        .nav {
+            display: flex;
+            justify-content: space-around;
+            list-style: none;
+            background-color: #3498db;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            padding: 10px 0;
+            flex-wrap: wrap;      /* 防止菜单项太多时溢出 */
+        }
+
+        .nav li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            display: block;
+        }
+
+        .nav li a:hover {
+            background-color: #2980b9;
+            border-radius: 4px;
+        }
+
+        /* 当前页面高亮（可选） */
+        .nav li a.active {
+            background-color: #2980b9;
+            border-radius: 4px;
+        }
+
+        /* 页面标题 */
+        .page-title {
+            text-align: center;
+            margin: 20px 0 30px;
+            color: #2c3e50;
+        }
+
+        /* ---------- 相册网格 ---------- */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .gallery-item {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            padding: 4px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+
+        .gallery-item img,
+        .gallery-item video {
+            width: 100%;
+            height: 200px;                /* 保持固定高度 */
+            object-fit: contain;          /* 完整显示，可能留白 */
+            display: block;
+            background-color: #f8f8f8;    /* 可选，与容器一致 */
+        }        
+        .gallery-item .caption {
+            padding: 12px;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* 包裹标题和图片的容器 */
+        .title-with-images {
+            display: flex;           /* 启用 Flexbox */
+            align-items: center;     /* 垂直居中对齐 */
+            justify-content: center; /* 水平居中对齐（让标题在中间） */
+            gap: 15px;               /* 图片和标题之间的间距 */
+            flex-wrap: wrap;         /* 如果屏幕太窄，允许换行 */
+            margin: 20px 0;          /* 上下留点空白 */
+            border-radius: 4px;  
+        }
+
+                /* 控制 GIF 图片的大小 */
+        .side-gif {
+            width: 50px;             /* 根据需要调整宽度 */
+            height: auto;            /* 高度自动，保持比例 */
+            max-width: 100%;         /* 在小屏幕上不超过容器宽度 */
+        }
+
+        /* 可选：针对极小屏幕（如宽度小于 400px）调整 */
+        @media (max-width: 400px) {
+        .side-gif {
+            width: 30px;         /* 图片再小一点 */
+        }
+        .title-with-images {
+            gap: 8px;            /* 间距也缩小 */
+        }
+        }
+
+
+        /* 媒体查询：当屏幕宽度小于等于 600px 时（手机） */
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;  /* 手机内边距小一点 */
+            }
+
+            h1 {
+                font-size: 24px; /* 标题小一点 */
+            }
+
+            /* 在手机上，导航菜单变成垂直排列 */
+            .nav {
+                flex-direction: column; /* 改为垂直方向 */
+                align-items: stretch;   /* 拉伸占满宽度 */
+            }
+
+            .nav li {
+                text-align: center;
+                border-bottom: 1px solid rgba(255,255,255,0.2);
+            }
+
+            .nav li:last-child {
+                border-bottom: none;
+            }
+        }
+
+        /* 移动端适配：在小屏幕上每行显示1-2列，由 grid 自动处理，已经很好了 */
+        @media (max-width: 600px) {
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 10px;
+            }
+            .gallery-item img {
+                height: 150px;
+            }
+        }
+
+        /* 底部切换按钮（如果之前有，可以保留，或者不需要） */
+        .toggle-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 20px 0;
+        }
+        .toggle-btn:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 导航菜单（复制自首页，但要把“相册”链接加上，并且当前页高亮） -->
+        <ul class="nav">
+            <li><a href="index.html">首页</a></li>
+            <li><a href="gallery.html" class="active">相册</a></li>
+            <li><a href="services.html">服务</a></li>
+            <li><a href="contact.html">联系</a></li>
+        </ul>
+
+        <div class="title-with-images">
+            <img src="images/happydog.webp" alt="左侧动图" class="side-gif">
+            <h1>熊熊相册</h1>
+            <img src="images/happypig.webp" alt="右侧动图" class="side-gif">
+         </div>
+
+        <!-- 相册网格 -->
+        <div class="gallery-grid">
+            <!-- 每个图片项，重复以下结构 -->
+            <div class="gallery-item">
+                <img src="images/bears.jpg" alt="玫熊恩熊在冬天的秦皇岛">
+                <div class="caption">玫熊和恩熊在冬天的秦皇岛</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images/meixiongeatsun.jpg" alt="玫熊食日">
+                <div class="caption">玫熊食日</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="images/bearsinbeijingzoo.jpg" alt="北京野生动物园">
+                <div class="caption">玫熊和恩熊在北京野生动物园</div>
+            </div>
+            <div class="gallery-item">
+                <img src="images/bearcapital.jpg" alt="熊之柱">
+                <div class="caption">一只玫熊柱</div>
+            </div>
+
+
+            <!-- 可以继续添加更多 -->
+        </div>
+
+        <!-- 底部切换按钮（如果之前有，可以保留；没有则去掉） -->
+        <!-- <div style="text-align: center;">
+            <button id="layoutToggle" class="toggle-btn">切换到桌面版</button>
+        </div> -->
+    </div>
+
+    <!-- 如果保留切换按钮，需要复制对应的 JavaScript；否则可以省略 -->
+    <!-- <script>...</script> -->
+</body>
+</html>
