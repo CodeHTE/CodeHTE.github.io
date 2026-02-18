@@ -2,8 +2,9 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
+    <!-- 确保移动端缩放正确，允许用户缩放（便于阅读） -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
-    <title>星阅伴 · 乡村儿童AI智慧伴读</title>
+    <title>星阅伴 · 乡村儿童AI智慧伴读（移动优化版）</title>
     <!-- 字体与图标库 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +19,7 @@
 
         body {
             font-family: 'Quicksand', sans-serif;
-            background-color: #faf7f2;  /* 柔和米白基底 */
+            background-color: #faf7f2;
             color: #2e3b3b;
             line-height: 1.5;
         }
@@ -79,6 +80,9 @@
             color: var(--text-dark);
             transition: color 0.2s;
             font-size: 1.1rem;
+            /* 增加点击区域 */
+            padding: 8px 0;
+            display: inline-block;
         }
         .nav-links a:hover {
             color: var(--primary-orange);
@@ -96,6 +100,7 @@
             box-shadow: 0 6px 12px rgba(255, 154, 90, 0.3);
             text-decoration: none;
             display: inline-block;
+            text-align: center;
         }
         .btn-green {
             background-color: var(--primary-green);
@@ -429,7 +434,22 @@
             color: white;
         }
 
-        /* 移动端优化 */
+        /* 报告卡片示例 */
+        .report-card {
+            background: #eef5ec;
+            border-radius: 40px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px dashed var(--primary-green);
+        }
+
+        /* ---------- 移动端精细适配 (新增断点) ---------- */
+        @media (max-width: 900px) {
+            .hero-text h1 {
+                font-size: 2.8rem;
+            }
+        }
+
         @media (max-width: 700px) {
             .navbar {
                 flex-direction: column;
@@ -445,13 +465,180 @@
                 padding: 24px;
             }
         }
-        /* 报告卡片示例 */
-        .report-card {
-            background: #eef5ec;
-            border-radius: 40px;
-            padding: 20px;
-            margin: 20px 0;
-            border: 2px dashed var(--primary-green);
+
+        /* 小屏设备 (≤600px) 优化 */
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 16px; /* 缩小左右边距 */
+            }
+
+            .nav-links {
+                gap: 16px; /* 减少间隙 */
+                justify-content: center;
+                width: 100%;
+            }
+            .nav-links a {
+                font-size: 1rem;
+                padding: 6px 0;
+            }
+            .btn-sm, .btn-outline.btn-sm {
+                padding: 6px 14px;
+                font-size: 0.9rem;
+            }
+
+            .hero-text h1 {
+                font-size: 2.2rem;
+            }
+            .hero-sub {
+                font-size: 1.1rem;
+            }
+            .hero-buttons {
+                flex-direction: column;
+                gap: 12px;
+            }
+            .hero-buttons .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr; /* 单列卡片 */
+                gap: 20px;
+            }
+            .feature-card {
+                padding: 24px 16px;
+            }
+            .feature-card h3 {
+                font-size: 1.5rem;
+            }
+
+            .companion-showcase {
+                border-radius: 40px;
+                padding: 20px;
+            }
+            .chat-bubble-left, .chat-bubble-right {
+                max-width: 95%; /* 放宽气泡宽度 */
+                padding: 14px 18px;
+                font-size: 0.95rem;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+            .pricing-card {
+                padding: 28px 20px;
+            }
+            .price {
+                font-size: 2.4rem;
+            }
+
+            .stats-grid {
+                border-radius: 40px;
+                padding: 30px 16px;
+                display: grid;
+                grid-template-columns: 1fr 1fr; /* 两列数据 */
+                gap: 20px;
+            }
+            .stat-item {
+                flex: unset; /* 取消flex, 由grid控制 */
+            }
+            .stat-number {
+                font-size: 2.2rem;
+            }
+
+            .partner-logos {
+                border-radius: 40px;
+                padding: 20px;
+                gap: 16px;
+            }
+            .partner-item {
+                padding: 8px 18px;
+                font-size: 0.9rem;
+            }
+
+            .footer {
+                border-radius: 40px 40px 0 0;
+                padding: 40px 0 20px;
+            }
+            .footer-inner {
+                flex-direction: column;
+                gap: 30px;
+            }
+        
+
+        /* 让“反中介化”标签换行并调小字号 */
+             .section-title span {
+                 display: block;        /* 块级显示，自动换行 */
+                 margin-left: 0;        /* 清除左侧间距 */
+                 margin-top: 8px;       /* 与主标题拉开一点距离 */
+                 font-size: 0.9rem;     /* 调小字号（原来约1rem） */
+                 width: fit-content;    /* 宽度自适应内容 */
+            }
+        }
+
+        /* 超小屏 (≤400px) 进一步优化 */
+        @media (max-width: 400px) {
+            .hero-text h1 {
+                font-size: 1.9rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+                margin: 40px 0 20px;
+            }
+            .section-title span {
+                display: block; /* 换行 */
+                margin-left: 0;
+                margin-top: 8px;
+                width: fit-content;
+            }
+
+            .avatar {
+                width: 70px;
+                height: 70px;
+                font-size: 2.8rem;
+            }
+            .bubble {
+                max-width: 200px;
+                padding: 14px 16px;
+                font-size: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr; /* 单列 */
+                text-align: left;
+            }
+            .stat-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: left;
+            }
+            .stat-number {
+                font-size: 1.8rem;
+            }
+
+            .partner-logos {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .partner-item {
+                text-align: center;
+            }
+
+            .btn, .btn-outline {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        /* 确保所有可点击元素有足够触摸区域 */
+        .nav-links a, .btn, .partner-item, .pricing-card a {
+            touch-action: manipulation;
+        }
+        /* 移除按钮可能出现的幻影点击 */
+        .btn, .btn-outline {
+            -webkit-tap-highlight-color: transparent;
         }
     </style>
 </head>
