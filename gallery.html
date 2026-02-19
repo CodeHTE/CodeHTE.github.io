@@ -1,73 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>熊熊Land-相册</title>
     <style>
-        /* 全局样式（和 index.html 保持一致，保持网站统一风格） */
+        /* 全局样式（统一继承style1的设计体系） */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+            font-family: "Minecraft AE","Comic Sans MS", "幼圆", monospace;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f4f4f4;
+            min-height: 100vh;
             padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .page-layout {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        .theme-switcher {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 120px;
+            margin-top: 20px;
+        }
+
+        .theme-btn {
+            padding: 12px 8px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: bold;
+            width: 100%;
+        }
+
+        .theme-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .container {
-            max-width: 1200px;      /* 相册可以更宽一些 */
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 20px;
+            flex: 1;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            border: 5px solid #87ceeb;
         }
 
-        /* 导航菜单（与首页一致） */
+        /* 导航菜单（继承style1风格） */
         .nav {
+            justify-content: center;
             display: flex;
-            justify-content: space-around;
-            list-style: none;
-            background-color: #3498db;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            padding: 10px 0;
-            flex-wrap: wrap;      /* 防止菜单项太多时溢出 */
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            flex-wrap: wrap;
         }
 
         .nav li a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 8px 12px;
             display: block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            transition: all 0.2s ease;
         }
 
         .nav li a:hover {
-            background-color: #2980b9;
-            border-radius: 4px;
+            transform: translateY(-2px);
         }
 
-        /* 当前页面高亮（可选） */
-        .nav li a.active {
-            background-color: #2980b9;
-            border-radius: 4px;
+        /* 标题区域样式 */
+        .title-with-images {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
         }
 
-        /* 页面标题 */
-        .page-title {
+        .side-gif {
+            width: 80px;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin: 20px 0;
             text-align: center;
-            margin: 20px 0 30px;
-            color: #2c3e50;
+            padding: 15px;
+            border-radius: 12px;
         }
 
-        /* ---------- 相册网格 ---------- */
+        /* 相册核心样式 */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -76,167 +116,540 @@
         }
 
         .gallery-item {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
             padding: 4px;
             transition: transform 0.3s, box-shadow 0.3s;
         }
 
         .gallery-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.18);
         }
-
 
         .gallery-item img,
         .gallery-item video {
             width: 100%;
-            height: 200px;                /* 保持固定高度 */
-            object-fit: contain;          /* 完整显示，可能留白 */
+            height: 200px;
+            object-fit: contain;
             display: block;
-            background-color: #f8f8f8;    /* 可选，与容器一致 */
-        }        
+            border-radius: 12px;
+        }
+
         .gallery-item .caption {
             padding: 12px;
             text-align: center;
-            font-size: 14px;
+            font-size: 16px;
             color: #555;
+            line-height: 1.4;
         }
 
-        /* 包裹标题和图片的容器 */
-        .title-with-images {
-            display: flex;           /* 启用 Flexbox */
-            align-items: center;     /* 垂直居中对齐 */
-            justify-content: center; /* 水平居中对齐（让标题在中间） */
-            gap: 15px;               /* 图片和标题之间的间距 */
-            flex-wrap: wrap;         /* 如果屏幕太窄，允许换行 */
-            margin: 20px 0;          /* 上下留点空白 */
-            border-radius: 4px;  
-        }
+        /* 移动端通用适配 */
+        @media (max-width: 768px) {
+            .page-layout {
+                flex-direction: column;
+                gap: 15px;
+                max-width: 100%;
+                padding: 10px;
+            }
 
-                /* 控制 GIF 图片的大小 */
-        .side-gif {
-            width: 50px;             /* 根据需要调整宽度 */
-            height: auto;            /* 高度自动，保持比例 */
-            max-width: 100%;         /* 在小屏幕上不超过容器宽度 */
-        }
+            .theme-switcher {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                margin-top: 0;
+            }
 
-        /* 可选：针对极小屏幕（如宽度小于 400px）调整 */
-        @media (max-width: 400px) {
-        .side-gif {
-            width: 30px;         /* 图片再小一点 */
-        }
-        .title-with-images {
-            gap: 8px;            /* 间距也缩小 */
-        }
-        }
+            .theme-btn {
+                padding: 10px 15px;
+                font-size: 12px;
+                width: auto;
+            }
 
-
-        /* 媒体查询：当屏幕宽度小于等于 600px 时（手机） */
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;  /* 手机内边距小一点 */
+            .container {
+                max-width: 100%;
+                margin: 0 auto;
+                padding: 20px;
+                border-width: 3px !important;
             }
 
             h1 {
-                font-size: 24px; /* 标题小一点 */
+                font-size: 28px;
             }
 
-            /* 在手机上，导航菜单变成垂直排列 */
             .nav {
-                flex-direction: column; /* 改为垂直方向 */
-                align-items: stretch;   /* 拉伸占满宽度 */
+                flex-direction: column;
+                gap: 8px;
+                padding: 8px;
             }
 
-            .nav li {
-                text-align: center;
-                border-bottom: 1px solid rgba(255,255,255,0.2);
+            .nav li a {
+                padding: 10px;
+                font-size: 16px;
             }
 
-            .nav li:last-child {
-                border-bottom: none;
+            .side-gif {
+                width: 50px;
             }
-        }
 
-        /* 移动端适配：在小屏幕上每行显示1-2列，由 grid 自动处理，已经很好了 */
-        @media (max-width: 600px) {
+            .title-with-images {
+                gap: 15px;
+            }
+
+            /* 相册移动端适配 */
             .gallery-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                 gap: 10px;
             }
-            .gallery-item img {
+            
+            .gallery-item img,
+            .gallery-item video {
                 height: 150px;
+            }
+            
+            .gallery-item .caption {
+                font-size: 14px;
+                padding: 8px;
             }
         }
 
-        /* 底部切换按钮（如果之前有，可以保留，或者不需要） */
-        .toggle-btn {
-            background-color: #3498db;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            margin: 20px 0;
+        @media (min-width: 601px) and (max-width: 768px) {
+            .nav {
+                flex-direction: row;
+            }
         }
-        .toggle-btn:hover {
-            background-color: #2980b9;
+
+        /* ==================== 主题1：卡通童趣风 ==================== */
+        body.theme-original {
+            background-color: #fff9e6;
+            color: #333;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffb6c1' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .theme-original .container {
+            background: white;
+            border: 4px solid #ff9eaa;
+            box-shadow: 0 0 0 8px rgba(255, 158, 170, 0.1);
+        }
+
+        .theme-original h1 {
+            color: #ff6b8b;
+            text-shadow: 2px 2px 0px #ffe0e7;
+        }
+
+        .theme-original .nav {
+            background-color: #87ceeb;
+            border: 3px solid #4fc3f7;
+        }
+
+        .theme-original .nav li a {
+            background-color: #4fc3f7;
+        }
+
+        .theme-original .nav li a:hover {
+            background-color: #2196f3;
+        }
+
+        .theme-original .nav li a.active {
+            background-color: #ff6b8b;
+        }
+
+        .theme-original .gallery-item {
+            background: white;
+            border: 3px solid #ff9eaa;
+        }
+
+        .theme-original .gallery-item .caption {
+            color: #ff6b8b;
+            font-weight: bold;
+        }
+
+        /* ==================== 主题2：糖果缤纷风 ==================== */
+        body.theme-candy {
+            background-color: #fff0f5;
+            color: #555;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffc0cb' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .theme-candy .container {
+            background: linear-gradient(145deg, #ffffff 0%, #fff9fb 100%);
+            border: 5px solid #ff85a2;
+            border-radius: 24px;
+            box-shadow: 0 0 0 10px rgba(255, 133, 162, 0.1), 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .theme-candy h1 {
+            background: linear-gradient(90deg, #ff6b8b, #ff99cc, #87cefa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 38px;
+            text-shadow: none;
+            letter-spacing: 1px;
+        }
+
+        .theme-candy .nav {
+            background: linear-gradient(90deg, #87cefa, #99ddff);
+            border: 3px solid #66c2ff;
+            border-radius: 50px;
+        }
+
+        .theme-candy .nav li a {
+            background: linear-gradient(145deg, #66c2ff, #4fc3f7);
+            border-radius: 50px;
+            border: 2px solid transparent;
+        }
+
+        .theme-candy .nav li a:hover {
+            background: linear-gradient(145deg, #4fc3f7, #2196f3);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            border-color: white;
+        }
+
+        .theme-candy .nav li a.active {
+            background: linear-gradient(145deg, #ff6b8b, #ff85a2);
+            box-shadow: 0 6px 12px rgba(255, 107, 139, 0.3);
+        }
+
+        .theme-candy .side-gif {
+            border: 4px solid #ffdd55;
+            box-shadow: 0 0 0 4px rgba(255, 221, 85, 0.2);
+        }
+
+        .theme-candy .gallery-item {
+            background: linear-gradient(145deg, #ffffff 0%, #fff0f5 100%);
+            border: 4px solid #87cefa;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(135, 206, 250, 0.2);
+        }
+
+        .theme-candy .gallery-item img,
+        .theme-candy .gallery-item video {
+            border-radius: 16px;
+            border: 3px solid #ff85a2;
+        }
+
+        .theme-candy .gallery-item .caption {
+            background: linear-gradient(90deg, #ff6b8b, #ff99cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+            font-size: 17px;
+        }
+
+        /* ==================== 主题3：森林治愈风 ==================== */
+        body.theme-forest {
+            background-color: #f5f9f0;
+            color: #4a5a45;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23a8d08d' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .theme-forest .container {
+            background: #ffffff;
+            border: 4px solid #c19a6b;
+            box-shadow: 0 0 0 8px rgba(193, 154, 107, 0.1), 0 8px 16px rgba(0,0,0,0.08);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.8 2.8c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6zm29 0c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6zm29 0c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6zm29 0c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6z' fill='%23f8f5f0' fill-opacity='0.6' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .theme-forest h1 {
+            color: #6b8e23;
+            text-shadow: 2px 2px 0px #e8f0d6;
+        }
+
+        .theme-forest .nav {
+            background-color: #8fbc8f;
+            border: 3px solid #6f9e6f;
+        }
+
+        .theme-forest .nav li a {
+            background-color: #7ccd7c;
+        }
+
+        .theme-forest .nav li a:hover {
+            background-color: #66c266;
+        }
+
+        .theme-forest .nav li a.active {
+            background-color: #c19a6b;
+        }
+
+        .theme-forest .side-gif {
+            border: 3px solid #c19a6b;
+        }
+
+        .theme-forest .gallery-item {
+            background: #f8f5f0;
+            border: 4px solid #8fbc8f;
+        }
+
+        .theme-forest .gallery-item img,
+        .theme-forest .gallery-item video {
+            border: 3px solid #c19a6b;
+            background-color: #f5f9f0;
+        }
+
+        .theme-forest .gallery-item .caption {
+            color: #6b8e23;
+            font-weight: bold;
+        }
+
+        /* ==================== 主题4：我的世界风格 ==================== */
+        @font-face {
+            font-family: "Minecraft AE";
+            src: url("fonts/Minecraft AE(ch).ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body.theme-pixel {
+            font-family: "Minecraft AE", "Comic Sans MS", "幼圆", monospace;
+            background-color: #e0e0e0;
+            color: #2a2a2a;
+            background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23969696' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            font-size: 16px;
+            line-height: 1;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+            font-smooth: never;
+            text-rendering: optimizeSpeed;
+            letter-spacing: 0;
+        }
+
+        .theme-pixel .container {
+            background: #c69c6d;
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm8 8h8v8H8V8zM0 8h8v8H0V8zm8 0h8v8H8V8z' fill='%23966c42' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border-radius: 0;
+            border: 6px solid #8b5a2b;
+            box-shadow: 8px 8px 0 #4a3218;
+        }
+
+        .theme-pixel h1 {
+            color: #ffffff;
+            font-size: 24px;
+            text-shadow: 3px 3px 0 #000000;
+            background: #808080;
+            background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h4v4H0V0zm1 1h2v2H1V1zm2 0h2v2H3V1zm-2 2h2v2H1V3zm2 0h2v2H3V3z' fill='%23696969' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+            padding: 10px;
+            border: 4px solid #000000;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 2px;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .theme-pixel .nav {
+            background: #4040a0;
+            border: 4px solid #000000;
+            border-radius: 0;
+            gap: 8px;
+            background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 8 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm1 1h6v6H1V1z' fill='%23303080' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .theme-pixel .nav li a {
+            border-radius: 0;
+            background-color: #6060c0;
+            border: 4px solid #000000;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 4px 4px 0 #202080;
+            color: #ffffff;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .theme-pixel .nav li a:hover {
+            background-color: #7070d0;
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #202080;
+        }
+
+        .theme-pixel .nav li a.active {
+            background-color: #ff3030;
+            border: 4px solid #000000;
+            box-shadow: 4px 4px 0 #a01010;
+        }
+
+        .theme-pixel .side-gif {
+            border-radius: 0;
+            border: 4px solid #ffaa00;
+            box-shadow: 4px 4px 0 #000000;
+            padding: 4px;
+            background-color: #f0f0f0;
+        }
+
+        .theme-pixel .gallery-item {
+            background: #c69c6d;
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm8 8h8v8H8V8zM0 8h8v8H0V8zm8 0h8v8H8V8z' fill='%23966c42' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border: 6px solid #8b5a2b;
+            border-radius: 0;
+            box-shadow: 8px 8px 0 #4a3218;
+        }
+
+        .theme-pixel .gallery-item img,
+        .theme-pixel .gallery-item video {
+            border-radius: 0;
+            border: 4px solid #507050;
+            box-shadow: 4px 4px 0 #000000;
+            height: 190px;
+            background-color: #e0e0e0;
+        }
+
+        .theme-pixel .gallery-item .caption {
+            color: #ffffff;
+            text-shadow: 2px 2px 0 #000;
+            font-size: 16px;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+            background-color: #808080;
+            border: 2px solid #000;
+            border-radius: 0;
+        }
+
+        /* 移动端我的世界风格适配 */
+        @media (max-width: 768px) {
+            .theme-pixel {
+                font-size: 16px !important;
+                line-height: 1;
+            }
+            .theme-pixel .container {
+                border-width: 4px;
+                box-shadow: 4px 4px 0 #4a3218;
+            }
+            .theme-pixel h1 {
+                font-size: 20px;
+                padding: 8px;
+                border-width: 3px;
+                text-shadow: 2px 2px 0 #000;
+            }
+            .theme-pixel .nav {
+                border-width: 3px;
+            }
+            .theme-pixel .nav li a {
+                border-width: 3px;
+                box-shadow: 3px 3px 0 #202080;
+            }
+            .theme-pixel .side-gif {
+                border-width: 3px;
+                box-shadow: 3px 3px 0 #000;
+            }
+            .theme-pixel .gallery-item {
+                border-width: 4px;
+                box-shadow: 4px 4px 0 #4a3218;
+            }
+            .theme-pixel .gallery-item img,
+            .theme-pixel .gallery-item video {
+                border-width: 3px;
+                box-shadow: 3px 3px 0 #000;
+                height: 140px;
+            }
+        }
+
+        /* 主题按钮配色 */
+        #btn-original {
+            background-color: #ff6b8b;
+        }
+        #btn-candy {
+            background: linear-gradient(90deg, #ff6b8b, #ff99cc, #87cefa);
+        }
+        #btn-forest {
+            background-color: #6b8e23;
+        }
+        #btn-pixel {
+            background-color: #8b5a2b;
+            font-family: "Minecraft AE", monospace;
+            font-size: 14px;
+            text-shadow: 1px 1px 0 #000;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <!-- 导航菜单（复制自首页，但要把“相册”链接加上，并且当前页高亮） -->
-        <ul class="nav">
-            <li><a href="index.html">首页</a></li>
-            <li><a href="gallery.html" class="active">相册</a></li>
-            <li><a href="services.html">服务</a></li>
-            <li><a href="contact.html">联系</a></li>
-        </ul>
-
-        <div class="title-with-images">
-            <img src="images/happydog.webp" alt="左侧动图" class="side-gif">
-            <h1>熊熊相册</h1>
-            <img src="images/happypig.webp" alt="右侧动图" class="side-gif">
-         </div>
-
-        <!-- 相册网格 -->
-        <div class="gallery-grid">
-            <!-- 每个图片项，重复以下结构 -->
-            <div class="gallery-item">
-                <img src="images/bears.jpg" alt="玫熊恩熊在冬天的秦皇岛">
-                <div class="caption">玫熊和恩熊在冬天的秦皇岛</div>
-            </div>
-            <div class="gallery-item">
-                <img src="images/meixiongeatsun.jpg" alt="玫熊食日">
-                <div class="caption">玫熊食日</div>
-            </div>
-
-            <div class="gallery-item">
-                <img src="images/bearsinbeijingzoo.jpg" alt="北京野生动物园">
-                <div class="caption">玫熊和恩熊在北京野生动物园</div>
-            </div>
-            <div class="gallery-item">
-                <img src="images/bearcapital.jpg" alt="熊之柱">
-                <div class="caption">一只玫熊柱</div>
-            </div>
-
-
-            <!-- 可以继续添加更多 -->
+<body class="theme-original">
+    <!-- 整体页面布局容器 -->
+    <div class="page-layout">
+        <!-- 主题切换按钮（左侧竖排） -->
+        <div class="theme-switcher">
+            <button class="theme-btn" id="btn-original">卡通童趣风</button>
+            <button class="theme-btn" id="btn-candy">糖果缤纷风</button>
+            <button class="theme-btn" id="btn-forest">森林治愈风</button>
+            <button class="theme-btn" id="btn-pixel">复古像素风</button>
         </div>
 
-        <!-- 底部切换按钮（如果之前有，可以保留；没有则去掉） -->
-        <!-- <div style="text-align: center;">
-            <button id="layoutToggle" class="toggle-btn">切换到桌面版</button>
-        </div> -->
+        <!-- 原有内容容器 -->
+        <div class="container">
+            <ul class="nav">
+                <li><a href="index.html">首页</a></li>
+                <li><a href="gallery.html" class="active">相册</a></li>
+            </ul>
+
+            <div class="title-with-images">
+                <img src="images/happydog.webp" alt="左侧动图" class="side-gif">
+                <h1>熊熊相册</h1>
+                <img src="images/happypig.webp" alt="右侧动图" class="side-gif">
+            </div>
+
+            <!-- 相册网格 -->
+            <div class="gallery-grid">
+                <!-- 每个图片项，重复以下结构 -->
+                <div class="gallery-item">
+                    <img src="images/bears.jpg" alt="玫熊恩熊在冬天的秦皇岛">
+                    <div class="caption">玫熊和恩熊在冬天的秦皇岛</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/meixiongeatsun.jpg" alt="玫熊食日">
+                    <div class="caption">玫熊食日</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/bearsinbeijingzoo.jpg" alt="北京野生动物园">
+                    <div class="caption">玫熊和恩熊在北京野生动物园</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/bearcapital.jpg" alt="熊之柱">
+                    <div class="caption">一只玫熊柱</div>
+                </div>
+                <!-- 可以继续添加更多 -->
+            </div>
+        </div>
     </div>
 
-    <!-- 如果保留切换按钮，需要复制对应的 JavaScript；否则可以省略 -->
-    <!-- <script>...</script> -->
+    <script>
+        // 主题切换逻辑
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取所有主题按钮
+            const btnOriginal = document.getElementById('btn-original');
+            const btnCandy = document.getElementById('btn-candy');
+            const btnForest = document.getElementById('btn-forest');
+            const btnPixel = document.getElementById('btn-pixel');
+            const body = document.body;
+
+            // 切换到卡通童趣风
+            btnOriginal.addEventListener('click', function() {
+                body.className = 'theme-original';
+            });
+
+            // 切换到糖果缤纷风
+            btnCandy.addEventListener('click', function() {
+                body.className = 'theme-candy';
+            });
+
+            // 切换到森林治愈风
+            btnForest.addEventListener('click', function() {
+                body.className = 'theme-forest';
+            });
+
+            // 切换到我的世界风
+            btnPixel.addEventListener('click', function() {
+                body.className = 'theme-pixel';
+            });
+        });
+    </script>
 </body>
 </html>
