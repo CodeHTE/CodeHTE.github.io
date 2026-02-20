@@ -568,6 +568,62 @@
                 setActiveButtonFromBodyClass();
             });
         });
+        document.addEventListener('DOMContentLoaded', function() {
+        const btnOriginal = document.getElementById('btn-original');
+        const btnCandy = document.getElementById('btn-candy');
+        const btnForest = document.getElementById('btn-forest');
+        const btnPixel = document.getElementById('btn-pixel');
+        const body = document.body;
+        const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
+
+        // 从 localStorage 读取保存的主题，若没有则默认 'theme-original'
+        const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
+        body.className = savedTheme;
+
+        // 根据当前 body 类名设置对应按钮为 active
+        function setActiveButtonFromBodyClass() {
+            allBtns.forEach(btn => btn.classList.remove('active'));
+            if (body.classList.contains('theme-original')) {
+                btnOriginal.classList.add('active');
+            } else if (body.classList.contains('theme-candy')) {
+                btnCandy.classList.add('active');
+            } else if (body.classList.contains('theme-forest')) {
+                btnForest.classList.add('active');
+            } else if (body.classList.contains('theme-pixel')) {
+                btnPixel.classList.add('active');
+            }
+        }
+
+        // 初始化按钮激活状态
+        setActiveButtonFromBodyClass();
+
+        // 保存主题到 localStorage 的函数
+        function saveTheme(themeClass) {
+            localStorage.setItem('selectedTheme', themeClass);
+        }
+
+        // 为每个按钮绑定点击事件，切换主题并保存
+        btnOriginal.addEventListener('click', function() {
+            body.className = 'theme-original';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-original');
+        });
+        btnCandy.addEventListener('click', function() {
+            body.className = 'theme-candy';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-candy');
+        });
+        btnForest.addEventListener('click', function() {
+            body.className = 'theme-forest';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-forest');
+        });
+        btnPixel.addEventListener('click', function() {
+            body.className = 'theme-pixel';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-pixel');
+        });
+    });
     </script>
 </body>
 </html>

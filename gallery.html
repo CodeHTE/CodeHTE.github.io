@@ -136,6 +136,7 @@
             gap: 20px;
             margin-bottom: 30px;
         }
+        
         .gallery-item {
             border-radius: 16px;
             overflow: hidden;
@@ -162,6 +163,67 @@
             color: #555;
             line-height: 1.4;
         }
+
+        /*分页*/
+        .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+.page-btn {
+    padding: 8px 20px;
+    background-color: #87ceeb;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.page-btn:hover:not(:disabled) {
+    background-color: #4fc3f7;
+    transform: translateY(-2px);
+}
+.page-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+#pageInfo {
+    font-size: 16px;
+    color: #333;
+}
+.page-jump {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#jumpPage {
+    width: 70px;
+    padding: 6px 8px;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    outline: none;
+    transition: 0.2s;
+}
+
+#jumpPage:focus {
+    border-color: #87ceeb;
+    box-shadow: 0 0 0 2px rgba(135,206,235,0.3);
+}
+
+/* 小号按钮（用于跳转） */
+.page-btn.small {
+    padding: 6px 12px;
+    font-size: 14px;
+}
 
         /* ----- 移动端基础适配 (与首页合并) ----- */
         @media (max-width: 768px) {
@@ -385,8 +447,8 @@
             background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23969696' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
             font-size: 16px;
             line-height: 1;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
+        /*    image-rendering: pixelated; */
+        /*    image-rendering: crisp-edges; */
             -webkit-font-smoothing: none;
             -moz-osx-font-smoothing: grayscale;
             font-smooth: never;
@@ -531,7 +593,211 @@
         @media (max-width: 768px) {
             #btn-pixel { font-size: 12px; }
             .theme-candy .nav { border-radius: 20px; }
+            .page-jump {
+                width: 100%;
+                margin-top: 10px;
+            }
+            #jumpPage {
+                width: 60px;
+                padding: 4px;
+            }
+            .page-btn.small {
+                padding: 4px 10px;
+            }
         }
+
+        /* ----- 分页按钮主题适配 ----- */
+/* 基础分页样式已在全局定义，此处仅需主题覆盖 */
+
+/* 卡通童趣风 */
+.theme-original .page-btn {
+    background-color: #87ceeb;
+    border-radius: 8px;
+    border: 2px solid #4fc3f7;
+    color: white;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+.theme-original .page-btn:hover:not(:disabled) {
+    background-color: #4fc3f7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.theme-original .page-btn:disabled {
+    background-color: #b0d4e8;
+    border-color: #9fc5e0;
+    opacity: 0.6;
+    transform: none;
+}
+.theme-original #pageInfo {
+    color: #ff6b8b;
+    font-weight: bold;
+}
+.theme-original #jumpPage {
+    border-color: #ff9eaa;
+    color: #333;
+    background-color: #fff9f0;
+}
+.theme-original #jumpPage:focus {
+    border-color: #ff6b8b;
+    box-shadow: 0 0 0 2px rgba(255,107,139,0.2);
+}
+
+/* 糖果缤纷风 */
+.theme-candy .page-btn {
+    background: linear-gradient(145deg, #66c2ff, #4fc3f7);
+    border-radius: 50px;
+    border: 2px solid transparent;
+    color: white;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.theme-candy .page-btn:hover:not(:disabled) {
+    background: linear-gradient(145deg, #4fc3f7, #2196f3);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 12px rgba(255,107,139,0.2);
+    border-color: white;
+}
+.theme-candy .page-btn:disabled {
+    background: linear-gradient(145deg, #b3d9ff, #99ccff);
+    opacity: 0.6;
+    transform: none;
+    border-color: transparent;
+}
+.theme-candy #pageInfo {
+    background: linear-gradient(90deg, #ff6b8b, #ff99cc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: bold;
+}
+.theme-candy #jumpPage {
+    border: 2px solid #ff85a2;
+    border-radius: 30px;
+    background: linear-gradient(145deg, #fff0f5, #ffe6ef);
+    color: #ff6b8b;
+}
+.theme-candy #jumpPage:focus {
+    border-color: #ff6b8b;
+    box-shadow: 0 0 0 3px rgba(255,133,162,0.2);
+}
+
+/* 森林治愈风 */
+.theme-forest .page-btn {
+    background-color: #8fbc8f;
+    border-radius: 8px;
+    border: 2px solid #6f9e6f;
+    color: white;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+.theme-forest .page-btn:hover:not(:disabled) {
+    background-color: #66c266;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.theme-forest .page-btn:disabled {
+    background-color: #b0cfa0;
+    border-color: #9db98b;
+    opacity: 0.6;
+    transform: none;
+}
+.theme-forest #pageInfo {
+    color: #6b8e23;
+    font-weight: bold;
+}
+.theme-forest #jumpPage {
+    border-color: #c19a6b;
+    background-color: #f8f5f0;
+    color: #4a5a45;
+}
+.theme-forest #jumpPage:focus {
+    border-color: #6b8e23;
+    box-shadow: 0 0 0 2px rgba(107,142,35,0.2);
+}
+
+/* 复古像素风 */
+.theme-pixel .page-btn {
+    background-color: #6060c0;
+    border: 4px solid #000;
+    border-radius: 0;
+    color: white;
+    text-shadow: 2px 2px 0 #000;
+    box-shadow: 4px 4px 0 #202080;
+    font-family: "Minecraft AE", monospace;
+    font-size: 16px;
+    padding: 8px 20px;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    transition: all 0.1s ease;
+}
+.theme-pixel .page-btn:hover:not(:disabled) {
+    background-color: #7070d0;
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 #202080;
+}
+.theme-pixel .page-btn:disabled {
+    background-color: #404080;
+    border-color: #000;
+    box-shadow: 2px 2px 0 #202080;
+    opacity: 0.7;
+    transform: none;
+    text-shadow: 1px 1px 0 #000;
+}
+.theme-pixel #pageInfo {
+    color: #f0f0f0;
+    text-shadow: 2px 2px 0 #000;
+    font-family: "Minecraft AE", monospace;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+}
+.theme-pixel #jumpPage {
+    border: 4px solid #000;
+    border-radius: 0;
+    background-color: #c69c6d;
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    font-family: "Minecraft AE", monospace;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    box-shadow: inset -2px -2px 0 #4a3218;
+    padding: 4px 6px;
+    width: 80px;
+}
+.theme-pixel #jumpPage:focus {
+    outline: 2px solid #ffaa00;
+    background-color: #b38b5c;
+}
+.theme-pixel .page-btn.small {
+    font-size: 14px;
+    padding: 4px 10px;
+}
+
+/* 移动端适配：调整分页按钮大小和间距 */
+@media (max-width: 768px) {
+    .pagination {
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .page-btn {
+        padding: 6px 15px;
+        font-size: 14px;
+    }
+    .theme-pixel .page-btn {
+        font-size: 14px;
+        padding: 6px 15px;
+        border-width: 3px;
+        box-shadow: 3px 3px 0 #202080;
+    }
+    .theme-pixel .page-btn:hover:not(:disabled) {
+        transform: translate(1px, 1px);
+        box-shadow: 2px 2px 0 #202080;
+    }
+    #pageInfo {
+        font-size: 14px;
+    }
+}
     </style>
 </head>
 <body class="theme-original">
@@ -557,22 +823,16 @@
 
             <!-- 相册网格 -->
             <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="images/bears.jpg" alt="玫熊恩熊在冬天的秦皇岛">
-                    <div class="caption">玫熊和恩熊在冬天的秦皇岛</div>
+            </div>
+            <!-- 分页控件 -->
+            <div class="pagination">
+                <button id="prevPage" class="page-btn">‹ 上一页</button>
+                <div class="page-jump">
+                    <span id="pageInfo">第 1 / X 页</span>
+                    <input type="number" id="jumpPage" min="1" placeholder="页码">
+                    <button id="jumpBtn" class="page-btn small">跳转</button>
                 </div>
-                <div class="gallery-item">
-                    <img src="images/meixiongeatsun.jpg" alt="玫熊食日">
-                    <div class="caption">玫熊食日</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="images/bearsinbeijingzoo.jpg" alt="北京野生动物园">
-                    <div class="caption">玫熊和恩熊在北京野生动物园</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="images/bearcapital.jpg" alt="熊之柱">
-                    <div class="caption">一只玫熊柱</div>
-                </div>
+                <button id="nextPage" class="page-btn">下一页 ›</button>
             </div>
         </div>
     </div>
@@ -618,6 +878,196 @@
                 setActiveButtonFromBodyClass();
             });
         });
+
+        //<----- 分页逻辑 ----->
+        // 相册数据（请根据实际图片路径和说明填写）
+const galleryItems = [
+    { src: 'images/bears.jpg', caption: '玫熊和恩熊在冬天的秦皇岛' },
+    { src: 'images/meixiongeatsun.jpg', caption: '玫熊食日' },
+    { src: 'images/bearsinbeijingzoo.jpg', caption: '玫熊和恩熊在北京野生动物园' },
+    { src: 'images/bearcapital.jpg', caption: '一只玫熊柱' },
+    { src: 'images/milkteabear.jpg', caption: '玫熊喝奶茶'},
+    { src: 'images/lazybear.jpg', caption: '玫熊葛优躺'},
+    { src: 'images/sadbearinTaiAn.jpg', caption: '将要分别的瓦熊——泰安站'},
+    { src: 'images/HTEinTHU.jpg', caption: '恩熊在清华！'},
+    { src: 'images/UNbear.jpg', caption: '联合国之熊'},
+    { src: 'images/amazingbear.jpg', caption: '惊讶之熊——泰国'},
+    { src: 'images/bearsinDaiMiao.jpg', caption: '玫熊恩熊在岱庙'},
+    { src: 'images/bearfishSJZ.jpg', caption: '玫熊在石家庄的烤鱼店'},
+    { src: 'images/beareatingTianDong.jpg', caption: '玫熊在田东中学食堂'},
+    { src: 'images/bearonthetrain.jpg', caption: '玫熊在火车上——前往田东'},
+    { src: 'images/bearindoge.jpg', caption: '玫熊戴doge'},
+    { src: 'images/bearwithpenguin.jpg', caption: '玫熊和企鹅——第一次的秦皇岛'},
+    { src: 'images/bearsonthesea.jpg', caption: '玫熊恩熊在秦皇岛的海上'},
+    { src: 'images/bearslove.jpg', caption: '熊熊沙滩爱情誓言'},
+    { src: 'images/bearwalkingsea.jpg', caption: '玫熊在秦皇岛的海边——summer'},
+    { src: 'images/bearpointingsea.jpg', caption: '玫熊指向大海'},
+    { src: 'images/beaubear.jpg', caption: '海边的美美玫熊！'},
+    { src: 'images/bearwithsnake.jpg', caption: '玫熊被蛇蛇缠住了！'},
+    { src: 'images/bearinXiaoJiangXi.jpg', caption: '玫熊吃小江溪'},
+    { src: 'images/beareatingYY.jpg', caption: '玫熊吃鱼悦烤鱼'},
+    { src: 'images/bearperfectsad.jpg', caption: '玫熊的完美瓦瓦'},
+    { src: 'images/bearinFangTe.jpg', caption: '玫熊在天津方特'},
+    { src: 'images/bearPiaoLiu.jpg', caption: '玫熊玩激流勇进'},
+    { src: 'images/bearshorrymc.jpg', caption: '熊熊玩MC恐怖地图——天津滨海'},
+    { src: 'images/bearbaseball.jpg', caption: '玫熊打网球'},
+    { src: 'images/bearinguojialiping.jpg', caption: '玫熊在国家礼品文物管理中心'},
+    { src: 'images/coolbear.jpg', caption: '酷酷玫熊——刚从庐山回京'},
+    { src: 'images/LuShancat.jpg', caption: '庐山牯岭镇锅圈食汇门口的小猫'},
+    { src: 'images/LuShancat1.jpg', caption: '还是那只小猫'},
+    { src: 'images/LuShancat2.jpg', caption: '庐山牯岭镇另一只小猫'},
+    { src: 'images/WuLou.jpg', caption: '庐山吴楼'},
+    { src: 'images/LuShanLanChe.jpg', caption: '庐山上的缆车——Snowy!'},
+    { src: 'images/MeiLutoilet.jpg', caption: '庐山美庐厕所'},
+    { src: 'images/scroutwindow.jpg', caption: '1934别墅的院子'},
+    { src: 'images/LuShanlake.jpg', caption: '庐山上的芦林湖'},
+    { src: 'images/bearzhChess.jpg', caption: '玫熊玩中国象棋'},
+    { src: 'images/bearsinBBEZ.jpg', caption: '玫熊恩熊在蚌埠二中吃冒菜'},
+    
+    // 继续添加更多项...
+    // 示例： { src: 'images/xxx.jpg', caption: '说明文字' }
+];
+
+const itemsPerPage = 6;          // 每页显示数量
+let currentPage = 1;              // 当前页码
+
+const galleryGrid = document.querySelector('.gallery-grid');
+const prevBtn = document.getElementById('prevPage');
+const nextBtn = document.getElementById('nextPage');
+const pageInfo = document.getElementById('pageInfo');
+
+// 计算总页数
+const totalPages = Math.ceil(galleryItems.length / itemsPerPage);
+
+// 渲染指定页码
+function renderPage(page) {
+    // 计算当前页数据起始索引
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageData = galleryItems.slice(start, end);
+
+    // 清空网格并重新填充
+    galleryGrid.innerHTML = '';
+    pageData.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'gallery-item';
+        itemDiv.innerHTML = `
+            <img src="${item.src}" alt="${item.caption}">
+            <div class="caption">${item.caption}</div>
+        `;
+        galleryGrid.appendChild(itemDiv);
+    });
+
+    // 更新分页按钮状态
+    prevBtn.disabled = (page === 1);
+    nextBtn.disabled = (page === totalPages);
+    pageInfo.textContent = `第 ${page} / ${totalPages} 页`;
+}
+
+// 上一页
+prevBtn.addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage);
+    }
+});
+
+// 下一页
+nextBtn.addEventListener('click', () => {
+    if (currentPage < totalPages) {
+        currentPage++;
+        renderPage(currentPage);
+    }
+});
+
+// 初始化渲染第一页
+renderPage(currentPage);
+
+// 获取跳转相关元素
+const jumpInput = document.getElementById('jumpPage');
+const jumpBtn = document.getElementById('jumpBtn');
+
+// 跳转函数
+function goToPage() {
+    let page = parseInt(jumpInput.value, 10);
+    if (isNaN(page) || page < 1) page = 1;
+    if (page > totalPages) page = totalPages;
+    if (page !== currentPage) {
+        currentPage = page;
+        renderPage(currentPage);
+    }
+    jumpInput.value = ''; // 清空输入（可选）
+}
+
+// 点击跳转按钮
+jumpBtn.addEventListener('click', goToPage);
+
+// 输入框按回车跳转
+jumpInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        goToPage();
+    }
+});
+
+// 可选：输入框失去焦点时自动跳转（根据需求）
+// jumpInput.addEventListener('blur', goToPage);
+
+document.addEventListener('DOMContentLoaded', function() {
+        const btnOriginal = document.getElementById('btn-original');
+        const btnCandy = document.getElementById('btn-candy');
+        const btnForest = document.getElementById('btn-forest');
+        const btnPixel = document.getElementById('btn-pixel');
+        const body = document.body;
+        const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
+
+        // 从 localStorage 读取保存的主题，若没有则默认 'theme-original'
+        const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
+        body.className = savedTheme;
+
+        // 根据当前 body 类名设置对应按钮为 active
+        function setActiveButtonFromBodyClass() {
+            allBtns.forEach(btn => btn.classList.remove('active'));
+            if (body.classList.contains('theme-original')) {
+                btnOriginal.classList.add('active');
+            } else if (body.classList.contains('theme-candy')) {
+                btnCandy.classList.add('active');
+            } else if (body.classList.contains('theme-forest')) {
+                btnForest.classList.add('active');
+            } else if (body.classList.contains('theme-pixel')) {
+                btnPixel.classList.add('active');
+            }
+        }
+
+        // 初始化按钮激活状态
+        setActiveButtonFromBodyClass();
+
+        // 保存主题到 localStorage 的函数
+        function saveTheme(themeClass) {
+            localStorage.setItem('selectedTheme', themeClass);
+        }
+
+        // 为每个按钮绑定点击事件，切换主题并保存
+        btnOriginal.addEventListener('click', function() {
+            body.className = 'theme-original';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-original');
+        });
+        btnCandy.addEventListener('click', function() {
+            body.className = 'theme-candy';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-candy');
+        });
+        btnForest.addEventListener('click', function() {
+            body.className = 'theme-forest';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-forest');
+        });
+        btnPixel.addEventListener('click', function() {
+            body.className = 'theme-pixel';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-pixel');
+        });
+    });
     </script>
 </body>
 </html>
