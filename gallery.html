@@ -716,6 +716,32 @@
     border-color: #6b8e23;
     box-shadow: 0 0 0 2px rgba(107,142,35,0.2);
 }
+        /*----- 以上三种主题的按钮修正 -----*/
+        .theme-original .nav li a {
+            box-shadow: 0 4px 0 #d45e7a; /* 深粉色阴影，模拟立体按压效果 */
+        }
+        .theme-original .back-btn {
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        .theme-original .nav li a:hover,
+        .theme-original .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a; /* hover时阴影更高，配合上移 */
+        }
+        .theme-forest .nav li a,
+        .theme-forest .back-btn {
+            border: 2px solid #4f7317; /* 深绿色边框，与文字颜色呼应 */
+        }
+        /* 普通状态添加半透明白色边框 */
+        .theme-candy .nav li a,
+        .theme-candy .back-btn {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        /* hover时边框变为纯白（保留原有渐变背景和缩放效果） */
+        .theme-candy .nav li a:hover,
+        .theme-candy .back-btn:hover {
+            border-color: #fff;
+        }
 
 /* 复古像素风 */
 .theme-pixel .page-btn {

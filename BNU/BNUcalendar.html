@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校历 - 熊熊大学BNU</title>
+    <style>
+        /* ----- 基础重置 & 全局变量 (与主页完全一致) ----- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+        }
+        body {
+            min-height: 100vh;
+            padding: 20px;
+            transition: all 0.3s ease;
+            font-family: "幼圆", "Comic Sans MS", monospace;
+        }
+        .page-layout {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+        .theme-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #444;
+            text-align: center;
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .theme-switcher {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 120px;
+            margin-top: 20px;
+        }
+        .theme-btn {
+            padding: 12px 8px;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: bold;
+            width: 100%;
+        }
+        .theme-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        /* 激活按钮样式：手指图标 + 脉冲动画 */
+        .theme-btn.active {
+            position: relative;
+            animation: pulse 1.5s infinite ease-in-out;
+            padding-left: 36px;
+        }
+        .theme-btn.active::before {
+            content: "☞";
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 2px #000;
+            font-family: "幼圆";
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+            50% { transform: scale(1.02); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+            100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        }
+
+        .container {
+            flex: 1;
+            padding: 30px;
+            border-radius: 16px;
+        }
+
+        /* 导航菜单 (保留首页和相册) */
+        .nav {
+            justify-content: center;
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
+        .nav li a {
+            display: block;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+        .nav li a:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 标题区域 */
+        .title-with-images {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .side-gif {
+            width: 80px;
+            border-radius: 50%;
+        }
+        h1 {
+            font-size: 36px;
+            margin: 20px 0;
+            text-align: center;
+            padding: 15px;
+            border-radius: 12px;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        /* 校历图片区域：自适应容器宽度 */
+        .calendar-wrapper {
+            margin: 30px 80px 20px;
+            text-align: center;
+        }
+        .calendar-image {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+            border-radius: 12px; /* 可选，增加一点圆润感，不影响自适应 */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* 柔和阴影，提升质感 */
+            transition: all 0.2s ease;
+        }
+        .svg-image {
+            width: 280px;          /* 相对父容器宽度 */
+            max-width: 250px;    /* 最大宽度限制，避免过大 */
+            height: auto;        /* 保持比例 */
+        }
+        .back-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            color: #fff;
+            margin: 0 5px;
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .year-switch {
+            margin: 0 5px;
+        }
+        .back-btn.active-year {
+            filter: brightness(1.5);
+            box-shadow: 0 0 0 2px #fff;
+        }
+
+        /* ----- 像素主题专用字体 ----- */
+        @font-face {
+            font-family: "Minecraft AE";
+            src: url("../fonts/Minecraft AE(ch).ttf") format("truetype");
+        }
+
+        /* ========== 四个主题的样式 ========== */
+
+        /* ---- 卡通童趣风 ---- */
+        body.theme-original {
+            background-color: #fff9e6;
+            color: #333;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffb6c1' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .theme-original .container {
+            background: #fff;
+            border: 4px solid #ff9eaa;
+            box-shadow: 0 0 0 8px rgba(255,158,170,0.1);
+        }
+        .theme-original h1 {
+            color: #ff6b8b;
+            text-shadow: 2px 2px 0 #ffe0e7;
+        }
+        .theme-original .nav {
+            background-color: #87ceeb;
+            border: 3px solid #4fc3f7;
+        }
+        .theme-original .nav li a {
+            background-color: #4fc3f7;
+        }
+        .theme-original .nav li a:hover {
+            background-color: #2196f3;
+        }
+        .theme-original .nav li a.active {
+            background-color: #ff6b8b;
+        }
+        .theme-original .calendar-image {
+            border: 4px dashed #ff6b8b;
+            border-radius: 16px;
+        }
+        .theme-original .back-btn {
+            background-color: #ff6b8b; /* 使用h1颜色或主题主色 */
+        }
+        .theme-original .nav li a {
+            box-shadow: 0 4px 0 #d45e7a; /* 深粉色阴影，模拟立体按压效果 */
+        }
+        .theme-original .back-btn {
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        .theme-original .nav li a:hover,
+        .theme-original .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a; /* hover时阴影更高，配合上移 */
+        }
+
+        /* ---- 糖果缤纷风 ---- */
+        body.theme-candy {
+            background-color: #fff0f5;
+            color: #555;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffc0cb' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .theme-candy .container {
+            background: linear-gradient(145deg,#fff 0,#fff9fb 100%);
+            border: 5px solid #ff85a2;
+            border-radius: 24px;
+            box-shadow: 0 0 0 10px rgba(255,133,162,0.1), 0 8px 24px rgba(0,0,0,0.08);
+        }
+        .theme-candy h1 {
+            background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-size: 38px;
+            text-shadow: none;
+            letter-spacing: 1px;
+        }
+        .theme-candy .nav {
+            background: linear-gradient(90deg,#87cefa,#99ddff);
+            border: 3px solid #66c2ff;
+            border-radius: 50px;
+        }
+        .theme-candy .nav li a {
+            background: linear-gradient(145deg,#66c2ff,#4fc3f7);
+            border-radius: 50px;
+            border: 2px solid transparent;
+        }
+        .theme-candy .nav li a:hover {
+            background: linear-gradient(145deg,#4fc3f7,#2196f3);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            border-color: #fff;
+        }
+        .theme-candy .nav li a.active {
+            background: linear-gradient(145deg,#ff6b8b,#ff85a2);
+            box-shadow: 0 6px 12px rgba(255,107,139,0.3);
+        }
+        .theme-candy .side-gif {
+            border: 4px solid #ffdd55;
+            box-shadow: 0 0 0 4px rgba(255,221,85,0.2);
+        }
+        .theme-candy .calendar-image {
+            border: 4px solid #ff85a2;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(255,133,162,0.2);
+        }
+        .theme-candy .back-btn {
+            background: linear-gradient(145deg,#ff6b8b,#ff85a2);
+            border: 2px solid transparent;
+            border-radius: 50px; /* 与导航圆角一致 */
+        }
+        .theme-candy .back-btn:hover {
+            background: linear-gradient(145deg,#ff85a2,#ff6b8b);
+            transform: translateY(-2px) scale(1.05);
+            border-color: #fff;
+        }
+        /* 普通状态添加半透明白色边框 */
+        .theme-candy .nav li a,
+        .theme-candy .back-btn {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        /* hover时边框变为纯白（保留原有渐变背景和缩放效果） */
+        .theme-candy .nav li a:hover,
+        .theme-candy .back-btn:hover {
+            border-color: #fff;
+        }
+        /* ---- 森林治愈风 ---- */
+        body.theme-forest {
+            background-color: #f5f9f0;
+            color: #4a5a45;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23a8d08d' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .theme-forest .container {
+            background: #fff;
+            border: 4px solid #c19a6b;
+            box-shadow: 0 0 0 8px rgba(193,154,107,0.1), 0 8px 16px rgba(0,0,0,0.08);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.8 2.8c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6zm29 0c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6zm29 0c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6zm29 0c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6z' fill='%23f8f5f0' fill-opacity='0.6' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .theme-forest h1 {
+            color: #6b8e23;
+            text-shadow: 2px 2px 0 #e8f0d6;
+        }
+        .theme-forest .nav {
+            background-color: #8fbc8f;
+            border: 3px solid #6f9e6f;
+        }
+        .theme-forest .nav li a {
+            background-color: #7ccd7c;
+        }
+        .theme-forest .nav li a:hover {
+            background-color: #66c266;
+        }
+        .theme-forest .nav li a.active {
+            background-color: #c19a6b;
+        }
+        .theme-forest .side-gif {
+            border: 3px solid #c19a6b;
+        }
+        .theme-forest .calendar-image {
+            border: 4px solid #6b8e23;
+            border-radius: 8px;
+        }
+        .theme-forest .back-btn {
+            background-color: #6b8e23; /* 使用h1颜色 */
+        }
+        .theme-forest .back-btn:hover {
+            background-color: #4f7317;
+        }
+        .theme-forest .nav li a,
+        .theme-forest .back-btn {
+            border: 2px solid #4f7317; /* 深绿色边框，与文字颜色呼应 */
+}
+        /* ---- 我的世界像素风 (使用 Minecraft AE 字体) ---- */
+        body.theme-pixel {
+            font-family: "Minecraft AE", "幼圆", "Comic Sans MS", monospace;
+            background-color: #e0e0e0;
+            color: #2a2a2a;
+            background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23969696' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            font-size: 16px;
+            line-height: 1;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+            font-smooth: never;
+            text-rendering: optimizeSpeed;
+        }
+        .theme-pixel .container {
+            background: #c69c6d;
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm8 8h8v8H8V8zM0 8h8v8H0V8zm8 0h8v8H8V8z' fill='%23966c42' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border-radius: 0;
+            border: 6px solid #8b5a2b;
+            box-shadow: 8px 8px 0 #4a3218;
+        }
+        .theme-pixel h1 {
+            color: #fff;
+            font-size: 24px;
+            text-shadow: 3px 3px 0 #000;
+            background: #808080;
+            background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h4v4H0V0zm1 1h2v2H1V1zm2 0h2v2H3V1zm-2 2h2v2H1V3zm2 0h2v2H3V3z' fill='%23696969' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+            padding: 10px;
+            border: 4px solid #000;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 2px;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .theme-pixel .nav {
+            background: #4040a0;
+            border: 4px solid #000;
+            border-radius: 0;
+            gap: 8px;
+            background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 8 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm1 1h6v6H1V1z' fill='%23303080' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        .theme-pixel .nav li a {
+            border-radius: 0;
+            background-color: #6060c0;
+            border: 4px solid #000;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 4px 4px 0 #202080;
+            color: #fff;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .theme-pixel .nav li a:hover {
+            background-color: #7070d0;
+            transform: translate(2px,2px);
+            box-shadow: 2px 2px 0 #202080;
+        }
+        .theme-pixel .nav li a.active {
+            background-color: #ff3030;
+            border: 4px solid #000;
+            box-shadow: 4px 4px 0 #a01010;
+        }
+        .theme-pixel .side-gif {
+            border-radius: 0;
+            border: 4px solid #ffaa00;
+            box-shadow: 4px 4px 0 #000;
+            padding: 4px;
+            background-color: #f0f0f0;
+            image-rendering: pixelated;
+        }
+        .theme-pixel .calendar-image {
+            border-radius: 0;
+            border: 6px solid #507050;
+            box-shadow: 8px 8px 0 #000;
+            image-rendering: smooth;
+        }
+        .theme-pixel .back-btn {
+            background-color: #507050;
+            border: 4px solid #000;
+            border-radius: 0;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 4px 4px 0 #2a3a2a;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .theme-pixel .back-btn:hover {
+            background-color: #60a060;
+            transform: translate(2px,2px);
+            box-shadow: 2px 2px 0 #2a3a2a;
+        }
+
+        /* 主题按钮配色 */
+        #btn-original { background-color: #ff6b8b; }
+        #btn-candy { background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa); }
+        #btn-forest { background-color: #6b8e23; }
+        #btn-pixel {
+            background-color: #8b5a2b;
+            font-family: "Minecraft AE", monospace;
+            font-size: 13px;
+            text-shadow: 1px 1px 0 #000;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* 校徽矢量图样式 (来自之前的需求，保持主题边框) */
+        .svg-image {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+            transition: border 0.2s ease, box-shadow 0.2s ease;
+        }
+        .theme-original .svg-image {
+            border: 4px dashed #ff6b8b;
+            border-radius: 16px;
+        }
+        .theme-candy .svg-image {
+            border: 4px solid #ff85a2;
+            border-radius: 30px;
+            box-shadow: 0 4px 12px rgba(255,133,162,0.2);
+        }
+        .theme-forest .svg-image {
+            border: 4px solid #6b8e23;
+            border-radius: 8px;
+        }
+        .theme-pixel .svg-image {
+            border: 4px solid #000;
+            border-radius: 0;
+            box-shadow: 4px 4px 0 #2a3a2a;
+        }
+
+        /* ----- 移动端基础适配 (与主页一致) ----- */
+        @media (max-width: 768px) {
+            .page-layout {
+                flex-direction: column;
+                gap: 15px;
+                max-width: 100%;
+                padding: 10px;
+            }
+            .theme-switcher {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                margin-top: 0;
+            }
+            .theme-btn {
+                padding: 10px 15px;
+                font-size: 12px;
+                width: auto;
+            }
+            .theme-btn.active::before {
+                left: 12px;
+            }
+            .container {
+                max-width: 100%;
+                margin: 0 auto;
+                padding: 20px;
+                border-width: 3px !important;
+            }
+            h1 {
+                font-size: 28px;
+            }
+            .nav {
+                flex-direction: column;
+                gap: 8px;
+                padding: 8px;
+            }
+            .nav li a {
+                padding: 10px;
+                font-size: 16px;
+                text-align: center;
+            }
+            .side-gif {
+                width: 50px;
+            }
+            .title-with-images {
+                gap: 15px;
+            }
+            .calendar-wrapper {
+                margin: 30px 0 20px;
+            }
+            .svg-image {
+                width: 60%;
+                max-width: 150px;
+                height: auto;
+            }
+            .back-btn {
+                padding: 4px 8px;
+                font-size: 11px;
+            }
+            .year-switch {
+                margin: 2px; /* 减小间距，允许换行 */
+                white-space: nowrap;
+            }
+            /* 像素主题移动端适配 */
+            .theme-pixel .container {
+                border-width: 4px;
+                box-shadow: 4px 4px 0 #4a3218;
+            }
+            .theme-pixel h1 {
+                font-size: 20px;
+                padding: 8px;
+                border-width: 3px;
+                text-shadow: 2px 2px 0 #000;
+                -webkit-font-smoothing: none;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            .theme-pixel .nav {
+                border-width: 3px;
+            }
+            .theme-pixel .nav li a {
+                border-width: 3px;
+                box-shadow: 3px 3px 0 #202080;
+                -webkit-font-smoothing: none;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            .theme-pixel .side-gif {
+                border-width: 3px;
+                box-shadow: 3px 3px 0 #000;
+            }
+            .theme-pixel .back-btn,
+            .theme-pixel .svg-image {
+                border-width: 3px;
+                box-shadow: 3px 3px 0 #2a3a2a;
+            }
+        }
+
+        @media (min-width: 601px) and (max-width: 768px) {
+            .nav {
+                flex-direction: row;
+            }
+        }
+    </style>
+</head>
+<body class="theme-original">
+    <div class="page-layout">
+        <div class="theme-switcher">
+            <div class="theme-title">主题选择</div>
+            <button class="theme-btn" id="btn-original">卡通童趣</button>
+            <button class="theme-btn" id="btn-candy">糖果缤纷</button>
+            <button class="theme-btn" id="btn-forest">森林治愈</button>
+            <button class="theme-btn" id="btn-pixel">复古像素</button>
+        </div>
+        <div class="container">
+            <!-- 导航菜单：首页、相册、BNU (BNU保持高亮，表示当前在BNU板块) -->
+            <ul class="nav">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="../gallery.html">相册</a></li>
+                <li><a href="BNUindex.html" class="active">BNU</a></li>
+            </ul>
+
+            <div class="title-with-images">
+                <img src="images/pigsleepy.webp" alt="左侧动图" class="side-gif">
+                <h1>BNU-校历</h1>
+                <img src="images/pigsleep.webp" alt="右侧动图" class="side-gif">
+            </div>
+            <div style="position: relative; margin-bottom: 15px; min-height: 40px;">
+                <!-- 返回按钮（左对齐） -->
+                <a href="BNUindex.html" class="back-btn" style="position: relative; z-index: 2;">← 返回</a>
+                <!-- 年份按钮组（绝对居中） -->
+                <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1; white-space: nowrap;">
+                    <button class="back-btn year-switch" data-year="2024秋">大一上</button>
+                    <button class="back-btn year-switch" data-year="2025春">大一下</button>
+                    <button class="back-btn year-switch" data-year="2025秋">大二上</button>
+                    <button class="back-btn year-switch" data-year="2026春">大二下</button>
+                </div>
+            </div>
+
+            <!-- 校历图片区域：自适应宽度，请将您的校历图片命名为 calendar.jpg 并放在 images 文件夹下，或修改 src 路径 -->
+            <div class="calendar-wrapper">
+                <img src="images/BNU2026春.png" alt="校历" class="calendar-image">
+            </div>
+            <!-- 在校历图片下方添加下载按钮 -->
+            <div class="download-wrapper" style="text-align: center; margin-top: 15px;">
+                <a href="images/BNU2026春.png" download="BNU2026春.png" class="back-btn">下载校历</a>
+            </div>
+            <!-- 底部校徽矢量图 (保留原主题边框样式) -->
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="https://www.bnu.edu.cn/">
+                    <img src="images/BNUlogo.svg" alt="BNU矢量图" class="svg-image">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnOriginal = document.getElementById('btn-original');
+            const btnCandy = document.getElementById('btn-candy');
+            const btnForest = document.getElementById('btn-forest');
+            const btnPixel = document.getElementById('btn-pixel');
+            const body = document.body;
+            const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
+
+            // 从 localStorage 读取保存的主题，若没有则默认 'theme-original'
+            const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
+            body.className = savedTheme;
+
+            function setActiveButtonFromBodyClass() {
+                allBtns.forEach(btn => btn.classList.remove('active'));
+                if (body.classList.contains('theme-original')) {
+                    btnOriginal.classList.add('active');
+                } else if (body.classList.contains('theme-candy')) {
+                    btnCandy.classList.add('active');
+                } else if (body.classList.contains('theme-forest')) {
+                    btnForest.classList.add('active');
+                } else if (body.classList.contains('theme-pixel')) {
+                    btnPixel.classList.add('active');
+                }
+            }
+
+            setActiveButtonFromBodyClass();
+
+            function saveTheme(themeClass) {
+                localStorage.setItem('selectedTheme', themeClass);
+            }
+
+            btnOriginal.addEventListener('click', function() {
+                body.className = 'theme-original';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-original');
+            });
+            btnCandy.addEventListener('click', function() {
+                body.className = 'theme-candy';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-candy');
+            });
+            btnForest.addEventListener('click', function() {
+                body.className = 'theme-forest';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-forest');
+            });
+            btnPixel.addEventListener('click', function() {
+                body.className = 'theme-pixel';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-pixel');
+            });
+
+            // 年份切换功能
+            const yearButtons = document.querySelectorAll('.year-switch');
+            const calendarImage = document.querySelector('.calendar-image');
+            const downloadLink = document.querySelector('.download-wrapper a');
+
+            // 初始化时设置2026按钮为激活状态（可选）
+            yearButtons.forEach(btn => {
+                if (btn.dataset.year === '2026春') {
+                    btn.classList.add('active-year');
+                }
+                btn.addEventListener('click', function() {
+                    const year = this.dataset.year;
+                    // 更新校历图片
+                    calendarImage.src = `images/BNU${year}.png`;
+                    // 更新下载链接
+                    downloadLink.href = `images/BNU${year}.png`;
+                    downloadLink.download = `BNU${year}.png`;
+
+                    // 切换激活状态
+                    yearButtons.forEach(btn => btn.classList.remove('active-year'));
+                    this.classList.add('active-year');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

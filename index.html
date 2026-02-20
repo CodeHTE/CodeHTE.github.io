@@ -241,6 +241,9 @@
         }
         .theme-original .nav li a:hover { background-color: #2196f3; }
         .theme-original .nav li a.active { background-color: #ff6b8b; }
+        .theme-original .back-btn {
+            background-color: #ff6b8b; /* 使用h1颜色或主题主色 */
+        }
 
         /* ---- 糖果缤纷风 ---- */
         body.theme-candy {
@@ -328,6 +331,33 @@
         .theme-forest audio {
             border: 3px solid #c19a6b;
             background-color: #f8f5f0;
+        }
+        
+        /*----- 以上三种主题的按钮修正 -----*/
+        .theme-original .nav li a {
+            box-shadow: 0 4px 0 #d45e7a; /* 深粉色阴影，模拟立体按压效果 */
+        }
+        .theme-original .back-btn {
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        .theme-original .nav li a:hover,
+        .theme-original .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a; /* hover时阴影更高，配合上移 */
+        }
+        .theme-forest .nav li a,
+        .theme-forest .back-btn {
+            border: 2px solid #4f7317; /* 深绿色边框，与文字颜色呼应 */
+        }
+        /* 普通状态添加半透明白色边框 */
+        .theme-candy .nav li a,
+        .theme-candy .back-btn {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        /* hover时边框变为纯白（保留原有渐变背景和缩放效果） */
+        .theme-candy .nav li a:hover,
+        .theme-candy .back-btn:hover {
+            border-color: #fff;
         }
 
         /* ---- 我的世界像素风 (使用 Minecraft AE 字体) ---- */
@@ -495,6 +525,8 @@
             <ul class="nav">
                 <li><a href="index.html" class="active">首页</a></li>
                 <li><a href="gallery.html">相册</a></li>
+                <li><a href="#">影集</a></li>
+                <li><a href="#">地图</a></li>
                 <li><a href="BNU/BNUindex.html">BNU</a></li>
             </ul>
             <div class="title-with-images">
