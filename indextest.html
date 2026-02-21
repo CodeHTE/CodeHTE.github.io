@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>熊熊Land-online</title>
+    <title>🐻熊熊Land - online</title>
     <style>
         /* ----- 基础重置 & 全局变量 ----- */
         * {
@@ -241,6 +241,9 @@
         }
         .theme-original .nav li a:hover { background-color: #2196f3; }
         .theme-original .nav li a.active { background-color: #ff6b8b; }
+        .theme-original .back-btn {
+            background-color: #ff6b8b; /* 使用h1颜色或主题主色 */
+        }
 
         /* ---- 糖果缤纷风 ---- */
         body.theme-candy {
@@ -328,6 +331,33 @@
         .theme-forest audio {
             border: 3px solid #c19a6b;
             background-color: #f8f5f0;
+        }
+        
+        /*----- 以上三种主题的按钮修正 -----*/
+        .theme-original .nav li a {
+            box-shadow: 0 4px 0 #d45e7a; /* 深粉色阴影，模拟立体按压效果 */
+        }
+        .theme-original .back-btn {
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        .theme-original .nav li a:hover,
+        .theme-original .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a; /* hover时阴影更高，配合上移 */
+        }
+        .theme-forest .nav li a,
+        .theme-forest .back-btn {
+            border: 2px solid #4f7317; /* 深绿色边框，与文字颜色呼应 */
+        }
+        /* 普通状态添加半透明白色边框 */
+        .theme-candy .nav li a,
+        .theme-candy .back-btn {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+        /* hover时边框变为纯白（保留原有渐变背景和缩放效果） */
+        .theme-candy .nav li a:hover,
+        .theme-candy .back-btn:hover {
+            border-color: #fff;
         }
 
         /* ---- 我的世界像素风 (使用 Minecraft AE 字体) ---- */
@@ -480,7 +510,150 @@
             border-radius: 20px;
         }
     }
-    </style>
+
+        /* ========== 新增搜索栏样式 ========== */
+        .search-container {
+            margin: 20px 0 30px;
+            text-align: center;
+        }
+        .search-container form {
+            display: flex;
+            max-width: 700px;
+            margin: 0 auto;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .search-container input {
+            flex: 1 1 200px;
+            padding: 12px 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+        .search-container input:focus {
+            outline: none;
+            border-color: #ff9eaa; /* 默认使用原主题的粉色调，各主题可覆盖 */
+        }
+        .search-container button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            font-size: 16px;
+            background-color: #4fc3f7; /* 默认蓝色，后续被主题覆盖 */
+            box-shadow: 0 4px 0 #d45e7a; /* 默认阴影，后续可覆盖 */
+        }
+        .search-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+
+        /* 各主题下搜索框的专属样式 */
+        .theme-original .search-container input:focus {
+            border-color: #ff6b8b;
+        }
+        .theme-original .search-container button {
+            background-color: #4fc3f7;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        .theme-original .search-container button:hover {
+            background-color: #2196f3;
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+
+        .theme-candy .search-container input:focus {
+            border-color: #ff85a2;
+        }
+        .theme-candy .search-container button {
+            background: linear-gradient(145deg,#66c2ff,#4fc3f7);
+            border: 2px solid transparent;
+            box-shadow: none;
+        }
+        .theme-candy .search-container button:hover {
+            background: linear-gradient(145deg,#4fc3f7,#2196f3);
+            border-color: #fff;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .theme-forest .search-container input:focus {
+            border-color: #6b8e23;
+        }
+        .theme-forest .search-container button {
+            background-color: #7ccd7c;
+            border: 2px solid #4f7317;
+            box-shadow: none;
+        }
+        .theme-forest .search-container button:hover {
+            background-color: #66c266;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .theme-pixel .search-container input {
+            border-radius: 0;
+            border: 4px solid #000;
+            background-color: #f0f0f0;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .theme-pixel .search-container input:focus {
+            border-color: #ffaa00;
+        }
+        .theme-pixel .search-container button {
+            border-radius: 0;
+            background-color: #6060c0;
+            border: 4px solid #000;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 4px 4px 0 #202080;
+            color: #fff;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .theme-pixel .search-container button:hover {
+            background-color: #7070d0;
+            transform: translate(2px,2px);
+            box-shadow: 2px 2px 0 #202080;
+        }
+
+/* 移动端搜索框适配 - 左右排列 */
+@media (max-width: 768px) {
+    .search-container form {
+        flex-wrap: nowrap;        /* 禁止换行，强制左右排列 */
+        gap: 8px;                 /* 输入框与按钮之间的间距 */
+    }
+    .search-container input {
+        flex: 1 1 auto;           /* 输入框自动伸缩，占据剩余空间 */
+        min-width: 100px;         /* 防止输入框被压缩得太小 */
+    }
+    .search-container button {
+        flex: 0 0 auto;           /* 按钮宽度由内容决定，不伸缩 */
+        white-space: nowrap;      /* 按钮文字不换行 */
+        padding-left: 12px;
+        padding-right: 12px;
+        font-size: 14px;          /* 适当减小字体以适应移动端 */
+    }
+}
+
+/* 针对超小屏幕（如宽度 ≤ 360px）进一步调整 */
+@media (max-width: 360px) {
+    .search-container button {
+        padding-left: 8px;
+        padding-right: 8px;
+        font-size: 12px;
+    }
+}    
+</style>
 </head>
 <body class="theme-original">
     <div class="page-layout">
@@ -495,7 +668,19 @@
             <ul class="nav">
                 <li><a href="index.html" class="active">首页</a></li>
                 <li><a href="gallery.html">相册</a></li>
+                <li><a href="#">影集</a></li>
+                <li><a href="maptest.html">地图</a></li>
+                <li><a href="BNU/BNUindex.html">BNU</a></li>
             </ul>
+
+            <!-- 新增的 Bing 搜索栏 -->
+            <div class="search-container">
+                <form action="https://www.bing.com/search" method="get" target="_blank">
+                    <input type="text" name="q" placeholder="搜搜熊感兴趣的内容..." required>
+                    <button type="submit">Bing搜索</button>
+                </form>
+            </div>
+
             <div class="title-with-images">
                 <img src="images/left.gif" alt="左侧动图" class="side-gif">
                 <h1>你好，玫熊！</h1>
@@ -531,11 +716,13 @@
             const body = document.body;
             const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
 
-            // 根据当前body类设置对应按钮为active
+            // 从 localStorage 读取保存的主题，若没有则默认 'theme-original'
+            const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
+            body.className = savedTheme;
+
+            // 根据当前 body 类名设置对应按钮为 active
             function setActiveButtonFromBodyClass() {
-                // 移除所有按钮的active类
                 allBtns.forEach(btn => btn.classList.remove('active'));
-                // 根据body类添加对应按钮的active类
                 if (body.classList.contains('theme-original')) {
                     btnOriginal.classList.add('active');
                 } else if (body.classList.contains('theme-candy')) {
@@ -547,25 +734,34 @@
                 }
             }
 
-            // 初始设置
+            // 初始化按钮激活状态
             setActiveButtonFromBodyClass();
 
-            // 为每个按钮绑定点击事件
+            // 保存主题到 localStorage 的函数
+            function saveTheme(themeClass) {
+                localStorage.setItem('selectedTheme', themeClass);
+            }
+
+            // 为每个按钮绑定点击事件，切换主题并保存
             btnOriginal.addEventListener('click', function() {
                 body.className = 'theme-original';
                 setActiveButtonFromBodyClass();
+                saveTheme('theme-original');
             });
             btnCandy.addEventListener('click', function() {
                 body.className = 'theme-candy';
                 setActiveButtonFromBodyClass();
+                saveTheme('theme-candy');
             });
             btnForest.addEventListener('click', function() {
                 body.className = 'theme-forest';
                 setActiveButtonFromBodyClass();
+                saveTheme('theme-forest');
             });
             btnPixel.addEventListener('click', function() {
                 body.className = 'theme-pixel';
                 setActiveButtonFromBodyClass();
+                saveTheme('theme-pixel');
             });
         });
     </script>

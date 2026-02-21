@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>熊熊Land - BNU</title>
+    <title>🐻熊熊Land - online</title>
     <style>
-        /* ----- 基础重置 & 全局变量 (与主页完全一致) ----- */
+        /* ----- 基础重置 & 全局变量 ----- */
         * {
             margin: 0;
             padding: 0;
@@ -17,7 +17,7 @@
             min-height: 100vh;
             padding: 20px;
             transition: all 0.3s ease;
-            font-family: "幼圆", "Comic Sans MS", monospace;
+            font-family: "幼圆", "Comic Sans MS", monospace; /* 默认幼圆，像素主题单独覆盖 */
         }
         .page-layout {
             display: flex;
@@ -26,16 +26,16 @@
             margin: 0 auto;
             align-items: flex-start;
         }
-        .theme-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #444;
-            text-align: center;
-            width: 100%;
-            border-bottom: 1px solid #ccc;
-            padding-bottom: 5px;
-        }
+.theme-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #444;
+    text-align: center;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5px;
+}
         .theme-switcher {
             display: flex;
             flex-direction: column;
@@ -57,37 +57,46 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        /* 激活按钮样式：手指图标 + 脉冲动画 */
-        .theme-btn.active {
-            position: relative;
-            animation: pulse 1.5s infinite ease-in-out;
-            padding-left: 36px;
-        }
-        .theme-btn.active::before {
-            content: "☞";
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 2px #000;
-            font-family: "幼圆";
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-            50% { transform: scale(1.02); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
-            100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        }
+        /* 当前激活主题按钮的样式 */
+.theme-btn.active {
+    position: relative;               /* 为伪元素定位 */
+    animation: pulse 1.5s infinite;   /* 同时添加动画 */
+    padding-left: 36px; /* 为图标留出空间 */
+}
+
+.theme-btn.active::before {
+    content: "☞";                     /* 符号 */
+    position: absolute;
+    left: 18px;                         /* 距离左侧距离 */
+    top: 50%;
+    transform: translateY(-50%);       /* 垂直居中 */
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;                       /* 黑色对勾，更通用 */
+    text-shadow: 0 0 2px #000;         /* 白色发光，适应深色背景 */
+    font-family: "幼圆";
+    /* 如需白色对勾，改为 color:#fff; text-shadow:0 0 2px #000; */
+}
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    50% {
+        transform: scale(1.02);               /* 轻微放大 */
+        box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+}
 
         .container {
             flex: 1;
             padding: 30px;
             border-radius: 16px;
         }
-
-        /* 导航菜单 (保留首页和相册) */
         .nav {
             justify-content: center;
             display: flex;
@@ -108,8 +117,6 @@
         .nav li a:hover {
             transform: translateY(-2px);
         }
-
-        /* 标题区域 */
         .title-with-images {
             display: flex;
             align-items: center;
@@ -132,37 +139,22 @@
             font-size: 18px;
             line-height: 1.6;
             margin: 15px 0;
-            text-align: center;
+            text-align: justify;
+        }
+        .responsive-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 16px;
+            margin: 20px 0;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        audio {
+            border-radius: 16px;
+            margin: 15px 0;
+            border: 3px solid #ff9eaa;
         }
 
-        /* 功能按钮组：两列网格布局 */
-        .feature-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 30px 0 20px;
-        }
-        .feature-btn {
-            display: inline-block;
-            padding: 12px 10px;
-            border-radius: 12px;          /* 与导航不同的基础圆角 */
-            font-weight: bold;
-            text-align: center;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-        }
-        .feature-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-        }
-        .svg-image {
-            width: 280px;          /* 相对父容器宽度 */
-            max-width: 250px;    /* 最大宽度限制，避免过大 */
-            height: auto;        /* 保持比例 */
-            }
-
-
-        /* 移动端基础适配 (与主页一致) */
+        /* ----- 移动端基础适配 ----- */
         @media (max-width: 768px) {
             .page-layout {
                 flex-direction: column;
@@ -211,42 +203,20 @@
             .title-with-images {
                 gap: 15px;
             }
-            /* 功能按钮在移动端变为单列 */
-            .feature-container {
-                grid-template-columns: 1fr;
-                gap: 10px;
-            }
-            
-            .feature-btn {
-                padding: 10px 12px;
-                font-size: 14px;
-            }
-            .svg-image {
-            width: 60%;          /* 相对父容器宽度 */
-            max-width: 150px;    /* 最大宽度限制，避免过大 */
-            height: auto;        /* 保持比例 */
-            }
         }
         @media (min-width: 601px) and (max-width: 768px) {
             .nav {
                 flex-direction: row;
             }
         }
-.svg-image {
-    max-width: 100%;
-    height: auto;
-    display: inline-block;
-    transition: border 0.2s ease, box-shadow 0.2s ease;
-}
+
         /* ----- 像素主题专用字体 ----- */
         @font-face {
             font-family: "Minecraft AE";
-            src: url("../fonts/Minecraft AE(ch).ttf") format("truetype");
+            src: url("fonts/Minecraft AE(ch).ttf") format("truetype");
         }
 
-        /* ========== 四个主题的样式 ========== */
-        /* 注意：导航区样式保持不变，功能按钮区单独设计以作区分 */
-
+        /* ========== 主题样式 ========== */
         /* ---- 卡通童趣风 ---- */
         body.theme-original {
             background-color: #fff9e6;
@@ -269,27 +239,12 @@
         .theme-original .nav li a {
             background-color: #4fc3f7;
         }
-        .theme-original .nav li a:hover {
-            background-color: #2196f3;
+        .theme-original .nav li a:hover { background-color: #2196f3; }
+        .theme-original .nav li a.active { background-color: #ff6b8b; }
+        .theme-original .back-btn {
+            background-color: #ff6b8b; /* 使用h1颜色或主题主色 */
         }
-        .theme-original .nav li a.active {
-            background-color: #ff6b8b;
-        }
-        /* 功能按钮：半透明白背景，粉色虚线边框，粉色文字 */
-        .theme-original .feature-btn {
-            background-color: rgba(255,255,255,0.8);
-            border: 2px dashed #ff6b8b;
-            color: #ff6b8b;
-            box-shadow: 0 4px 10px rgba(255,107,139,0.1);
-        }
-        .theme-original .feature-btn:hover {
-            background-color: rgba(255,255,255,1);
-            border-color: #ff4d6d;
-        }
-.theme-original .svg-image {
-    border: 4px dashed #ff6b8b;
-    border-radius: 16px;
-}
+
         /* ---- 糖果缤纷风 ---- */
         body.theme-candy {
             background-color: #fff0f5;
@@ -335,25 +290,17 @@
             border: 4px solid #ffdd55;
             box-shadow: 0 0 0 4px rgba(255,221,85,0.2);
         }
-        /* 功能按钮：浅粉渐变背景，半透明边框，渐变文字 */
-        .theme-candy .feature-btn {
-            background: linear-gradient(145deg,#ffe6f0,#fff0f5);
-            border: 2px solid rgba(255,133,162,0.5);
-            border-radius: 30px;
-            color: #ff6b8b;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-            box-shadow: 0 4px 12px rgba(255,133,162,0.2);
+        .theme-candy .responsive-img {
+            border-radius: 20px;
+            border: 5px solid #87cefa;
+            box-shadow: 0 10px 20px rgba(135,206,250,0.2);
         }
-        .theme-candy .feature-btn:hover {
-            background: linear-gradient(145deg,#ffd9e6,#ffe6f0);
-            border-color: #ff85a2;
-            transform: translateY(-2px);
+        .theme-candy audio {
+            border-radius: 50px;
+            border: 3px solid #ff85a2;
+            background: linear-gradient(145deg,#fff0f5,#ffe6ef);
         }
-.theme-candy .svg-image {
-    border: 4px solid #ff85a2;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(255, 133, 162, 0.2);
-}
+
         /* ---- 森林治愈风 ---- */
         body.theme-forest {
             background-color: #f5f9f0;
@@ -377,33 +324,15 @@
         .theme-forest .nav li a {
             background-color: #7ccd7c;
         }
-        .theme-forest .nav li a:hover {
-            background-color: #66c266;
-        }
-        .theme-forest .nav li a.active {
-            background-color: #c19a6b;
-        }
-        .theme-forest .side-gif {
+        .theme-forest .nav li a:hover { background-color: #66c266; }
+        .theme-forest .nav li a.active { background-color: #c19a6b; }
+        .theme-forest .side-gif { border: 3px solid #c19a6b; }
+        .theme-forest .responsive-img { border: 5px solid #8fbc8f; }
+        .theme-forest audio {
             border: 3px solid #c19a6b;
+            background-color: #f8f5f0;
         }
-        /* 功能按钮：亚麻色背景，深绿色边框，木质文字 */
-        .theme-forest .feature-btn {
-            background-color: #e0d6c0;
-            border: 2px solid #6b8e23;
-            border-radius: 8px;
-            color: #3a5e1c;
-            box-shadow: inset 0 1px 4px rgba(255,255,255,0.6), 0 4px 8px rgba(0,0,0,0.1);
-            font-weight: 600;
-        }
-        .theme-forest .feature-btn:hover {
-            background-color: #d2c5a8;
-            border-color: #4f7317;
-        }
-.theme-forest .svg-image {
-    border: 4px solid #6b8e23;
-    border-radius: 8px;
-}      
-
+        
         /*----- 以上三种主题的按钮修正 -----*/
         .theme-original .nav li a {
             box-shadow: 0 4px 0 #d45e7a; /* 深粉色阴影，模拟立体按压效果 */
@@ -431,9 +360,9 @@
             border-color: #fff;
         }
 
-  /* ---- 我的世界像素风 (使用 Minecraft AE 字体) ---- */
+        /* ---- 我的世界像素风 (使用 Minecraft AE 字体) ---- */
         body.theme-pixel {
-            font-family: "Minecraft AE", "幼圆", "Comic Sans MS", monospace;
+            font-family: "Minecraft AE", "幼圆", "Comic Sans MS", monospace; /* 像素主题专用字体链 */
             background-color: #e0e0e0;
             color: #2a2a2a;
             background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23969696' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
@@ -465,6 +394,12 @@
             margin-left: auto;
             margin-right: auto;
             letter-spacing: 2px;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .theme-pixel p {
+            font-size: 18px;
+            color: #f0f0f0;
             -webkit-font-smoothing: none;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -502,29 +437,18 @@
             padding: 4px;
             background-color: #f0f0f0;
         }
-        /* 功能按钮：像素风不同色块，绿色边框，亮色背景 */
-        .theme-pixel .feature-btn {
-            background-color: #507050;
-            border: 4px solid #000;
+        .theme-pixel .responsive-img {
             border-radius: 0;
-            color: #fff;
-            text-shadow: 2px 2px 0 #000;
-            box-shadow: 4px 4px 0 #2a3a2a;
-            font-family: "Minecraft AE", monospace;
-            -webkit-font-smoothing: none;
-            -moz-osx-font-smoothing: grayscale;
+            border: 6px solid #507050;
+            box-shadow: 8px 8px 0 #000;
         }
-        .theme-pixel .feature-btn:hover {
-            background-color: #60a060;
-            transform: translate(2px,2px);
-            box-shadow: 2px 2px 0 #2a3a2a;
+        .theme-pixel audio {
+            border-radius: 0;
+            border: 4px solid #8b5a2b;
+            background: #c69c6d;
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm8 8h8v8H8V8zM0 8h8v8H0V8zm8 0h8v8H8V8z' fill='%23966c42' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            box-shadow: 4px 4px 0 #4a3218;
         }
-        .theme-pixel .svg-image {
-    border: 4px solid #000;
-    border-radius: 0;
-    box-shadow: 4px 4px 0 #2a3a2a;
-}
-
         /* 像素主题移动端适配 */
         @media (max-width: 768px) {
             .theme-pixel {
@@ -543,11 +467,8 @@
                 -webkit-font-smoothing: none;
                 -moz-osx-font-smoothing: grayscale;
             }
-            .theme-pixel .nav {
-                border-width: 3px;
-            }
-            .theme-pixel .nav li a,
-            .theme-pixel .feature-btn {
+            .theme-pixel .nav { border-width: 3px; }
+            .theme-pixel .nav li a {
                 border-width: 3px;
                 box-shadow: 3px 3px 0 #202080;
                 -webkit-font-smoothing: none;
@@ -557,9 +478,17 @@
                 border-width: 3px;
                 box-shadow: 3px 3px 0 #000;
             }
+            .theme-pixel .responsive-img {
+                border-width: 4px;
+                box-shadow: 4px 4px 0 #000;
+            }
+            .theme-pixel audio {
+                border-width: 3px;
+                box-shadow: 3px 3px 0 #4a3218;
+            }
         }
 
-        /* 主题按钮配色 */
+        /* ----- 主题按钮配色（保持不变）----- */
         #btn-original { background-color: #ff6b8b; }
         #btn-candy { background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa); }
         #btn-forest { background-color: #6b8e23; }
@@ -572,13 +501,159 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* 移动端微调 */
-        @media (max-width: 768px) {
-            #btn-pixel { font-size: 12px; }
-            .theme-candy .nav { border-radius: 20px; }
+        /* ----- 移动端修正 ----- */
+         @media (max-width: 768px) {
+        #btn-pixel {
+            font-size: 12px;
         }
-        
-    </style>
+        .theme-candy .nav {
+            border-radius: 20px;
+        }
+    }
+
+        /* ========== 新增搜索栏样式 ========== */
+        .search-container {
+            margin: 20px 0 30px;
+            text-align: center;
+        }
+        .search-container form {
+            display: flex;
+            max-width: 700px;
+            margin: 0 auto;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .search-container input {
+            flex: 1 1 200px;
+            padding: 12px 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            background-color: #fff;
+            transition: border-color 0.2s;
+        }
+        .search-container input:focus {
+            outline: none;
+            border-color: #ff9eaa; /* 默认使用原主题的粉色调，各主题可覆盖 */
+        }
+        .search-container button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            font-size: 16px;
+            background-color: #4fc3f7; /* 默认蓝色，后续被主题覆盖 */
+            box-shadow: 0 4px 0 #d45e7a; /* 默认阴影，后续可覆盖 */
+        }
+        .search-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+
+        /* 各主题下搜索框的专属样式 */
+        .theme-original .search-container input:focus {
+            border-color: #ff6b8b;
+        }
+        .theme-original .search-container button {
+            background-color: #4fc3f7;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        .theme-original .search-container button:hover {
+            background-color: #2196f3;
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+
+        .theme-candy .search-container input:focus {
+            border-color: #ff85a2;
+        }
+        .theme-candy .search-container button {
+            background: linear-gradient(145deg,#66c2ff,#4fc3f7);
+            border: 2px solid transparent;
+            box-shadow: none;
+        }
+        .theme-candy .search-container button:hover {
+            background: linear-gradient(145deg,#4fc3f7,#2196f3);
+            border-color: #fff;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .theme-forest .search-container input:focus {
+            border-color: #6b8e23;
+        }
+        .theme-forest .search-container button {
+            background-color: #7ccd7c;
+            border: 2px solid #4f7317;
+            box-shadow: none;
+        }
+        .theme-forest .search-container button:hover {
+            background-color: #66c266;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .theme-pixel .search-container input {
+            border-radius: 0;
+            border: 4px solid #000;
+            background-color: #f0f0f0;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .theme-pixel .search-container input:focus {
+            border-color: #ffaa00;
+        }
+        .theme-pixel .search-container button {
+            border-radius: 0;
+            background-color: #6060c0;
+            border: 4px solid #000;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 4px 4px 0 #202080;
+            color: #fff;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .theme-pixel .search-container button:hover {
+            background-color: #7070d0;
+            transform: translate(2px,2px);
+            box-shadow: 2px 2px 0 #202080;
+        }
+
+/* 移动端搜索框适配 - 左右排列 */
+@media (max-width: 768px) {
+    .search-container form {
+        flex-wrap: nowrap;        /* 禁止换行，强制左右排列 */
+        gap: 8px;                 /* 输入框与按钮之间的间距 */
+    }
+    .search-container input {
+        flex: 1 1 auto;           /* 输入框自动伸缩，占据剩余空间 */
+        min-width: 100px;         /* 防止输入框被压缩得太小 */
+    }
+    .search-container button {
+        flex: 0 0 auto;           /* 按钮宽度由内容决定，不伸缩 */
+        white-space: nowrap;      /* 按钮文字不换行 */
+        padding-left: 12px;
+        padding-right: 12px;
+        font-size: 14px;          /* 适当减小字体以适应移动端 */
+    }
+}
+
+/* 针对超小屏幕（如宽度 ≤ 360px）进一步调整 */
+@media (max-width: 360px) {
+    .search-container button {
+        padding-left: 8px;
+        padding-right: 8px;
+        font-size: 12px;
+    }
+}    
+</style>
 </head>
 <body class="theme-original">
     <div class="page-layout">
@@ -590,45 +665,48 @@
             <button class="theme-btn" id="btn-pixel">复古像素</button>
         </div>
         <div class="container">
-            <!-- 导航菜单：仅保留首页和相册，无高亮 -->
             <ul class="nav">
-                <li><a href="../index.html">首页</a></li>
-                <li><a href="../gallery.html">相册</a></li>
+                <li><a href="index.html" class="active">首页</a></li>
+                <li><a href="gallery.html">相册</a></li>
                 <li><a href="#">影集</a></li>
-                <li><a href="#">地图</a></li>
-                <li><a href="BNUindex.html", class="active">BNU</a></li>
+                <li><a href="maptest.html">地图</a></li>
+                <li><a href="BNU/BNUindex.html">BNU</a></li>
             </ul>
 
+            <!-- 新增的 Bing 搜索栏 -->
+            <div class="search-container">
+                <form action="https://www.bing.com/search" method="get" target="_blank">
+                    <input type="text" name="q" placeholder="搜搜熊感兴趣的内容..." required>
+                    <button type="submit">Bing搜索</button>
+                </form>
+            </div>
+
             <div class="title-with-images">
-                <img src="images/pigsleepy.webp" alt="左侧动图" class="side-gif">
-                <h1>熊熊大学BNU</h1>
-                <img src="images/pigsleep.webp" alt="右侧动图" class="side-gif">
+                <img src="images/left.gif" alt="左侧动图" class="side-gif">
+                <h1>你好，玫熊！</h1>
+                <img src="images/right.gif" alt="右侧动图" class="side-gif">
             </div>
-            <p>下面是关于熊熊大学的内容</p>
-
-            <!-- 功能按钮组：两列网格 -->
-            <div class="feature-container">
-                <a href="BNUcalendar.html" class="feature-btn">校历</a>
-                <a href="BNUmap.html" class="feature-btn">地图</a>
-                <a href="#" class="feature-btn">课程表</a>
-                <a href="#" class="feature-btn">绩点计算</a>
-                <a href="#" class="feature-btn">体测成绩</a>
-                <a href="#" class="feature-btn">图书馆</a>
-                <a href="#" class="feature-btn">社团活动</a>
-                <a href="#" class="feature-btn">食堂</a>
-                <a href="#" class="feature-btn">考试安排</a>
-            </div>
-            
+            <p>这是我的第一个移动端友好网页。无论熊在手机还是电脑上观看，它都会自动调整布局，让熊获得最佳体验。</p>
+            <p>这里放一张示例图片（玫熊和恩熊在秦皇岛）：</p>
+            <img src="images/bears.jpg" alt="玫熊与恩熊" class="responsive-img">
+            <p>这里是一段示例音频（想熊老！）：</p>
             <div style="text-align: center;">
-                <a href="https://www.bnu.edu.cn/">
-                <img src="images/BNUlogo.svg" alt="BNU矢量图" class="svg-image" >
-                </a>
+                <audio controls style="width: 100%; max-width: 400px;">
+                    <source src="audios/imissxiong.aac" type="audio/mpeg">
+                    您的浏览器不支持 audio 元素。
+                </audio>
             </div>
-            
-
+            <p>还有潮熊与潮熊妹：</p>
+            <div style="text-align: center;">
+                <audio controls style="width: 100%; max-width: 400px;">
+                    <source src="audios/bearandsister.m4a" type="audio/mpeg">
+                    您的浏览器不支持 audio 元素。
+                </audio>
+            </div>
+            <p>在手机屏幕上，导航菜单会变成垂直堆叠，文字大小也会微调。</p>
+            <p>恩熊已经掌握制作网页的技术！以后可以在此大展手脚辣！</p>
         </div>
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const btnOriginal = document.getElementById('btn-original');
@@ -642,6 +720,7 @@
             const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
             body.className = savedTheme;
 
+            // 根据当前 body 类名设置对应按钮为 active
             function setActiveButtonFromBodyClass() {
                 allBtns.forEach(btn => btn.classList.remove('active'));
                 if (body.classList.contains('theme-original')) {
@@ -655,12 +734,15 @@
                 }
             }
 
+            // 初始化按钮激活状态
             setActiveButtonFromBodyClass();
 
+            // 保存主题到 localStorage 的函数
             function saveTheme(themeClass) {
                 localStorage.setItem('selectedTheme', themeClass);
             }
 
+            // 为每个按钮绑定点击事件，切换主题并保存
             btnOriginal.addEventListener('click', function() {
                 body.className = 'theme-original';
                 setActiveButtonFromBodyClass();
