@@ -635,72 +635,92 @@
         #btn-original { background-color: #ff6b8b; }
         #btn-candy { background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa); }
         #btn-forest { background-color: #6b8e23; }
-        #btn-pixel { background-color: #8b5a2b; font-family: "Minecraft AE", monospace; }
+        #btn-pixel {
+            background-color: #8b5a2b;
+            font-family: "Minecraft AE", monospace;
+            font-size: 13px;
+            text-shadow: 1px 1px 0 #000;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
         /* ----- 移动端适配 (覆盖 map-wrapper 宽度为 100%) ----- */
-        @media (max-width: 800px) {
-            .page-layout {
-                flex-direction: column;
-                align-items: center;
-                gap: 15px;
-            }
-            .theme-switcher {
-                width: 100%;
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 8px;
-                margin-top: 0;
-            }
-            .theme-btn {
-                width: auto;
-                padding: 10px 15px;
-            }
-            .main-content {
-                width: 100%;
-                max-width: 100%;
-                padding: 20px;
-            }
-            .map-wrapper {
-                width: 100%;
-                margin: 0;
-            }
-            .map-control-bar {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
-            }
-            .style-switcher {
-                justify-content: center;
-            }
-            .zoom-buttons {
-                justify-content: center;
-            }
-            #mapContainer {
-                height: 300px;
-            }
-            .title-with-images {
-                gap: 10px;
-            }
-            .side-gif {
-                width: 50px;
-            }
-            h1 {
-                font-size: 28px;
-            }
-            .nav {
-                flex-direction: column;
-                gap: 8px;
-                padding: 8px;
-            }
-            .nav li a {
-                padding: 5px;
-                font-size: 14px;
-                text-align: center;
-            }
-
-        }
-    </style>
+@media (max-width: 768px) {
+    .page-layout {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 10px;          /* 与 index 一致 */
+    }
+    .theme-switcher {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 0;
+    }
+    .theme-btn {
+        width: auto;
+        padding: 10px 15px;
+        font-size: 12px;         /* 统一按钮字体 */
+    }
+    .theme-btn.active::before {
+        left: 12px;               /* 移动端手指图标位置 */
+    }
+    .main-content {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px;
+        border-width: 3px !important;  /* 强制统一边框宽度 */
+    }
+    .map-wrapper {
+        width: 100%;
+        margin: 0;
+    }
+    .map-control-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .style-switcher {
+        justify-content: center;
+    }
+    .zoom-buttons {
+        justify-content: center;
+    }
+    #mapContainer {
+        height: 300px;
+    }
+    .title-with-images {
+        gap: 15px;               /* 与 index 一致 */
+    }
+    .side-gif {
+        width: 50px;
+    }
+    h1 {
+        font-size: 28px;
+    }
+    .nav {
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px;
+    }
+    .nav li a {
+        padding: 5px;
+        font-size: 14px;
+        text-align: center;
+    }
+    /* 像素主题按钮移动端字体缩小（与 index 一致） */
+    #btn-pixel {
+        font-size: 12px;
+    }
+    /* 糖果主题导航圆角（与 index 一致） */
+    .theme-candy .nav {
+        border-radius: 20px;
+    }
+}
+</style>
 </head>
 <body class="theme-original">
     <div class="page-layout">
