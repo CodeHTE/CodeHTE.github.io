@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>可编辑大学课程表 · 课程类型颜色区分</title>
+<style>
+  *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Microsoft YaHei",sans-serif;
+  }
+  body{
+    background:#f7f8fa;
+    padding:20px;
+  }
+  .wrap{
+    max-width:1400px;
+    margin:0 auto;
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 2px 12px rgba(0,0,0,0.08);
+    overflow:hidden;
+  }
+  .title{
+    text-align:center;
+    padding:20px;
+    font-size:24px;
+    font-weight:bold;
+    color:#333;
+    background:#fafafa;
+    border-bottom:1px solid #eee;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout: fixed;
+  }
+  th,td{
+    border:1px solid #e5e7eb;
+    text-align:center;
+    padding:8px 4px;
+    position:relative;
+  }
+  th{
+    background:#415fff;
+    color:#fff;
+    font-weight:normal;
+  }
+  th:first-child, td.time-block {
+    width: 50px;
+  }
+  th:nth-child(2), td.lesson-index {
+    width: 40px;
+  }
+  th:nth-child(n+3), td.course-cell {
+    width: 120px;
+  }
+  .time-block{
+    background:#f8f9fa;
+    font-weight:bold;
+    font-size:16px;
+  }
+  .morning{ background:#e6f7ff; }
+  .afternoon{ background:#f6ffed; }
+  .evening{ background:#fff7e6; }
+  
+  .course-cell{
+    /*min-height:70px;*/
+    height: 70px !important;
+    cursor:default;
+    transition:background-color 0.2s;
+    vertical-align:top;
+    padding:4px;
+  }
+  .course-cell.editable{
+    cursor:pointer;
+  }
+  .course-cell:hover{
+    background-color:#f0f7ff;
+  }
+  .course-cell.selected {
+    background-color: #b8d4ff !important;
+    outline: 2px solid #415fff;
+    outline-offset: -2px;
+  }
+  .course-cell.merge-hover {
+    background-color: #c0f0c0 !important;
+    outline: 2px solid #2e7d32;
+    outline-offset: -2px;
+  }
+  /* 新增：复制高亮样式 */
+  .course-cell.copy-hover {
+    background-color: #fff3cd !important;
+    outline: 2px solid #fd7e14;
+    outline-offset: -2px;
+  }
+  /* 新增：隐藏被合并的单元格 */
+  .course-cell.merged {
+    display: none;
+  }
+  
+  /* 课程类型颜色样式 */
+  .course-content{
+    border-radius:6px;
+    padding:6px 4px;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+    text-align:left;
+    font-size:13px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.05);
+    height:100%;
+    max-height: 280px;
+    overflow-y: auto;
+    word-break: break-word;
+  }
+  /* 无类型 */
+  .course-content.type-none { background: #dbeafe; }
+  .course-content.type-none .course-name { color: #1e3a8a; }
+  .course-content.type-none .course-location-teacher { border-top-color: #a5c0fa; }
+  
+  /* 专必课 */
+  .course-content.type-required-major { background: #ffe485; }
+  .course-content.type-required-major .course-name { color: #78350f; }
+  .course-content.type-required-major .course-location-teacher { border-top-color: #fbbf24; }
+  
+  /* 专选课 */
+  .course-content.type-elective-major { background: #bae6fd; }
+  .course-content.type-elective-major .course-name { color: #0c4a6e; }
+  .course-content.type-elective-major .course-location-teacher { border-top-color: #38bdf8; }
+  
+  /* 公必课 */
+  .course-content.type-required-public { background: #fed7aa; }
+  .course-content.type-required-public .course-name { color: #9a3412; }
+  .course-content.type-required-public .course-location-teacher { border-top-color: #fb923c; }
+  
+  /* 公选课 */
+  .course-content.type-elective-public { background: #bfdbfe; }
+  .course-content.type-elective-public .course-name { color: #1e40af; }
+  .course-content.type-elective-public .course-location-teacher { border-top-color: #60a5fa; }
+  
+  /* 体育课 */
+  .course-content.type-pe { background: #bbf7d0; }
+  .course-content.type-pe .course-name { color: #14532d; }
+  .course-content.type-pe .course-location-teacher { border-top-color: #4ade80; }
+  
+  /* 额外 */
+  .course-content.type-extra { background: #fbcfe8; }
+  .course-content.type-extra .course-name { color: #831843; }
+  .course-content.type-extra .course-location-teacher { border-top-color: #f472b6; }
+  
+  .course-content::-webkit-scrollbar {
+    width: 4px;
+  }
+  .course-content::-webkit-scrollbar-thumb {
+    background: #a0b8cc;
+    border-radius: 4px;
+  }
+  .course-name{
+    font-weight:700;
+    font-size:14px;
+    line-height:1.3;
+    word-break:break-word;
+  }
+  .course-type-tag{
+    font-size:10px;
+    padding:1px 4px;
+    border-radius:3px;
+    margin-left:4px;
+    color:white;
+    vertical-align:middle;
+  }
+  /* 类型标签颜色 */
+  .tag-none { display: none; }
+  .tag-required-major { background: #78350f; }
+  .tag-elective-major { background: #0c4a6e; }
+  .tag-required-public { background: #9a3412; }
+  .tag-elective-public { background: #1e40af; }
+  .tag-pe { background: #14532d; }
+  .tag-extra { background: #831843; }
+  
+  .course-location-teacher{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    color:#2c3e50;
+    font-size:12px;
+    line-height:1.4;
+    word-break:break-word;
+    border-top:1px dashed #a5c0fa;
+    padding-top:4px;
+  }
+  .course-location-teacher::before{
+    content:"📍";
+    margin-right:2px;
+    opacity:0.8;
+  }
+  .empty{
+    background:#f9f9fc;
+  }
+  .empty .course-content{
+    display:none;
+  }
+
+  .table-footer{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    padding:20px;
+    background:#fafafa;
+    border-top:1px solid #e5e7eb;
+    flex-wrap: wrap;
+  }
+  .action-btn{
+    padding:10px 30px;
+    border:none;
+    border-radius:40px;
+    font-size:16px;
+    font-weight:500;
+    cursor:pointer;
+    transition:all 0.2s;
+    box-shadow:0 2px 6px rgba(0,0,0,0.05);
+  }
+  .edit-btn{
+    background:#415fff;
+    color:white;
+  }
+  .edit-btn:hover{
+    background:#2e4ad6;
+    transform:translateY(-2px);
+    box-shadow:0 6px 12px rgba(65,95,255,0.3);
+  }
+  .save-all{
+    background:#415fff;
+    color:white;
+  }
+  .save-all:hover{
+    background:#2e4ad6;
+    transform:translateY(-2px);
+    box-shadow:0 6px 12px rgba(65,95,255,0.3);
+  }
+  .clear-all{
+    background:#ffffff;
+    color:#4b5563;
+    border:1px solid #d1d5db;
+  }
+  .clear-all:hover{
+    background:#f3f4f6;
+    transform:translateY(-2px);
+    box-shadow:0 6px 12px rgba(0,0,0,0.1);
+  }
+  .exit-edit{
+    background:#f97316;
+    color:white;
+  }
+  .exit-edit:hover{
+    background:#ea580c;
+    transform:translateY(-2px);
+    box-shadow:0 6px 12px rgba(249,115,22,0.3);
+  }
+  .delete-btn, .split-btn{
+    background:#ffffff;
+    color:#4b5563;
+    border:1px solid #d1d5db;
+  }
+  .delete-btn:not(:disabled):hover {
+    background:#fee2e2;
+    border-color:#f87171;
+    color:#b91c1c;
+    transform:translateY(-2px);
+    box-shadow:0 6px 12px rgba(239,68,68,0.2);
+  }
+  .split-btn:not(:disabled):hover {
+    background:#e0f2e0;
+    border-color:#2e7d32;
+    color:#1b5e20;
+    transform:translateY(-2px);
+    box-shadow:0 6px 12px rgba(46,125,50,0.2);
+  }
+  .delete-btn:disabled, .split-btn:disabled {
+    opacity:0.4;
+    cursor:not-allowed;
+    transform:none;
+    box-shadow:none;
+  }
+
+  .float-edit-panel {
+    position: fixed;
+    background: white;
+    border: 2px solid #415fff;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    z-index: 1000;
+    width: 260px;
+    display: none;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .float-edit-panel .field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .float-edit-panel label {
+    font-size: 12px;
+    color: #4b5563;
+    font-weight: 500;
+  }
+  .float-edit-panel input,
+  .float-edit-panel select {
+    padding: 6px 8px;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    font-size: 13px;
+    outline: none;
+  }
+  .float-edit-panel input:focus,
+  .float-edit-panel select:focus {
+    border-color: #415fff;
+    box-shadow: 0 0 0 2px rgba(65,95,255,0.2);
+  }
+  .float-edit-panel .panel-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .float-edit-panel .panel-save,
+  .float-edit-panel .panel-cancel {
+    padding: 5px 14px;
+    border: none;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .float-edit-panel .panel-save {
+    background: #415fff;
+    color: white;
+  }
+  .float-edit-panel .panel-cancel {
+    background: #f1f5f9;
+    color: #334155;
+  }
+
+  /* 操作选择弹窗样式 */
+  .action-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 2000;
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 280px;
+  }
+  .action-modal .modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+  }
+  .action-modal .modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .action-modal .modal-btn {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .modal-btn.merge {
+    background: #2e7d32;
+    color: white;
+  }
+  .modal-btn.merge:hover {
+    background: #1b5e20;
+    transform: translateY(-2px);
+  }
+  .modal-btn.copy {
+    background: #415fff;
+    color: white;
+  }
+  .modal-btn.copy:hover {
+    background: #2e4ad6;
+    transform: translateY(-2px);
+  }
+  .modal-btn.cancel {
+    background: #f1f5f9;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+  }
+  .modal-btn.cancel:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+  }
+
+  /* 复制确认弹窗样式 */
+  .confirm-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    z-index: 2000;
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 280px;
+  }
+  .confirm-modal .modal-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+  }
+  .confirm-modal .modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+
+  /* 遮罩层样式 */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+    display: none;
+    /* 禁止遮罩层点击事件穿透 */
+    pointer-events: none;
+  }
+  /* 弹窗显示时遮罩层允许点击（但仅用于视觉，不处理关闭） */
+  .modal-overlay.show {
+    pointer-events: auto;
+  }
+  #courseTable tbody tr {
+  height: 70px; /* 可根据需要调整，建议与原来单元格高度相近 */
+  }
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">可编辑课程表 · 课程类型颜色区分</div>
+  <table id="courseTable">
+    <thead>
+      <tr>
+        <th>时段</th>
+        <th>节次</th>
+        <th>周一</th>
+        <th>周二</th>
+        <th>周三</th>
+        <th>周四</th>
+        <th>周五</th>
+        <th>周六</th>
+        <th>周日</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- 上午 1-4 节 -->
+      <tr class="morning">
+        <td rowspan="4" class="time-block">上午</td>
+        <td>1</td>
+        <td class="course-cell" data-name="高等数学" data-location="一教101" data-teacher="张老师" data-type="required-major">
+          <div class="course-content type-required-major"><div class="course-name">高等数学<span class="course-type-tag tag-required-major">专必课</span></div><div class="course-location-teacher">一教101 丨 张老师</div></div>
+        </td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+      <tr class="morning">
+        <td>2</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+      <tr class="morning">
+        <td>3</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+      <tr class="morning">
+        <td>4</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+
+      <!-- 下午 5-8 节 -->
+      <tr class="afternoon">
+        <td rowspan="4" class="time-block">下午</td>
+        <td>5</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+      <tr class="afternoon">
+        <td>6</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+      <tr class="afternoon">
+        <td>7</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+      <tr class="afternoon">
+        <td>8</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+
+      <!-- 晚上 9-12 节 -->
+      <tr class="evening">
+        <td rowspan="4" class="time-block">晚上</td>
+        <td>9</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+      <tr class="evening">
+        <td>10</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+      <tr class="evening">
+        <td>11</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+      <tr class="evening">
+        <td>12</td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+        <td class="course-cell empty" data-name="" data-location="" data-teacher="" data-type="none"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="table-footer" id="footerButtons">
+    <button class="action-btn edit-btn" id="editModeBtn">✏️ 编辑</button>
+  </div>
+</div>
+
+<!-- 课程编辑面板（新增类型选择器） -->
+<div class="float-edit-panel" id="floatEditPanel">
+  <div class="field">
+    <label>📘 课程名称</label>
+    <input type="text" id="editName" placeholder="例如：高等数学">
+  </div>
+  <div class="field">
+    <label>📚 课程类型</label>
+    <select id="editType">
+      <option value="none">无</option>
+      <option value="required-major">专必课</option>
+      <option value="elective-major">专选课</option>
+      <option value="required-public">公必课</option>
+      <option value="elective-public">公选课</option>
+      <option value="pe">体育课</option>
+      <option value="extra">额外</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>📍 地点</label>
+    <input type="text" id="editLocation" placeholder="例如：一教101">
+  </div>
+  <div class="field">
+    <label>👤 教师</label>
+    <input type="text" id="editTeacher" placeholder="例如：张老师">
+  </div>
+  <div class="panel-buttons">
+    <button class="panel-save" id="panelSave">保存</button>
+    <button class="panel-cancel" id="panelCancel">取消</button>
+  </div>
+</div>
+
+<!-- 操作选择弹窗（合并/复制） -->
+<div class="action-modal" id="actionModal">
+  <div class="modal-title">选择你要进行的操作</div>
+  <div class="modal-buttons">
+    <button class="modal-btn merge" id="modalMergeBtn">合并</button>
+    <button class="modal-btn copy" id="modalCopyBtn">复制</button>
+    <button class="modal-btn cancel" id="modalCancelBtn">取消</button>
+  </div>
+</div>
+
+<!-- 复制确认弹窗 -->
+<div class="confirm-modal" id="confirmModal">
+  <div class="modal-title">确定要复制课程信息吗？</div>
+  <div class="modal-buttons">
+    <button class="modal-btn copy" id="confirmCopyBtn">确定</button>
+    <button class="modal-btn cancel" id="confirmCancelBtn">取消</button>
+  </div>
+</div>
+
+<!-- 遮罩层 -->
+<div class="modal-overlay" id="modalOverlay"></div>
+
+<script>
+(function() {
+  // ---------- 课程类型配置（可自定义） ----------
+  const courseTypeConfig = {
+    'none': {
+      name: '无',
+      bgColor: '#dbeafe',
+      textColor: '#1e3a8a',
+      borderColor: '#a5c0fa',
+      tagClass: 'tag-none'
+    },
+    'required-major': {
+      name: '专必课',
+      bgColor: '#ffe485',
+      textColor: '#78350f',
+      borderColor: '#fbbf24',
+      tagClass: 'tag-required-major'
+    },
+    'elective-major': {
+      name: '专选课',
+      bgColor: '#bae6fd',
+      textColor: '#0c4a6e',
+      borderColor: '#38bdf8',
+      tagClass: 'tag-elective-major'
+    },
+    'required-public': {
+      name: '公必课',
+      bgColor: '#fed7aa',
+      textColor: '#9a3412',
+      borderColor: '#fb923c',
+      tagClass: 'tag-required-public'
+    },
+    'elective-public': {
+      name: '公选课',
+      bgColor: '#bfdbfe',
+      textColor: '#1e40af',
+      borderColor: '#60a5fa',
+      tagClass: 'tag-elective-public'
+    },
+    'pe': {
+      name: '体育课',
+      bgColor: '#bbf7d0',
+      textColor: '#14532d',
+      borderColor: '#4ade80',
+      tagClass: 'tag-pe'
+    },
+    'extra': {
+      name: '额外',
+      bgColor: '#fbcfe8',
+      textColor: '#831843',
+      borderColor: '#f472b6',
+      tagClass: 'tag-extra'
+    }
+  };
+
+  // ---------- 通用工具函数 ----------
+  function updateCellDisplay(cell, name, location, teacher, type) {
+    // 确保type有默认值
+    type = type || cell.dataset.type || 'none';
+    // 验证类型有效性
+    if (!courseTypeConfig[type]) type = 'none';
+    
+    const oldContent = cell.querySelector('.course-content');
+    if (oldContent) oldContent.remove();
+
+    if (name) {
+      cell.classList.remove('empty');
+      const contentDiv = document.createElement('div');
+      // 设置类型样式类
+      contentDiv.className = `course-content type-${type}`;
+
+      let locationTeacher = '';
+      if (location && teacher) {
+        locationTeacher = `${escapeHtml(location)} 丨 ${escapeHtml(teacher)}`;
+      } else if (location) {
+        locationTeacher = `${escapeHtml(location)} 丨 —`;
+      } else if (teacher) {
+        locationTeacher = `— 丨 ${escapeHtml(teacher)}`;
+      } else {
+        locationTeacher = '— 丨 —';
+      }
+
+      // 构建课程名称（包含类型标签）
+      let courseNameHtml = escapeHtml(name);
+      if (type !== 'none') {
+        courseNameHtml += `<span class="course-type-tag ${courseTypeConfig[type].tagClass}">${courseTypeConfig[type].name}</span>`;
+      }
+
+      contentDiv.innerHTML = `
+        <div class="course-name" style="color: ${courseTypeConfig[type].textColor}">${courseNameHtml}</div>
+        <div class="course-location-teacher" style="border-top-color: ${courseTypeConfig[type].borderColor}">${locationTeacher}</div>
+      `;
+      cell.appendChild(contentDiv);
+    } else {
+      cell.classList.add('empty');
+    }
+    
+    // 更新单元格的type数据属性
+    cell.dataset.type = type;
+  }
+
+  function escapeHtml(unsafe) {
+    if (!unsafe) return unsafe;
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+  // 初始化单元格元数据
+  function initMetadata() {
+    const cells = document.querySelectorAll('.course-cell');
+    cells.forEach(cell => {
+      const tr = cell.closest('tr');
+      if (!tr) return;
+      const cellsInRow = tr.cells;
+      let idx = -1;
+      for (let i = 0; i < cellsInRow.length; i++) {
+        if (cellsInRow[i] === cell) {
+          idx = i;
+          break;
+        }
+      }
+      if (idx === -1) return;
+
+      let baseOffset = 0;
+      if (cellsInRow.length > 0 && cellsInRow[0].rowSpan > 1) {
+        baseOffset = 2; // 时段 + 节次
+      } else {
+        baseOffset = 1; // 只有节次
+      }
+      const weekdayIndex = idx - baseOffset; // 0:周一 ... 6:周日
+      if (weekdayIndex >= 0 && weekdayIndex < 7) {
+        const weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+        cell.dataset.weekday = weekdays[weekdayIndex];
+      }
+      if (tr.classList.contains('morning')) {
+        cell.dataset.session = '上午';
+      } else if (tr.classList.contains('afternoon')) {
+        cell.dataset.session = '下午';
+      } else if (tr.classList.contains('evening')) {
+        cell.dataset.session = '晚上';
+      }
+      const lessonTd = cellsInRow[baseOffset - 1];
+      if (lessonTd) {
+        cell.dataset.lesson = lessonTd.textContent.trim();
+      }
+      if (!cell.dataset.mergeSize) {
+        cell.dataset.mergeSize = '1';
+      }
+      if (!cell.dataset.mergedBy) {
+        cell.dataset.mergedBy = '';
+      }
+      // 初始化课程类型
+      if (!cell.dataset.type) {
+        cell.dataset.type = 'none';
+      }
+    });
+  }
+
+  // ---------- 核心功能函数 ----------
+  // 复制课程信息（包含类型）
+  function copyCourseInfo(sourceCell, targetCell) {
+    if (!sourceCell || !targetCell) return;
+    targetCell.dataset.name = sourceCell.dataset.name || '';
+    targetCell.dataset.location = sourceCell.dataset.location || '';
+    targetCell.dataset.teacher = sourceCell.dataset.teacher || '';
+    targetCell.dataset.type = sourceCell.dataset.type || 'none'; // 复制类型
+    updateCellDisplay(targetCell, targetCell.dataset.name, targetCell.dataset.location, targetCell.dataset.teacher, targetCell.dataset.type);
+  }
+
+  // 判断是否可合并
+  function canMerge(cellA, cellB) {
+    if (!cellA || !cellB || cellA === cellB) return false;
+    if (cellA.dataset.weekday !== cellB.dataset.weekday) return false;
+    if (cellA.dataset.session !== cellB.dataset.session) return false;
+    
+    const lessonA = parseInt(cellA.dataset.lesson);
+    const sizeA = parseInt(cellA.dataset.mergeSize);
+    const lessonB = parseInt(cellB.dataset.lesson);
+    const sizeB = parseInt(cellB.dataset.mergeSize);
+    
+    return (lessonA + sizeA === lessonB) || (lessonB + sizeB === lessonA);
+  }
+
+  // 合并单元格（保留类型）
+  function mergeCells(selected, target) {
+    if (!canMerge(selected, target)) return;
+    
+    const lessonSel = parseInt(selected.dataset.lesson);
+    const lessonTar = parseInt(target.dataset.lesson);
+    let top, bottom;
+    
+    if (lessonSel < lessonTar) {
+      top = selected;
+      bottom = target;
+    } else {
+      top = target;
+      bottom = selected;
+    }
+    
+    // 复制内容（包含类型）到顶部单元格
+    if (selected === bottom) {
+      top.dataset.name = selected.dataset.name;
+      top.dataset.location = selected.dataset.location;
+      top.dataset.teacher = selected.dataset.teacher;
+      top.dataset.type = selected.dataset.type; // 复制类型
+      updateCellDisplay(top, top.dataset.name, top.dataset.location, top.dataset.teacher, top.dataset.type);
+    }
+    
+    // 更新合并尺寸
+    const newSize = parseInt(top.dataset.mergeSize) + parseInt(bottom.dataset.mergeSize);
+    top.rowSpan = newSize;
+    top.dataset.mergeSize = newSize;
+    
+    // 标记被合并的单元格
+    bottom.dataset.mergedBy = top.dataset.lesson + '-' + top.dataset.weekday;
+    bottom.classList.add('merged');
+    
+    // 更新选中状态
+    clearSelected();
+    top.classList.add('selected');
+    selectedCell = top;
+    updateButtonStates();
+  }
+
+  // 拆分单元格
+  function splitCell(cell) {
+    const mergeSize = parseInt(cell.dataset.mergeSize);
+    if (mergeSize <= 1) return;
+
+    const lesson = parseInt(cell.dataset.lesson);
+    const weekday = cell.dataset.weekday;
+    const mergeKey = lesson + '-' + weekday;
+
+    // 恢复当前单元格为单行
+    cell.rowSpan = 1;
+    cell.dataset.mergeSize = '1';
+
+    // 显示并重置被合并的单元格
+    const mergedCells = document.querySelectorAll(`.course-cell[data-merged-by="${mergeKey}"]`);
+    mergedCells.forEach(mergedCell => {
+      mergedCell.dataset.mergedBy = '';
+      mergedCell.classList.remove('merged');
+      mergedCell.dataset.mergeSize = '1';
+      mergedCell.dataset.name = '';
+      mergedCell.dataset.location = '';
+      mergedCell.dataset.teacher = '';
+      mergedCell.dataset.type = 'none'; // 重置类型为无
+      updateCellDisplay(mergedCell, '', '', '', 'none');
+    });
+
+    initMetadata();
+    updateButtonStates();
+  }
+
+  // ---------- 弹窗控制函数 ----------
+  // 显示操作弹窗（合并/复制）
+  function showActionModal() {
+    const overlay = document.getElementById('modalOverlay');
+    overlay.style.display = 'block';
+    overlay.classList.add('show');
+    document.getElementById('actionModal').style.display = 'flex';
+    document.getElementById('confirmModal').style.display = 'none';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // 显示复制确认弹窗
+  function showConfirmModal() {
+    const overlay = document.getElementById('modalOverlay');
+    overlay.style.display = 'block';
+    overlay.classList.add('show');
+    document.getElementById('actionModal').style.display = 'none';
+    document.getElementById('confirmModal').style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+
+  // 隐藏所有弹窗
+  function hideAllModals() {
+    const overlay = document.getElementById('modalOverlay');
+    overlay.style.display = 'none';
+    overlay.classList.remove('show');
+    document.getElementById('actionModal').style.display = 'none';
+    document.getElementById('confirmModal').style.display = 'none';
+    document.body.style.overflow = '';
+    targetCell = null;
+  }
+
+  // ---------- 状态管理函数 ----------
+  function clearSelected() {
+    if (selectedCell) {
+      selectedCell.classList.remove('selected');
+    }
+    document.querySelectorAll('.course-cell').forEach(c => {
+      c.classList.remove('merge-hover', 'copy-hover');
+    });
+    selectedCell = null;
+    updateButtonStates();
+  }
+
+  function hideEditPanel() {
+    document.getElementById('floatEditPanel').style.display = 'none';
+    currentEditingCell = null;
+  }
+
+  function updateButtonStates() {
+    const deleteBtn = document.getElementById('deleteBtn');
+    const splitBtn = document.getElementById('splitBtn');
+    
+    if (deleteBtn) {
+      deleteBtn.disabled = !(editingMode && selectedCell);
+    }
+    if (splitBtn) {
+      splitBtn.disabled = !(editingMode && selectedCell && parseInt(selectedCell.dataset.mergeSize) > 1);
+    }
+  }
+
+  function clearCell(cell) {
+    if (!cell) return;
+    cell.dataset.name = '';
+    cell.dataset.location = '';
+    cell.dataset.teacher = '';
+    cell.dataset.type = 'none'; // 清空时重置类型为无
+    updateCellDisplay(cell, '', '', '', 'none');
+    if (currentEditingCell === cell) hideEditPanel();
+  }
+
+  // ---------- 底部按钮渲染 ----------
+  function renderFooter() {
+    const footer = document.getElementById('footerButtons');
+    
+    if (editingMode) {
+      footer.innerHTML = `
+        <button class="action-btn delete-btn" id="deleteBtn" disabled>🗑️ 删除选中</button>
+        <button class="action-btn split-btn" id="splitBtn" disabled>✂️ 拆分</button>
+        <button class="action-btn save-all" id="saveAllBtn">💾 保存课表</button>
+        <button class="action-btn clear-all" id="clearAllBtn">🗑️ 清空全部</button>
+        <button class="action-btn exit-edit" id="exitEditBtn">🚪 退出编辑</button>
+      `;
+      
+      // 删除选中
+      document.getElementById('deleteBtn').addEventListener('click', function() {
+        if (selectedCell) {
+          clearCell(selectedCell);
+          updateButtonStates();
+        }
+      });
+      
+      // 拆分单元格
+      document.getElementById('splitBtn').addEventListener('click', function() {
+        if (selectedCell && parseInt(selectedCell.dataset.mergeSize) > 1) {
+          splitCell(selectedCell);
+        }
+      });
+      
+      // 保存所有（包含类型）
+      document.getElementById('saveAllBtn').addEventListener('click', function() {
+        const cells = document.querySelectorAll('.course-cell');
+        const data = [];
+        cells.forEach(cell => {
+          data.push({
+            name: cell.dataset.name || '',
+            location: cell.dataset.location || '',
+            teacher: cell.dataset.teacher || '',
+            type: cell.dataset.type || 'none', // 保存类型
+            mergeSize: cell.dataset.mergeSize || '1',
+            lesson: cell.dataset.lesson,
+            weekday: cell.dataset.weekday,
+            mergedBy: cell.dataset.mergedBy || ''
+          });
+        });
+        localStorage.setItem('courseTableData', JSON.stringify(data));
+        alert('✅ 课表已保存（包含课程类型）');
+      });
+      
+      // 清空全部
+      document.getElementById('clearAllBtn').addEventListener('click', function() {
+        if (confirm('确定要清空所有课程吗？')) {
+          const cells = document.querySelectorAll('.course-cell');
+          cells.forEach(cell => {
+            cell.dataset.name = '';
+            cell.dataset.location = '';
+            cell.dataset.teacher = '';
+            cell.dataset.type = 'none'; // 重置类型
+            cell.dataset.mergedBy = '';
+            cell.classList.remove('merged');
+            cell.dataset.mergeSize = '1';
+            cell.rowSpan = 1;
+            updateCellDisplay(cell, '', '', '', 'none');
+          });
+          clearSelected();
+          hideEditPanel();
+        }
+      });
+      
+      // 退出编辑
+      document.getElementById('exitEditBtn').addEventListener('click', function() {
+        editingMode = false;
+        clearSelected();
+        hideEditPanel();
+        hideAllModals();
+        document.querySelectorAll('.course-cell').forEach(c => {
+          c.classList.remove('editable', 'selected', 'merge-hover', 'copy-hover');
+        });
+        renderFooter();
+      });
+      
+      updateButtonStates();
+    } else {
+      footer.innerHTML = `<button class="action-btn edit-btn" id="editModeBtn">✏️ 编辑</button>`;
+      document.getElementById('editModeBtn').addEventListener('click', function() {
+        editingMode = true;
+        clearSelected();
+        document.querySelectorAll('.course-cell').forEach(c => c.classList.add('editable'));
+        renderFooter();
+      });
+    }
+  }
+
+  // 加载本地存储数据（包含类型）
+  function loadFromStorage() {
+    const saved = localStorage.getItem('courseTableData');
+    if (!saved) return;
+    
+    try {
+      const data = JSON.parse(saved);
+      const cells = document.querySelectorAll('.course-cell');
+      cells.forEach((cell, i) => {
+        if (data[i]) {
+          cell.dataset.name = data[i].name || '';
+          cell.dataset.location = data[i].location || '';
+          cell.dataset.teacher = data[i].teacher || '';
+          cell.dataset.type = data[i].type || 'none'; // 加载类型
+          cell.dataset.mergeSize = data[i].mergeSize || '1';
+          cell.dataset.mergedBy = data[i].mergedBy || '';
+          
+          if (data[i].mergedBy) {
+            cell.classList.add('merged');
+          } else {
+            cell.classList.remove('merged');
+          }
+          
+          if (parseInt(cell.dataset.mergeSize) > 1) {
+            cell.rowSpan = parseInt(cell.dataset.mergeSize);
+          } else {
+            cell.rowSpan = 1;
+          }
+          
+          updateCellDisplay(cell, cell.dataset.name, cell.dataset.location, cell.dataset.teacher, cell.dataset.type);
+        }
+      });
+    } catch (e) {
+      console.error('加载课表数据失败:', e);
+    }
+  }
+
+  // ---------- 全局状态变量 ----------
+  let editingMode = false;
+  let currentEditingCell = null;
+  let selectedCell = null;
+  let targetCell = null;
+
+  // ---------- 初始化事件监听 ----------
+  function initEventListeners() {
+    const table = document.getElementById('courseTable');
+    const floatEditPanel = document.getElementById('floatEditPanel');
+    const editName = document.getElementById('editName');
+    const editLocation = document.getElementById('editLocation');
+    const editTeacher = document.getElementById('editTeacher');
+    const editType = document.getElementById('editType'); // 类型选择器
+    const wrap = document.querySelector('.wrap'); // 课程表容器
+    
+    // 单元格点击事件
+    table.addEventListener('click', function(e) {
+      const cell = e.target.closest('.course-cell');
+      if (!cell || !editingMode) return;
+      
+      // 如果弹窗已打开，不处理点击
+      if (document.getElementById('modalOverlay').style.display === 'block') {
+        return;
+      }
+
+      // 如果点击的是已选中的单元格，取消选中
+      if (selectedCell === cell) {
+        clearSelected();
+        return;
+      }
+
+      // 检查是否是要进行合并/复制操作（这是唯一不取消选中的场景）
+      if (selectedCell && selectedCell !== cell) {
+        // 检查是否可合并
+        if (canMerge(selectedCell, cell)) {
+          targetCell = cell;
+          showActionModal(); // 显示合并/复制选择弹窗
+          return;
+        } else {
+          // 不可合并则显示复制确认弹窗
+          targetCell = cell;
+          showConfirmModal(); // 显示复制确认弹窗
+          return;
+        }
+      }
+
+      // 其他情况：先取消原有选中，再选中当前单元格
+      clearSelected();
+      cell.classList.add('selected');
+      selectedCell = cell;
+      updateButtonStates();
+    });
+
+    // 全局点击事件：点击任何非活动区域取消选中
+    document.addEventListener('click', function(e) {
+      // 编辑模式未开启，不处理
+      if (!editingMode) return;
+      
+      // 弹窗打开时，不处理
+      if (document.getElementById('modalOverlay').style.display === 'block') {
+        return;
+      }
+      
+      // 编辑面板打开时，不处理
+      if (floatEditPanel.style.display === 'flex') {
+        return;
+      }
+
+      // 获取点击目标
+      const target = e.target;
+      const cell = target.closest('.course-cell');
+
+      // 情况1：点击的是单元格（已在table的click事件处理）
+      if (cell) {
+        return;
+      }
+
+      // 情况2：点击的是其他区域（包括课程表内的非单元格区域、课程表外）
+      clearSelected();
+    });
+
+    // 单元格鼠标悬浮事件
+    table.addEventListener('mouseover', function(e) {
+      const cell = e.target.closest('.course-cell');
+      if (!cell || !editingMode || !selectedCell || cell === selectedCell) return;
+      if (document.getElementById('modalOverlay').style.display === 'block') return;
+      
+      if (canMerge(selectedCell, cell)) {
+        cell.classList.add('merge-hover');
+      } else {
+        cell.classList.add('copy-hover');
+      }
+    });
+
+    // 单元格鼠标离开事件
+    table.addEventListener('mouseout', function(e) {
+      const cell = e.target.closest('.course-cell');
+      if (cell) {
+        cell.classList.remove('merge-hover', 'copy-hover');
+      }
+    });
+
+    // 单元格双击编辑（加载类型）
+    table.addEventListener('dblclick', function(e) {
+      const cell = e.target.closest('.course-cell');
+      if (!cell || !editingMode) return;
+      if (document.getElementById('modalOverlay').style.display === 'block') return;
+      
+      e.stopPropagation();
+      editName.value = cell.dataset.name || '';
+      editLocation.value = cell.dataset.location || '';
+      editTeacher.value = cell.dataset.teacher || '';
+      editType.value = cell.dataset.type || 'none'; // 加载当前类型
+      
+      // 定位编辑面板
+      const x = e.clientX, y = e.clientY;
+      const panelWidth = 260, panelHeight = floatEditPanel.offsetHeight || 200;
+      let left = x + 10, top = y + 10;
+      
+      if (left + panelWidth > window.innerWidth) left = x - panelWidth - 10;
+      if (top + panelHeight > window.innerHeight) top = y - panelHeight - 10;
+      if (left < 0) left = 10;
+      if (top < 0) top = 10;
+      
+      floatEditPanel.style.left = left + 'px';
+      floatEditPanel.style.top = top + 'px';
+      floatEditPanel.style.display = 'flex';
+      currentEditingCell = cell;
+    });
+
+    // 编辑面板保存（保存类型）
+    document.getElementById('panelSave').addEventListener('click', function() {
+      if (!currentEditingCell) return;
+      
+      const name = editName.value.trim();
+      const location = editLocation.value.trim();
+      const teacher = editTeacher.value.trim();
+      const type = editType.value; // 获取选中的类型
+      
+      currentEditingCell.dataset.name = name;
+      currentEditingCell.dataset.location = location;
+      currentEditingCell.dataset.teacher = teacher;
+      currentEditingCell.dataset.type = type; // 保存类型
+      updateCellDisplay(currentEditingCell, name, location, teacher, type);
+      
+      hideEditPanel();
+    });
+
+    // 编辑面板取消
+    document.getElementById('panelCancel').addEventListener('click', hideEditPanel);
+
+    // 操作弹窗 - 合并按钮
+    document.getElementById('modalMergeBtn').addEventListener('click', function() {
+      if (selectedCell && targetCell) {
+        mergeCells(selectedCell, targetCell);
+      }
+      hideAllModals();
+    });
+
+    // 操作弹窗 - 复制按钮（复制类型）
+    document.getElementById('modalCopyBtn').addEventListener('click', function() {
+      if (selectedCell && targetCell) {
+        copyCourseInfo(selectedCell, targetCell);
+        clearSelected();
+        targetCell.classList.add('selected');
+        selectedCell = targetCell;
+        updateButtonStates();
+      }
+      hideAllModals();
+    });
+
+    // 操作弹窗 - 取消按钮
+    document.getElementById('modalCancelBtn').addEventListener('click', hideAllModals);
+
+    // 复制确认弹窗 - 确定按钮
+    document.getElementById('confirmCopyBtn').addEventListener('click', function() {
+      if (selectedCell && targetCell) {
+        copyCourseInfo(selectedCell, targetCell);
+        clearSelected();
+        targetCell.classList.add('selected');
+        selectedCell = targetCell;
+        updateButtonStates();
+      }
+      hideAllModals();
+    });
+
+    // 复制确认弹窗 - 取消按钮
+    document.getElementById('confirmCancelBtn').addEventListener('click', hideAllModals);
+
+    // 移除遮罩层点击关闭弹窗的功能
+    // document.getElementById('modalOverlay').addEventListener('click', hideAllModals);
+
+    // 点击空白处关闭编辑面板
+    document.addEventListener('click', function(e) {
+      if (floatEditPanel.style.display !== 'flex') return;
+      if (floatEditPanel.contains(e.target)) return;
+      if (e.target.closest('.course-cell') === currentEditingCell) return;
+      hideEditPanel();
+    });
+  }
+
+  // ---------- 初始化 ----------
+  initMetadata();
+  loadFromStorage();
+  renderFooter();
+  initEventListeners();
+
+})();
+</script>
+</body>
+</html>
