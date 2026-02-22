@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../icons/favicon.ico">
-    <title>🎓熊熊Land - BNU</title>
+    <title>🧮熊熊Land - 计算器</title>
+    <!-- Desmos API (使用示例密钥，个人项目可免费使用) -->
+    <script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=e22b95695fcf4a0a9d64a762888e2a80"></script>
     <style>
         /* ----- 基础重置 & 全局变量 (与主页完全一致) ----- */
         * {
@@ -88,7 +90,7 @@
             border-radius: 16px;
         }
 
-        /* 导航菜单 (保留首页和相册) */
+        /* 导航菜单 */
         .nav {
             justify-content: center;
             display: flex;
@@ -136,34 +138,48 @@
             text-align: center;
         }
 
-        /* 功能按钮组：两列网格布局 */
-        .feature-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 30px 0 20px;
+        /* ----- 计算器类型选择器 (新添加) ----- */
+        .calculator-type-selector {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0 10px;
         }
-        .feature-btn {
-            display: inline-block;
-            padding: 12px 10px;
-            border-radius: 12px;          /* 与导航不同的基础圆角 */
+        .calc-type-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 30px;
             font-weight: bold;
-            text-align: center;
+            cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            font-size: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
         }
-        .feature-btn:hover {
+        .calc-type-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
-        .svg-image {
-            width: 280px;          /* 相对父容器宽度 */
-            max-width: 250px;    /* 最大宽度限制，避免过大 */
-            height: auto;        /* 保持比例 */
-            }
+        .calc-type-btn.active {
+            box-shadow: 0 0 0 3px currentColor;
+        }
 
+        /* ----- 计算器包装器（主题样式容器）----- */
+        .calculator-wrapper {
+            background: #fff;
+            padding: 12px;
+            border-radius: 16px;
+            transition: all 0.2s ease;
+            margin: 15px 0 15px;
+            width: 100%;
+        }
+        #calculator {
+            width: 100%;
+            height: 450px;
+            border: none;
+        }
 
-        /* 移动端基础适配 (与主页一致) */
+        /* 移动端适配 */
         @media (max-width: 768px) {
             .page-layout {
                 flex-direction: column;
@@ -213,20 +229,15 @@
             .title-with-images {
                 gap: 15px;
             }
-            /* 功能按钮在移动端变为单列 */
-            .feature-container {
-                grid-template-columns: 1fr;
-                gap: 10px;
+            #calculator {
+                height: 350px;
             }
-            
-            .feature-btn {
-                padding: 10px 12px;
+            .calculator-type-selector {
+                gap: 8px;
+            }
+            .calc-type-btn {
+                padding: 6px 12px;
                 font-size: 14px;
-            }
-            .svg-image {
-            width: 60%;          /* 相对父容器宽度 */
-            max-width: 150px;    /* 最大宽度限制，避免过大 */
-            height: auto;        /* 保持比例 */
             }
         }
         @media (min-width: 601px) and (max-width: 768px) {
@@ -234,20 +245,14 @@
                 flex-direction: row;
             }
         }
-.svg-image {
-    max-width: 100%;
-    height: auto;
-    display: inline-block;
-    transition: border 0.2s ease, box-shadow 0.2s ease;
-}
+
         /* ----- 像素主题专用字体 ----- */
         @font-face {
             font-family: "Minecraft AE";
             src: url("../fonts/Minecraft AE(ch).ttf") format("truetype");
         }
 
-        /* ========== 四个主题的样式 ========== */
-        /* 注意：导航区样式保持不变，功能按钮区单独设计以作区分 */
+        /* ========== 四个主题的样式（包含计算器类型按钮） ========== */
 
         /* ---- 卡通童趣风 ---- */
         body.theme-original {
@@ -270,28 +275,37 @@
         }
         .theme-original .nav li a {
             background-color: #4fc3f7;
+            box-shadow: 0 4px 0 #d45e7a;
         }
         .theme-original .nav li a:hover {
             background-color: #2196f3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
         }
         .theme-original .nav li a.active {
             background-color: #ff6b8b;
         }
-        /* 功能按钮：半透明白背景，粉色虚线边框，粉色文字 */
-        .theme-original .feature-btn {
-            background-color: rgba(255,255,255,0.8);
-            border: 2px dashed #ff6b8b;
+        /* 计算器类型按钮 */
+        .theme-original .calc-type-btn {
+            background-color: #ffe0e7;
             color: #ff6b8b;
-            box-shadow: 0 4px 10px rgba(255,107,139,0.1);
+            border: 2px solid #ff9eaa;
         }
-        .theme-original .feature-btn:hover {
-            background-color: rgba(255,255,255,1);
+        .theme-original .calc-type-btn:hover {
+            background-color: #ffc0d0;
+        }
+        .theme-original .calc-type-btn.active {
+            background-color: #ff6b8b;
+            color: white;
             border-color: #ff4d6d;
         }
-.theme-original .svg-image {
-    border: 4px dashed #ff6b8b;
-    border-radius: 16px;
-}
+        /* 计算器包装器 */
+        .theme-original .calculator-wrapper {
+            border: 3px dashed #ff6b8b;
+            box-shadow: 0 4px 12px rgba(255,107,139,0.15);
+            background: #fff;
+        }
+
         /* ---- 糖果缤纷风 ---- */
         body.theme-candy {
             background-color: #fff0f5;
@@ -337,25 +351,29 @@
             border: 4px solid #ffdd55;
             box-shadow: 0 0 0 4px rgba(255,221,85,0.2);
         }
-        /* 功能按钮：浅粉渐变背景，半透明边框，渐变文字 */
-        .theme-candy .feature-btn {
+        /* 计算器类型按钮 */
+        .theme-candy .calc-type-btn {
             background: linear-gradient(145deg,#ffe6f0,#fff0f5);
-            border: 2px solid rgba(255,133,162,0.5);
-            border-radius: 30px;
             color: #ff6b8b;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-            box-shadow: 0 4px 12px rgba(255,133,162,0.2);
+            border: 2px solid #ff99cc;
+            border-radius: 30px;
         }
-        .theme-candy .feature-btn:hover {
+        .theme-candy .calc-type-btn:hover {
             background: linear-gradient(145deg,#ffd9e6,#ffe6f0);
-            border-color: #ff85a2;
-            transform: translateY(-2px);
         }
-.theme-candy .svg-image {
-    border: 4px solid #ff85a2;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(255, 133, 162, 0.2);
-}
+        .theme-candy .calc-type-btn.active {
+            background: linear-gradient(145deg,#ff6b8b,#ff85a2);
+            color: white;
+            border-color: #ff4d6d;
+        }
+        /* 计算器包装器 */
+        .theme-candy .calculator-wrapper {
+            border: 3px solid rgba(255,133,162,0.5);
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(255,133,162,0.25);
+            background: #fff;
+        }
+
         /* ---- 森林治愈风 ---- */
         body.theme-forest {
             background-color: #f5f9f0;
@@ -378,6 +396,7 @@
         }
         .theme-forest .nav li a {
             background-color: #7ccd7c;
+            border: 2px solid #4f7317;
         }
         .theme-forest .nav li a:hover {
             background-color: #66c266;
@@ -388,52 +407,30 @@
         .theme-forest .side-gif {
             border: 3px solid #c19a6b;
         }
-        /* 功能按钮：亚麻色背景，深绿色边框，木质文字 */
-        .theme-forest .feature-btn {
+        /* 计算器类型按钮 */
+        .theme-forest .calc-type-btn {
             background-color: #e0d6c0;
+            color: #3a5e1c;
             border: 2px solid #6b8e23;
             border-radius: 8px;
-            color: #3a5e1c;
-            box-shadow: inset 0 1px 4px rgba(255,255,255,0.6), 0 4px 8px rgba(0,0,0,0.1);
-            font-weight: 600;
         }
-        .theme-forest .feature-btn:hover {
+        .theme-forest .calc-type-btn:hover {
             background-color: #d2c5a8;
+        }
+        .theme-forest .calc-type-btn.active {
+            background-color: #6b8e23;
+            color: white;
             border-color: #4f7317;
         }
-.theme-forest .svg-image {
-    border: 4px solid #6b8e23;
-    border-radius: 8px;
-}      
-
-        /*----- 以上三种主题的按钮修正 -----*/
-        .theme-original .nav li a {
-            box-shadow: 0 4px 0 #d45e7a; /* 深粉色阴影，模拟立体按压效果 */
-        }
-        .theme-original .back-btn {
-            box-shadow: 0 4px 0 #d45e7a;
-        }
-        .theme-original .nav li a:hover,
-        .theme-original .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 #d45e7a; /* hover时阴影更高，配合上移 */
-        }
-        .theme-forest .nav li a,
-        .theme-forest .back-btn {
-            border: 2px solid #4f7317; /* 深绿色边框，与文字颜色呼应 */
-        }
-        /* 普通状态添加半透明白色边框 */
-        .theme-candy .nav li a,
-        .theme-candy .back-btn {
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-        /* hover时边框变为纯白（保留原有渐变背景和缩放效果） */
-        .theme-candy .nav li a:hover,
-        .theme-candy .back-btn:hover {
-            border-color: #fff;
+        /* 计算器包装器 */
+        .theme-forest .calculator-wrapper {
+            border: 3px solid #6b8e23;
+            border-radius: 12px;
+            box-shadow: inset 0 1px 5px rgba(255,255,255,0.8), 0 6px 12px rgba(0,0,0,0.1);
+            background: #fff;
         }
 
-  /* ---- 我的世界像素风 (使用 Minecraft AE 字体) ---- */
+        /* ---- 我的世界像素风 ---- */
         body.theme-pixel {
             font-family: "Minecraft AE", "幼圆", "Comic Sans MS", monospace;
             background-color: #e0e0e0;
@@ -504,8 +501,8 @@
             padding: 4px;
             background-color: #f0f0f0;
         }
-        /* 功能按钮：像素风不同色块，绿色边框，亮色背景 */
-        .theme-pixel .feature-btn {
+        /* 计算器类型按钮 */
+        .theme-pixel .calc-type-btn {
             background-color: #507050;
             border: 4px solid #000;
             border-radius: 0;
@@ -515,50 +512,27 @@
             font-family: "Minecraft AE", monospace;
             -webkit-font-smoothing: none;
             -moz-osx-font-smoothing: grayscale;
+            padding: 6px 16px;
         }
-        .theme-pixel .feature-btn:hover {
+        .theme-pixel .calc-type-btn:hover {
             background-color: #60a060;
             transform: translate(2px,2px);
             box-shadow: 2px 2px 0 #2a3a2a;
         }
-        .theme-pixel .svg-image {
-    border: 4px solid #000;
-    border-radius: 0;
-    box-shadow: 4px 4px 0 #2a3a2a;
-}
-
-        /* 像素主题移动端适配 */
-        @media (max-width: 768px) {
-            .theme-pixel {
-                font-size: 16px !important;
-                line-height: 1;
-            }
-            .theme-pixel .container {
-                border-width: 4px;
-                box-shadow: 4px 4px 0 #4a3218;
-            }
-            .theme-pixel h1 {
-                font-size: 20px;
-                padding: 8px;
-                border-width: 3px;
-                text-shadow: 2px 2px 0 #000;
-                -webkit-font-smoothing: none;
-                -moz-osx-font-smoothing: grayscale;
-            }
-            .theme-pixel .nav {
-                border-width: 3px;
-            }
-            .theme-pixel .nav li a,
-            .theme-pixel .feature-btn {
-                border-width: 3px;
-                box-shadow: 3px 3px 0 #202080;
-                -webkit-font-smoothing: none;
-                -moz-osx-font-smoothing: grayscale;
-            }
-            .theme-pixel .side-gif {
-                border-width: 3px;
-                box-shadow: 3px 3px 0 #000;
-            }
+        .theme-pixel .calc-type-btn.active {
+            background-color: #ffaa00;
+            color: #000;
+            text-shadow: 2px 2px 0 #fff;
+            border-color: #000;
+            box-shadow: 4px 4px 0 #2a3a2a;
+        }
+        /* 计算器包装器 */
+        .theme-pixel .calculator-wrapper {
+            border: 5px solid #000;
+            border-radius: 0;
+            box-shadow: 6px 6px 0 #2a3a2a;
+            background: #fff;
+            padding: 10px;
         }
 
         /* 主题按钮配色 */
@@ -579,7 +553,6 @@
             #btn-pixel { font-size: 12px; }
             .theme-candy .nav { border-radius: 20px; }
         }
-        
     </style>
 </head>
 <body class="theme-original">
@@ -592,50 +565,43 @@
             <button class="theme-btn" id="btn-pixel">复古像素</button>
         </div>
         <div class="container">
-            <!-- 导航菜单：仅保留首页和相册，无高亮 -->
+            <!-- 导航菜单 -->
             <ul class="nav">
                 <li><a href="../index.html">首页</a></li>
                 <li><a href="../gallery.html">相册</a></li>
                 <li><a href="../videos.html">影集</a></li>
                 <li><a href="#">故事</a></li>
                 <li><a href="../maptest.html">地图</a></li>
-                <li><a href="BNUindex.html", class="active">BNU</a></li>
-                <li><a href="../more/more_index.html">更多</a></li>
+                <li><a href="../BNU/BNUindex.html">BNU</a></li>
+                <li><a href="more_index.html", class="active">更多</a></li>
             </ul>
 
             <div class="title-with-images">
-                <img src="images/pigsleepy.webp" alt="左侧动图" class="side-gif">
-                <h1>熊熊大学BNU</h1>
-                <img src="images/pigsleep.webp" alt="右侧动图" class="side-gif">
+                <img src="images/dudubird.webp" alt="左侧动图" class="side-gif">
+                <h1>科学计算器</h1>
+                <img src="images/pigeating.webp" alt="右侧动图" class="side-gif">
             </div>
-            <p>下面是关于熊熊大学的内容</p>
+            <p>Desmos 计算器家族 · 一键切换类型</p>
 
-            <!-- 功能按钮组：两列网格 -->
-            <div class="feature-container">
-                <a href="https://onevpn.bnu.edu.cn/" target="_blank" class="feature-btn">信息门户</a>
-                <a href="BNUcalendar.html" class="feature-btn">校历</a>
-                <a href="BNUmap.html" class="feature-btn">学校地图</a>
-                <a href="BNUtimetable.html" class="feature-btn">课程表</a>
-                <a href="#" class="feature-btn">绩点计算</a>
-                <a href="#" class="feature-btn">体测成绩</a>
-                <a href="#" class="feature-btn">图书馆</a>
-                <a href="#" class="feature-btn">社团活动</a>
-                <a href="#" class="feature-btn">食堂</a>
-                <a href="#" class="feature-btn">考试安排</a>
+            <!-- 计算器类型选择器（新） -->
+            <div class="calculator-type-selector">
+                <button class="calc-type-btn" data-type="graphing">图形</button>
+                <button class="calc-type-btn active" data-type="scientific">科学</button>
+                <button class="calc-type-btn" data-type="fourfunction">四功能</button>
+                <button class="calc-type-btn" data-type="geometry">几何</button>
+                <button class="calc-type-btn" data-type="3d">3D</button>
             </div>
-            
-            <div style="text-align: center;">
-                <a href="https://www.bnu.edu.cn/" target="_blank">
-                <img src="images/BNUlogo.svg" alt="BNU矢量图" class="svg-image" >
-                </a>
-            </div>
-            
 
+            <!-- 计算器包装器 -->
+            <div class="calculator-wrapper">
+                <div id="calculator"></div>
+            </div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // ---------- 主题切换功能 ----------
             const btnOriginal = document.getElementById('btn-original');
             const btnCandy = document.getElementById('btn-candy');
             const btnForest = document.getElementById('btn-forest');
@@ -643,7 +609,6 @@
             const body = document.body;
             const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
 
-            // 从 localStorage 读取保存的主题，若没有则默认 'theme-original'
             const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
             body.className = savedTheme;
 
@@ -659,7 +624,6 @@
                     btnPixel.classList.add('active');
                 }
             }
-
             setActiveButtonFromBodyClass();
 
             function saveTheme(themeClass) {
@@ -686,6 +650,69 @@
                 setActiveButtonFromBodyClass();
                 saveTheme('theme-pixel');
             });
+
+            // ---------- 计算器类型切换 (修复版) ----------
+            const typeButtons = document.querySelectorAll('.calc-type-btn');
+            const calculatorContainer = document.getElementById('calculator');
+            let currentCalculator = null;
+
+            // 正确的类型映射 (3D 使用 Graphing3DCalculator)
+            const typeMap = {
+                'graphing': Desmos.GraphingCalculator,
+                'scientific': Desmos.ScientificCalculator,
+                'fourfunction': Desmos.FourFunctionCalculator,
+                'geometry': Desmos.Geometry,
+                '3d': Desmos.Calculator3D   // 修正这里
+            };
+
+            // 销毁旧的 calculator 实例
+            function destroyCurrentCalculator() {
+                if (currentCalculator && typeof currentCalculator.destroy === 'function') {
+                    currentCalculator.destroy();
+                    currentCalculator = null;
+                }
+            }
+
+            // 初始化指定类型的计算器
+            function initCalculator(type = 'scientific') {
+                destroyCurrentCalculator(); // 先销毁旧的
+
+                const constructorFn = typeMap[type];
+                if (!constructorFn) {
+                    console.error('未知的计算器类型:', type);
+                    return;
+                }
+
+                try {
+                    currentCalculator = constructorFn(calculatorContainer);
+                } catch (e) {
+                    console.error('创建计算器失败:', e);
+                }
+            }
+
+            // 设置按钮激活状态
+            function setActiveTypeButton(type) {
+                typeButtons.forEach(btn => {
+                    const btnType = btn.dataset.type;
+                    if (btnType === type) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+            }
+
+            // 为每个按钮绑定事件
+            typeButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const type = this.dataset.type;
+                    setActiveTypeButton(type);
+                    initCalculator(type);
+                });
+            });
+
+            // 启动默认计算器（科学）
+            initCalculator('scientific');
         });
     </script>
 </body>
