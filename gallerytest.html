@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="icons/favicon.ico">
     <title>🖼熊熊Land - 相册</title>
     <style>
         /* ----- 基础重置 & 全局变量 (与首页完全一致) ----- */
@@ -607,6 +608,19 @@
                 padding: 4px 10px;
             }
         }
+        /* 翻页滑动淡出动画 */
+.gallery-grid.animate {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.gallery-grid.exit {
+    opacity: 0;
+    transform: translateX(-20px);
+    pointer-events: none;  /* 防止动画期间点击 */
+}
+.gallery-grid.enter {
+    opacity: 0;
+    transform: translateX(20px);
+}
 
         /* ----- 分页按钮主题适配 ----- */
 /* 基础分页样式已在全局定义，此处仅需主题覆盖 */
@@ -939,6 +953,7 @@
 .theme-pixel .modal-close {
     color: #fff;
     text-shadow: 2px 2px 0 #000;
+    font-family: 幼圆;
 }
 .theme-pixel .modal-caption {
     color: #fff;
@@ -999,9 +1014,11 @@
             <ul class="nav">
                 <li><a href="index.html">首页</a></li>
                 <li><a href="gallery.html" class="active">相册</a></li>
-                <li><a href="#">影集</a></li>
+                <li><a href="videos.html">影集</a></li>
+                <li><a href="#">故事</a></li>
                 <li><a href="maptest.html">地图</a></li>
                 <li><a href="BNU/BNUindex.html">BNU</a></li>
+                <li><a href="more/more_index.html">更多</a></li>
             </ul>
 
             <div class="title-with-images">
@@ -1071,6 +1088,10 @@ const galleryItems = [
     { src: 'images/LuShanlake.jpg', caption: '庐山上的芦林湖'},
     { src: 'images/bearzhchess.jpg', caption: '玫熊玩中国象棋'},
     { src: 'images/bearsinBBEZ.jpg', caption: '玫熊恩熊在蚌埠二中吃冒菜'},
+    { src: 'images/babybears.jpg', caption: '两头小宝熊！——豆姐作品'},
+    { src: 'images/babybears_cry.jpg', caption: '小玫熊被弄哭了TAT'},
+
+
     
     // 继续添加更多项...
     // 示例： { src: 'images/xxx.jpg', caption: '说明文字' }
@@ -1338,6 +1359,170 @@ jumpInput.addEventListener('keypress', (e) => {
 
             // 防止点击容器内部关闭
             modalOverlay.querySelector('.modal-container').addEventListener('click', (e) => e.stopPropagation());
+// ---------- 翻页滑动淡出效果实现（最终修正版）----------
+(function initPaginationWithAnimation() {
+    // 获取原控件
+    const oldPrev = document.getElementById('prevPage');
+    const oldNext = document.getElementById('nextPage');
+    const oldJumpBtn = document.getElementById('jumpBtn');
+    const oldInput = document.getElementById('jumpPage');
+    if (!oldPrev || !oldNext || !oldJumpBtn || !oldInput) return;
+
+    // 克隆替换按钮和输入框（移除旧事件）
+    const newPrev = oldPrev.cloneNode(true);
+    const newNext = oldNext.cloneNode(true);
+    const newJumpBtn = oldJumpBtn.cloneNode(true);
+    const newInput = oldInput.cloneNode(true);
+
+    oldPrev.parentNode.replaceChild(newPrev, oldPrev);
+    oldNext.parentNode.replaceChild(newNext, oldNext);
+    oldJumpBtn.parentNode.replaceChild(newJumpBtn, oldJumpBtn);
+    oldInput.parentNode.replaceChild(newInput, oldInput);
+
+    // 重新获取新引用
+    const prevBtn = newPrev;
+    const nextBtn = newNext;
+    const jumpBtn = newJumpBtn;
+    const jumpInput = newInput;
+
+    // 重写 renderPage 函数，使用最新的按钮引用
+    window.renderPage = function(page) {
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageData = galleryItems.slice(start, end);
+        galleryGrid.innerHTML = '';
+        pageData.forEach((item, idx) => {
+            const globalIndex = start + idx;
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'gallery-item';
+            itemDiv.setAttribute('data-global-index', globalIndex);
+            itemDiv.innerHTML = `
+                <img src="${item.src}" alt="${item.caption}">
+                <div class="caption">${item.caption}</div>
+            `;
+            galleryGrid.appendChild(itemDiv);
+        });
+        prevBtn.disabled = (page === 1);
+        nextBtn.disabled = (page === totalPages);
+        pageInfo.textContent = `第 ${page} / ${totalPages} 页`;
+    };
+
+    let isAnimating = false;
+    const grid = document.querySelector('.gallery-grid');
+
+    // 动画期间禁用所有翻页控件
+    function setAllControlsDisabled(disabled) {
+        prevBtn.disabled = disabled;
+        nextBtn.disabled = disabled;
+        jumpBtn.disabled = disabled;
+        jumpInput.disabled = disabled;
+    }
+
+    // 核心动画切换函数
+    function animatePageChange(newPage) {
+        if (isAnimating) return;
+        if (newPage < 1 || newPage > totalPages || newPage === currentPage) return;
+
+        isAnimating = true;
+        setAllControlsDisabled(true);   // 动画开始，禁用所有控件
+
+        grid.classList.add('animate');
+        grid.classList.add('exit');
+
+        const onExitEnd = (e) => {
+            if (e.target !== grid || (!e.propertyName.includes('opacity') && !e.propertyName.includes('transform'))) return;
+            grid.removeEventListener('transitionend', onExitEnd);
+
+            grid.classList.remove('exit');
+            currentPage = newPage;
+            renderPage(currentPage);          // 重新渲染，此时 prev/next 状态已正确设置
+
+            grid.offsetHeight;                 // 强制重排
+
+            grid.classList.add('enter');
+
+            const onEnterEnd = (e2) => {
+                if (e2.target !== grid || (!e2.propertyName.includes('opacity') && !e2.propertyName.includes('transform'))) return;
+                grid.removeEventListener('transitionend', onEnterEnd);
+                grid.classList.remove('enter', 'animate');
+
+                // 只启用跳转控件，上一页/下一页按钮保持 renderPage 设置的状态
+                jumpBtn.disabled = false;
+                jumpInput.disabled = false;
+                isAnimating = false;
+            };
+            grid.addEventListener('transitionend', onEnterEnd);
+            // 入场动画超时备用
+            setTimeout(() => {
+                if (isAnimating) {
+                    grid.removeEventListener('transitionend', onEnterEnd);
+                    grid.classList.remove('enter', 'animate');
+                    jumpBtn.disabled = false;
+                    jumpInput.disabled = false;
+                    isAnimating = false;
+                }
+            }, 400);
+        };
+        grid.addEventListener('transitionend', onExitEnd);
+        // 退场动画超时备用
+        setTimeout(() => {
+            if (isAnimating) {
+                grid.removeEventListener('transitionend', onExitEnd);
+                grid.classList.remove('exit');
+                currentPage = newPage;
+                renderPage(currentPage);
+                grid.classList.add('enter');
+                setTimeout(() => {
+                    grid.classList.remove('enter', 'animate');
+                    jumpBtn.disabled = false;
+                    jumpInput.disabled = false;
+                    isAnimating = false;
+                }, 300);
+            }
+        }, 350);
+    }
+
+    // 绑定新事件
+    prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!isAnimating && currentPage > 1) {
+            animatePageChange(currentPage - 1);
+        }
+    });
+
+    nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (!isAnimating && currentPage < totalPages) {
+            animatePageChange(currentPage + 1);
+        }
+    });
+
+    jumpBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (isAnimating) return;
+        let page = parseInt(jumpInput.value, 10);
+        if (isNaN(page) || page < 1) page = 1;
+        if (page > totalPages) page = totalPages;
+        if (page !== currentPage) {
+            animatePageChange(page);
+        }
+        jumpInput.value = '';
+    });
+
+    jumpInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (isAnimating) return;
+            let page = parseInt(jumpInput.value, 10);
+            if (isNaN(page) || page < 1) page = 1;
+            if (page > totalPages) page = totalPages;
+            if (page !== currentPage) {
+                animatePageChange(page);
+            }
+            jumpInput.value = '';
+        }
+    });
+})();
         });
     </script>
 </body>

@@ -700,6 +700,20 @@
         .theme-forest .nav li a { border: 2px solid #4f7317; }
         .theme-candy .nav li a { border-color: rgba(255,255,255,0.3); }
         .theme-candy .nav li a:hover { border-color: #fff; }
+
+        /* 翻页滑动淡出动画 */
+.gallery-grid.animate {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.gallery-grid.exit {
+    opacity: 0;
+    transform: translateX(-20px);
+    pointer-events: none;  /* 动画期间禁止点击内部元素 */
+}
+.gallery-grid.enter {
+    opacity: 0;
+    transform: translateX(20px);
+}
     </style>
 </head>
 <body class="theme-original">
@@ -744,128 +758,232 @@
         </div>
     </div>
 
-    <script>
-        (function() {
-            document.addEventListener('DOMContentLoaded', function() {
-                // 视频数据 (请修改为实际路径)
-                const videoItems = [
-                    { src: 'videos/bear_film_qhd.mp4', caption: '玫熊在冬季秦皇岛的海边（熊熊大电影预告片！）' },
-                    { src: 'videos/bearindogffe.mp4', caption: '玫熊在狗咖——秦皇岛' },
-                    { src: 'videos/bearcapital.mp4', caption: '一只玫熊柱' },
-                    { src: 'videos/sjzhotpot.mp4', caption: '石家庄独去闲小火锅' },
-                    
-                ];
+<script>
+(function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        // ---------- 视频数据 ----------
+        const videoItems = [
+            { src: 'videos/bear_film_qhd.mp4', caption: '玫熊在冬季秦皇岛的海边（熊熊大电影预告片！）' },
+            { src: 'videos/bearindogffe.mp4', caption: '玫熊在狗咖——秦皇岛' },
+            { src: 'videos/bearcapital.mp4', caption: '一只玫熊柱' },
+            { src: 'videos/sjzhotpot.mp4', caption: '石家庄独去闲小火锅' },
+        ];
 
-                const itemsPerPage = 1;          // 每页1个视频
-                let currentPage = 1;
-                const totalPages = Math.ceil(videoItems.length / itemsPerPage);
+        const itemsPerPage = 1;          // 每页1个视频
+        let currentPage = 1;
+        const totalPages = Math.ceil(videoItems.length / itemsPerPage);
 
-                const galleryGrid = document.querySelector('.gallery-grid');
-                const prevBtn = document.getElementById('prevPage');
-                const nextBtn = document.getElementById('nextPage');
-                const pageInfo = document.getElementById('pageInfo');
-                const jumpInput = document.getElementById('jumpPage');
-                const jumpBtn = document.getElementById('jumpBtn');
+        const galleryGrid = document.querySelector('.gallery-grid');
+        const oldPrev = document.getElementById('prevPage');
+        const oldNext = document.getElementById('nextPage');
+        const oldJumpBtn = document.getElementById('jumpBtn');
+        const oldInput = document.getElementById('jumpPage');
+        const pageInfo = document.getElementById('pageInfo');
 
-                function renderPage(page) {
-                    const start = (page - 1) * itemsPerPage;
-                    const end = start + itemsPerPage;
-                    const pageData = videoItems.slice(start, end);
+        // 克隆替换所有分页控件（移除旧事件）
+        const newPrev = oldPrev.cloneNode(true);
+        const newNext = oldNext.cloneNode(true);
+        const newJumpBtn = oldJumpBtn.cloneNode(true);
+        const newInput = oldInput.cloneNode(true);
 
-                    galleryGrid.innerHTML = '';
-                    pageData.forEach(item => {
-                        const itemDiv = document.createElement('div');
-                        itemDiv.className = 'gallery-item';
-                        itemDiv.innerHTML = `
-                            <video src="${item.src}" controls playsinline preload="metadata"></video>
-                            <div class="caption">${item.caption}</div>
-                        `;
-                        galleryGrid.appendChild(itemDiv);
-                    });
+        oldPrev.parentNode.replaceChild(newPrev, oldPrev);
+        oldNext.parentNode.replaceChild(newNext, oldNext);
+        oldJumpBtn.parentNode.replaceChild(newJumpBtn, oldJumpBtn);
+        oldInput.parentNode.replaceChild(newInput, oldInput);
 
-                    prevBtn.disabled = (page === 1);
-                    nextBtn.disabled = (page === totalPages);
-                    pageInfo.textContent = `第 ${page} / ${totalPages} 页`;
-                }
+        const prevBtn = newPrev;
+        const nextBtn = newNext;
+        const jumpBtn = newJumpBtn;
+        const jumpInput = newInput;
 
-                renderPage(currentPage);
+        // 重写 renderPage，使用新按钮引用
+        function renderPage(page) {
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageData = videoItems.slice(start, end);
 
-                prevBtn.addEventListener('click', function() {
-                    if (currentPage > 1) {
-                        currentPage--;
-                        renderPage(currentPage);
-                    }
-                });
-
-                nextBtn.addEventListener('click', function() {
-                    if (currentPage < totalPages) {
-                        currentPage++;
-                        renderPage(currentPage);
-                    }
-                });
-
-                function goToPage() {
-                    let page = parseInt(jumpInput.value, 10);
-                    if (isNaN(page) || page < 1) page = 1;
-                    if (page > totalPages) page = totalPages;
-                    if (page !== currentPage) {
-                        currentPage = page;
-                        renderPage(currentPage);
-                    }
-                    jumpInput.value = '';
-                }
-
-                jumpBtn.addEventListener('click', goToPage);
-                jumpInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') goToPage();
-                });
-
-                // ---------- 主题切换 (带localStorage) ----------
-                const btnOriginal = document.getElementById('btn-original');
-                const btnCandy = document.getElementById('btn-candy');
-                const btnForest = document.getElementById('btn-forest');
-                const btnPixel = document.getElementById('btn-pixel');
-                const body = document.body;
-                const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
-
-                const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
-                body.className = savedTheme;
-
-                function setActiveButtonFromBodyClass() {
-                    allBtns.forEach(btn => btn.classList.remove('active'));
-                    if (body.classList.contains('theme-original')) btnOriginal.classList.add('active');
-                    else if (body.classList.contains('theme-candy')) btnCandy.classList.add('active');
-                    else if (body.classList.contains('theme-forest')) btnForest.classList.add('active');
-                    else if (body.classList.contains('theme-pixel')) btnPixel.classList.add('active');
-                }
-                setActiveButtonFromBodyClass();
-
-                function saveTheme(themeClass) {
-                    localStorage.setItem('selectedTheme', themeClass);
-                }
-
-                btnOriginal.addEventListener('click', function() {
-                    body.className = 'theme-original';
-                    setActiveButtonFromBodyClass();
-                    saveTheme('theme-original');
-                });
-                btnCandy.addEventListener('click', function() {
-                    body.className = 'theme-candy';
-                    setActiveButtonFromBodyClass();
-                    saveTheme('theme-candy');
-                });
-                btnForest.addEventListener('click', function() {
-                    body.className = 'theme-forest';
-                    setActiveButtonFromBodyClass();
-                    saveTheme('theme-forest');
-                });
-                btnPixel.addEventListener('click', function() {
-                    body.className = 'theme-pixel';
-                    setActiveButtonFromBodyClass();
-                    saveTheme('theme-pixel');
-                });
+            galleryGrid.innerHTML = '';
+            pageData.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'gallery-item';
+                itemDiv.innerHTML = `
+                    <video src="${item.src}" controls playsinline preload="metadata"></video>
+                    <div class="caption">${item.caption}</div>
+                `;
+                galleryGrid.appendChild(itemDiv);
             });
-        })();
-    </script>
+
+            prevBtn.disabled = (page === 1);
+            nextBtn.disabled = (page === totalPages);
+            pageInfo.textContent = `第 ${page} / ${totalPages} 页`;
+        }
+
+        // 初始化第一页
+        renderPage(currentPage);
+
+        // ---------- 翻页动画 ----------
+        let isAnimating = false;
+        const grid = galleryGrid;  // 别名
+
+        // 动画期间禁用所有翻页控件
+        function setAllControlsDisabled(disabled) {
+            prevBtn.disabled = disabled;
+            nextBtn.disabled = disabled;
+            jumpBtn.disabled = disabled;
+            jumpInput.disabled = disabled;
+        }
+
+        // 核心动画切换函数
+        function animatePageChange(newPage) {
+            if (isAnimating) return;
+            if (newPage < 1 || newPage > totalPages || newPage === currentPage) return;
+
+            isAnimating = true;
+            setAllControlsDisabled(true);   // 动画开始，禁用所有控件
+
+            grid.classList.add('animate');
+            grid.classList.add('exit');
+
+            const onExitEnd = (e) => {
+                if (e.target !== grid || (!e.propertyName.includes('opacity') && !e.propertyName.includes('transform'))) return;
+                grid.removeEventListener('transitionend', onExitEnd);
+
+                grid.classList.remove('exit');
+                currentPage = newPage;
+                renderPage(currentPage);          // 重新渲染，此时 prev/next 状态已正确设置
+
+                grid.offsetHeight;                 // 强制重排
+
+                grid.classList.add('enter');
+
+                const onEnterEnd = (e2) => {
+                    if (e2.target !== grid || (!e2.propertyName.includes('opacity') && !e2.propertyName.includes('transform'))) return;
+                    grid.removeEventListener('transitionend', onEnterEnd);
+                    grid.classList.remove('enter', 'animate');
+
+                    // 只启用跳转控件，上一页/下一页按钮保持 renderPage 设置的状态
+                    jumpBtn.disabled = false;
+                    jumpInput.disabled = false;
+                    isAnimating = false;
+                };
+                grid.addEventListener('transitionend', onEnterEnd);
+                // 入场动画超时备用
+                setTimeout(() => {
+                    if (isAnimating) {
+                        grid.removeEventListener('transitionend', onEnterEnd);
+                        grid.classList.remove('enter', 'animate');
+                        jumpBtn.disabled = false;
+                        jumpInput.disabled = false;
+                        isAnimating = false;
+                    }
+                }, 400);
+            };
+            grid.addEventListener('transitionend', onExitEnd);
+            // 退场动画超时备用
+            setTimeout(() => {
+                if (isAnimating) {
+                    grid.removeEventListener('transitionend', onExitEnd);
+                    grid.classList.remove('exit');
+                    currentPage = newPage;
+                    renderPage(currentPage);
+                    grid.classList.add('enter');
+                    setTimeout(() => {
+                        grid.classList.remove('enter', 'animate');
+                        jumpBtn.disabled = false;
+                        jumpInput.disabled = false;
+                        isAnimating = false;
+                    }, 300);
+                }
+            }, 350);
+        }
+
+        // 绑定新事件
+        prevBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!isAnimating && currentPage > 1) {
+                animatePageChange(currentPage - 1);
+            }
+        });
+
+        nextBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (!isAnimating && currentPage < totalPages) {
+                animatePageChange(currentPage + 1);
+            }
+        });
+
+        jumpBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (isAnimating) return;
+            let page = parseInt(jumpInput.value, 10);
+            if (isNaN(page) || page < 1) page = 1;
+            if (page > totalPages) page = totalPages;
+            if (page !== currentPage) {
+                animatePageChange(page);
+            }
+            jumpInput.value = '';
+        });
+
+        jumpInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                if (isAnimating) return;
+                let page = parseInt(jumpInput.value, 10);
+                if (isNaN(page) || page < 1) page = 1;
+                if (page > totalPages) page = totalPages;
+                if (page !== currentPage) {
+                    animatePageChange(page);
+                }
+                jumpInput.value = '';
+            }
+        });
+
+        // ---------- 主题切换（保持不变）----------
+        const btnOriginal = document.getElementById('btn-original');
+        const btnCandy = document.getElementById('btn-candy');
+        const btnForest = document.getElementById('btn-forest');
+        const btnPixel = document.getElementById('btn-pixel');
+        const body = document.body;
+        const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
+
+        const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
+        body.className = savedTheme;
+
+        function setActiveButtonFromBodyClass() {
+            allBtns.forEach(btn => btn.classList.remove('active'));
+            if (body.classList.contains('theme-original')) btnOriginal.classList.add('active');
+            else if (body.classList.contains('theme-candy')) btnCandy.classList.add('active');
+            else if (body.classList.contains('theme-forest')) btnForest.classList.add('active');
+            else if (body.classList.contains('theme-pixel')) btnPixel.classList.add('active');
+        }
+        setActiveButtonFromBodyClass();
+
+        function saveTheme(themeClass) {
+            localStorage.setItem('selectedTheme', themeClass);
+        }
+
+        btnOriginal.addEventListener('click', function() {
+            body.className = 'theme-original';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-original');
+        });
+        btnCandy.addEventListener('click', function() {
+            body.className = 'theme-candy';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-candy');
+        });
+        btnForest.addEventListener('click', function() {
+            body.className = 'theme-forest';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-forest');
+        });
+        btnPixel.addEventListener('click', function() {
+            body.className = 'theme-pixel';
+            setActiveButtonFromBodyClass();
+            saveTheme('theme-pixel');
+        });
+    });
+})();
+</script>
 </body>
 </html>
