@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎓熊熊Land - BNU</title>
+    <title>📽熊熊Land - 影集 (大视频居中)</title>
     <style>
-        /* ----- 基础重置 & 全局变量 (与主页完全一致) ----- */
+        /* ----- 基础重置 & 全局变量 (与首页完全一致) ----- */
         * {
             margin: 0;
             padding: 0;
@@ -87,7 +87,7 @@
             border-radius: 16px;
         }
 
-        /* 导航菜单 (保留首页和相册) */
+        /* 导航菜单 */
         .nav {
             justify-content: center;
             display: flex;
@@ -128,41 +128,108 @@
             padding: 15px;
             border-radius: 12px;
         }
-        p {
-            font-size: 18px;
-            line-height: 1.6;
-            margin: 15px 0;
-            text-align: center;
-        }
 
-        /* 功能按钮组：两列网格布局 */
-        .feature-container {
+        /* ===== 影集网格（每页一个视频，居中放大） ===== */
+        .gallery-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin: 30px 0 20px;
+            grid-template-columns: 1fr;          /* 单列，填满容器宽度 */
+            justify-items: center;                /* 水平居中 */
+            align-items: center;                  /* 垂直居中（若有多余高度） */
+            gap: 20px;
+            margin: 20px 0 30px;
         }
-        .feature-btn {
-            display: inline-block;
-            padding: 12px 10px;
-            border-radius: 12px;          /* 与导航不同的基础圆角 */
-            font-weight: bold;
+        
+        .gallery-item {
+            max-width: 800px;                      /* 限制最大宽度，避免过大 */
+            width: 100%;                           /* 在小屏幕上自适应 */
+            margin: 0 auto;                         /* 确保在网格单元格内居中 */
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 4px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.18);
+        }
+        .gallery-item video {
+            width: 100%;
+            height: 450px;                         /* 更大视频高度 */
+            object-fit: contain;                   /* 保持比例，不裁剪 */
+            display: block;
+            border-radius: 12px;
+            background-color: #f0f0f0;              /* 视频加载背景 */
+        }
+        .gallery-item .caption {
+            padding: 15px;
             text-align: center;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            font-size: 18px;                        /* 说明文字稍大 */
+            color: #555;
+            line-height: 1.4;
         }
-        .feature-btn:hover {
+
+        /*分页*/
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .page-btn {
+            padding: 8px 20px;
+            background-color: #87ceeb;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .page-btn:hover:not(:disabled) {
+            background-color: #4fc3f7;
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
-        .svg-image {
-            width: 280px;          /* 相对父容器宽度 */
-            max-width: 250px;    /* 最大宽度限制，避免过大 */
-            height: auto;        /* 保持比例 */
-            }
+        .page-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        #pageInfo {
+            font-size: 16px;
+            color: #333;
+        }
+        .page-jump {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
+        #jumpPage {
+            width: 70px;
+            padding: 6px 8px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            outline: none;
+            transition: 0.2s;
+        }
 
-        /* 移动端基础适配 (与主页一致) */
+        #jumpPage:focus {
+            border-color: #87ceeb;
+            box-shadow: 0 0 0 2px rgba(135,206,235,0.3);
+        }
+
+        .page-btn.small {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
+        /* ----- 移动端基础适配 ----- */
         @media (max-width: 768px) {
             .page-layout {
                 flex-direction: column;
@@ -187,7 +254,6 @@
                 left: 12px;
             }
             .container {
-                width: 100%;
                 max-width: 100%;
                 margin: 0 auto;
                 padding: 20px;
@@ -212,20 +278,13 @@
             .title-with-images {
                 gap: 15px;
             }
-            /* 功能按钮在移动端变为单列 */
-            .feature-container {
-                grid-template-columns: 1fr;
-                gap: 10px;
+            /* 视频移动端调整 */
+            .gallery-item video {
+                height: 250px;       /* 移动端适当降低高度，仍保持较大 */
             }
-            
-            .feature-btn {
-                padding: 10px 12px;
-                font-size: 14px;
-            }
-            .svg-image {
-            width: 60%;          /* 相对父容器宽度 */
-            max-width: 150px;    /* 最大宽度限制，避免过大 */
-            height: auto;        /* 保持比例 */
+            .gallery-item .caption {
+                font-size: 16px;
+                padding: 10px;
             }
         }
         @media (min-width: 601px) and (max-width: 768px) {
@@ -233,21 +292,14 @@
                 flex-direction: row;
             }
         }
-.svg-image {
-    max-width: 100%;
-    height: auto;
-    display: inline-block;
-    transition: border 0.2s ease, box-shadow 0.2s ease;
-}
+
         /* ----- 像素主题专用字体 ----- */
         @font-face {
             font-family: "Minecraft AE";
-            src: url("../fonts/Minecraft AE(ch).ttf") format("truetype");
+            src: url("fonts/Minecraft AE(ch).ttf") format("truetype");
         }
 
-        /* ========== 四个主题的样式 ========== */
-        /* 注意：导航区样式保持不变，功能按钮区单独设计以作区分 */
-
+        /* ========== 四个主题的详细样式 (与首页完全一致，融入视频元素) ========== */
         /* ---- 卡通童趣风 ---- */
         body.theme-original {
             background-color: #fff9e6;
@@ -270,27 +322,17 @@
         .theme-original .nav li a {
             background-color: #4fc3f7;
         }
-        .theme-original .nav li a:hover {
-            background-color: #2196f3;
+        .theme-original .nav li a:hover { background-color: #2196f3; }
+        .theme-original .nav li a.active { background-color: #ff6b8b; }
+        .theme-original .gallery-item {
+            background: white;
+            border: 3px solid #ff9eaa;
         }
-        .theme-original .nav li a.active {
-            background-color: #ff6b8b;
-        }
-        /* 功能按钮：半透明白背景，粉色虚线边框，粉色文字 */
-        .theme-original .feature-btn {
-            background-color: rgba(255,255,255,0.8);
-            border: 2px dashed #ff6b8b;
+        .theme-original .gallery-item .caption {
             color: #ff6b8b;
-            box-shadow: 0 4px 10px rgba(255,107,139,0.1);
+            font-weight: bold;
         }
-        .theme-original .feature-btn:hover {
-            background-color: rgba(255,255,255,1);
-            border-color: #ff4d6d;
-        }
-.theme-original .svg-image {
-    border: 4px dashed #ff6b8b;
-    border-radius: 16px;
-}
+
         /* ---- 糖果缤纷风 ---- */
         body.theme-candy {
             background-color: #fff0f5;
@@ -336,25 +378,25 @@
             border: 4px solid #ffdd55;
             box-shadow: 0 0 0 4px rgba(255,221,85,0.2);
         }
-        /* 功能按钮：浅粉渐变背景，半透明边框，渐变文字 */
-        .theme-candy .feature-btn {
-            background: linear-gradient(145deg,#ffe6f0,#fff0f5);
-            border: 2px solid rgba(255,133,162,0.5);
-            border-radius: 30px;
-            color: #ff6b8b;
-            text-shadow: 0 1px 2px rgba(255,255,255,0.5);
-            box-shadow: 0 4px 12px rgba(255,133,162,0.2);
+        .theme-candy .gallery-item {
+            background: linear-gradient(145deg, #ffffff 0%, #fff0f5 100%);
+            border: 4px solid #87cefa;
+            border-radius: 20px;
+            box-shadow: 0 8px 16px rgba(135, 206, 250, 0.2);
         }
-        .theme-candy .feature-btn:hover {
-            background: linear-gradient(145deg,#ffd9e6,#ffe6f0);
-            border-color: #ff85a2;
-            transform: translateY(-2px);
+        .theme-candy .gallery-item video {
+            border-radius: 16px;
+            border: 3px solid #ff85a2;
         }
-.theme-candy .svg-image {
-    border: 4px solid #ff85a2;
-    border-radius: 20px;
-    box-shadow: 0 4px 12px rgba(255, 133, 162, 0.2);
-}
+        .theme-candy .gallery-item .caption {
+            background: linear-gradient(90deg, #ff6b8b, #ff99cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
         /* ---- 森林治愈风 ---- */
         body.theme-forest {
             background-color: #f5f9f0;
@@ -378,61 +420,23 @@
         .theme-forest .nav li a {
             background-color: #7ccd7c;
         }
-        .theme-forest .nav li a:hover {
-            background-color: #66c266;
+        .theme-forest .nav li a:hover { background-color: #66c266; }
+        .theme-forest .nav li a.active { background-color: #c19a6b; }
+        .theme-forest .side-gif { border: 3px solid #c19a6b; }
+        .theme-forest .gallery-item {
+            background: #f8f5f0;
+            border: 4px solid #8fbc8f;
         }
-        .theme-forest .nav li a.active {
-            background-color: #c19a6b;
-        }
-        .theme-forest .side-gif {
+        .theme-forest .gallery-item video {
             border: 3px solid #c19a6b;
+            background-color: #f5f9f0;
         }
-        /* 功能按钮：亚麻色背景，深绿色边框，木质文字 */
-        .theme-forest .feature-btn {
-            background-color: #e0d6c0;
-            border: 2px solid #6b8e23;
-            border-radius: 8px;
-            color: #3a5e1c;
-            box-shadow: inset 0 1px 4px rgba(255,255,255,0.6), 0 4px 8px rgba(0,0,0,0.1);
-            font-weight: 600;
-        }
-        .theme-forest .feature-btn:hover {
-            background-color: #d2c5a8;
-            border-color: #4f7317;
-        }
-.theme-forest .svg-image {
-    border: 4px solid #6b8e23;
-    border-radius: 8px;
-}      
-
-        /*----- 以上三种主题的按钮修正 -----*/
-        .theme-original .nav li a {
-            box-shadow: 0 4px 0 #d45e7a; /* 深粉色阴影，模拟立体按压效果 */
-        }
-        .theme-original .back-btn {
-            box-shadow: 0 4px 0 #d45e7a;
-        }
-        .theme-original .nav li a:hover,
-        .theme-original .back-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0 #d45e7a; /* hover时阴影更高，配合上移 */
-        }
-        .theme-forest .nav li a,
-        .theme-forest .back-btn {
-            border: 2px solid #4f7317; /* 深绿色边框，与文字颜色呼应 */
-        }
-        /* 普通状态添加半透明白色边框 */
-        .theme-candy .nav li a,
-        .theme-candy .back-btn {
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-        /* hover时边框变为纯白（保留原有渐变背景和缩放效果） */
-        .theme-candy .nav li a:hover,
-        .theme-candy .back-btn:hover {
-            border-color: #fff;
+        .theme-forest .gallery-item .caption {
+            color: #6b8e23;
+            font-weight: bold;
         }
 
-  /* ---- 我的世界像素风 (使用 Minecraft AE 字体) ---- */
+        /* ---- 我的世界像素风 (使用 Minecraft AE 字体) ---- */
         body.theme-pixel {
             font-family: "Minecraft AE", "幼圆", "Comic Sans MS", monospace;
             background-color: #e0e0e0;
@@ -440,8 +444,6 @@
             background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23969696' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
             font-size: 16px;
             line-height: 1;
-            image-rendering: pixelated;
-            image-rendering: crisp-edges;
             -webkit-font-smoothing: none;
             -moz-osx-font-smoothing: grayscale;
             font-smooth: never;
@@ -503,29 +505,30 @@
             padding: 4px;
             background-color: #f0f0f0;
         }
-        /* 功能按钮：像素风不同色块，绿色边框，亮色背景 */
-        .theme-pixel .feature-btn {
-            background-color: #507050;
-            border: 4px solid #000;
+        .theme-pixel .gallery-item {
+            background: #c69c6d;
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm8 8h8v8H8V8zM0 8h8v8H0V8zm8 0h8v8H8V8z' fill='%23966c42' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border: 6px solid #8b5a2b;
             border-radius: 0;
+            box-shadow: 8px 8px 0 #4a3218;
+        }
+        .theme-pixel .gallery-item video {
+            border-radius: 0;
+            border: 4px solid #507050;
+            box-shadow: 4px 4px 0 #000;
+            height: 430px;       /* 像素主题稍低一点以保持边框效果，但仍比原来大 */
+            background-color: #e0e0e0;
+        }
+        .theme-pixel .gallery-item .caption {
             color: #fff;
             text-shadow: 2px 2px 0 #000;
-            box-shadow: 4px 4px 0 #2a3a2a;
-            font-family: "Minecraft AE", monospace;
+            font-size: 16px;
             -webkit-font-smoothing: none;
             -moz-osx-font-smoothing: grayscale;
+            background-color: #808080;
+            border: 2px solid #000;
+            border-radius: 0;
         }
-        .theme-pixel .feature-btn:hover {
-            background-color: #60a060;
-            transform: translate(2px,2px);
-            box-shadow: 2px 2px 0 #2a3a2a;
-        }
-        .theme-pixel .svg-image {
-    border: 4px solid #000;
-    border-radius: 0;
-    box-shadow: 4px 4px 0 #2a3a2a;
-}
-
         /* 像素主题移动端适配 */
         @media (max-width: 768px) {
             .theme-pixel {
@@ -544,11 +547,8 @@
                 -webkit-font-smoothing: none;
                 -moz-osx-font-smoothing: grayscale;
             }
-            .theme-pixel .nav {
-                border-width: 3px;
-            }
-            .theme-pixel .nav li a,
-            .theme-pixel .feature-btn {
+            .theme-pixel .nav { border-width: 3px; }
+            .theme-pixel .nav li a {
                 border-width: 3px;
                 box-shadow: 3px 3px 0 #202080;
                 -webkit-font-smoothing: none;
@@ -558,9 +558,18 @@
                 border-width: 3px;
                 box-shadow: 3px 3px 0 #000;
             }
+            .theme-pixel .gallery-item {
+                border-width: 4px;
+                box-shadow: 4px 4px 0 #4a3218;
+            }
+            .theme-pixel .gallery-item video {
+                border-width: 3px;
+                box-shadow: 3px 3px 0 #000;
+                height: 240px;
+            }
         }
 
-        /* 主题按钮配色 */
+        /* 主题按钮配色 (与首页一致) */
         #btn-original { background-color: #ff6b8b; }
         #btn-candy { background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa); }
         #btn-forest { background-color: #6b8e23; }
@@ -577,8 +586,119 @@
         @media (max-width: 768px) {
             #btn-pixel { font-size: 12px; }
             .theme-candy .nav { border-radius: 20px; }
+            .page-jump {
+                width: 100%;
+                margin-top: 10px;
+            }
+            #jumpPage {
+                width: 60px;
+                padding: 4px;
+            }
+            .page-btn.small {
+                padding: 4px 10px;
+            }
         }
-        
+
+        /* ----- 分页按钮主题适配 (完全保留) ----- */
+        .theme-original .page-btn {
+            background-color: #87ceeb;
+            border-radius: 8px;
+            border: 2px solid #4fc3f7;
+            color: white;
+            font-weight: bold;
+        }
+        .theme-original .page-btn:hover:not(:disabled) {
+            background-color: #4fc3f7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .theme-original .page-btn:disabled {
+            background-color: #b0d4e8;
+            border-color: #9fc5e0;
+            opacity: 0.6;
+        }
+        .theme-original #pageInfo { color: #ff6b8b; font-weight: bold; }
+        .theme-original #jumpPage { border-color: #ff9eaa; background-color: #fff9f0; }
+
+        .theme-candy .page-btn {
+            background: linear-gradient(145deg, #66c2ff, #4fc3f7);
+            border-radius: 50px;
+            border: 2px solid transparent;
+            color: white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .theme-candy .page-btn:hover:not(:disabled) {
+            background: linear-gradient(145deg, #4fc3f7, #2196f3);
+            transform: translateY(-2px) scale(1.02);
+            border-color: white;
+        }
+        .theme-candy .page-btn:disabled {
+            background: linear-gradient(145deg, #b3d9ff, #99ccff);
+            opacity: 0.6;
+        }
+        .theme-candy #pageInfo {
+            background: linear-gradient(90deg, #ff6b8b, #ff99cc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: bold;
+        }
+        .theme-candy #jumpPage { border: 2px solid #ff85a2; border-radius: 30px; background: #fff0f5; color: #ff6b8b; }
+
+        .theme-forest .page-btn {
+            background-color: #8fbc8f;
+            border-radius: 8px;
+            border: 2px solid #6f9e6f;
+            color: white;
+        }
+        .theme-forest .page-btn:hover:not(:disabled) {
+            background-color: #66c266;
+            transform: translateY(-2px);
+        }
+        .theme-forest .page-btn:disabled {
+            background-color: #b0cfa0;
+            border-color: #9db98b;
+            opacity: 0.6;
+        }
+        .theme-forest #pageInfo { color: #6b8e23; font-weight: bold; }
+        .theme-forest #jumpPage { border-color: #c19a6b; background-color: #f8f5f0; color: #4a5a45; }
+
+        .theme-pixel .page-btn {
+            background-color: #6060c0;
+            border: 4px solid #000;
+            border-radius: 0;
+            color: white;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 4px 4px 0 #202080;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+        }
+        .theme-pixel .page-btn:hover:not(:disabled) {
+            background-color: #7070d0;
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #202080;
+        }
+        .theme-pixel .page-btn:disabled {
+            background-color: #404080;
+            box-shadow: 2px 2px 0 #202080;
+            opacity: 0.7;
+        }
+        .theme-pixel #pageInfo { color: #f0f0f0; text-shadow: 2px 2px 0 #000; font-family: "Minecraft AE", monospace; }
+        .theme-pixel #jumpPage {
+            border: 4px solid #000;
+            border-radius: 0;
+            background-color: #c69c6d;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+            font-family: "Minecraft AE", monospace;
+            box-shadow: inset -2px -2px 0 #4a3218;
+        }
+
+        /* 按钮微调 (保留原有) */
+        .theme-original .nav li a { box-shadow: 0 4px 0 #d45e7a; }
+        .theme-forest .nav li a { border: 2px solid #4f7317; }
+        .theme-candy .nav li a { border-color: rgba(255,255,255,0.3); }
+        .theme-candy .nav li a:hover { border-color: #fff; }
     </style>
 </head>
 <body class="theme-original">
@@ -591,99 +711,157 @@
             <button class="theme-btn" id="btn-pixel">复古像素</button>
         </div>
         <div class="container">
-            <!-- 导航菜单：仅保留首页和相册，无高亮 -->
             <ul class="nav">
-                <li><a href="../index.html">首页</a></li>
-                <li><a href="../gallery.html">相册</a></li>
-                <li><a href="../viewport.html">影集</a></li>
-                <li><a href="../maptest.html">地图</a></li>
-                <li><a href="BNUindex.html", class="active">BNU</a></li>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="gallery.html">相册</a></li>
+                <li><a href="video.html" class="active">影集</a></li>
+                <li><a href="maptest.html">地图</a></li>
+                <li><a href="BNU/BNUindex.html">BNU</a></li>
             </ul>
 
             <div class="title-with-images">
-                <img src="images/pigsleepy.webp" alt="左侧动图" class="side-gif">
-                <h1>熊熊大学BNU</h1>
-                <img src="images/pigsleep.webp" alt="右侧动图" class="side-gif">
+                <img src="images/happydog.webp" alt="左侧动图" class="side-gif">
+                <h1>熊熊影集</h1>
+                <img src="images/happypig.webp" alt="右侧动图" class="side-gif">
             </div>
-            <p>下面是关于熊熊大学的内容</p>
 
-            <!-- 功能按钮组：两列网格 -->
-            <div class="feature-container">
-                <a href="https://onevpn.bnu.edu.cn/" target="_blank" class="feature-btn">信息门户</a>
-                <a href="BNUcalendar.html" class="feature-btn">校历</a>
-                <a href="BNUmap.html" class="feature-btn">学校地图</a>
-                <a href="BNUtimetable.html" class="feature-btn">课程表</a>
-                <a href="#" class="feature-btn">绩点计算</a>
-                <a href="#" class="feature-btn">体测成绩</a>
-                <a href="#" class="feature-btn">图书馆</a>
-                <a href="#" class="feature-btn">社团活动</a>
-                <a href="#" class="feature-btn">食堂</a>
-                <a href="#" class="feature-btn">考试安排</a>
-            </div>
-            
-            <div style="text-align: center;">
-                <a href="https://www.bnu.edu.cn/" target="_blank">
-                <img src="images/BNUlogo.svg" alt="BNU矢量图" class="svg-image" >
-                </a>
-            </div>
-            
+            <!-- 影集网格 (每页一个视频，已放大居中) -->
+            <div class="gallery-grid"></div>
 
+            <!-- 分页控件 -->
+            <div class="pagination">
+                <button id="prevPage" class="page-btn">‹ 上一页</button>
+                <div class="page-jump">
+                    <span id="pageInfo">第 1 / X 页</span>
+                    <input type="number" id="jumpPage" min="1" placeholder="页码">
+                    <button id="jumpBtn" class="page-btn small">跳转</button>
+                </div>
+                <button id="nextPage" class="page-btn">下一页 ›</button>
+            </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const btnOriginal = document.getElementById('btn-original');
-            const btnCandy = document.getElementById('btn-candy');
-            const btnForest = document.getElementById('btn-forest');
-            const btnPixel = document.getElementById('btn-pixel');
-            const body = document.body;
-            const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
+        (function() {
+            document.addEventListener('DOMContentLoaded', function() {
+                // 视频数据 (请修改为实际路径)
+                const videoItems = [
+                    { src: 'videos/bearindogffe.mp4', caption: '玫熊在狗咖——秦皇岛' },
+                    { src: 'videos/bearcapital.mp4', caption: '一只玫熊柱' },
+                    { src: 'videos/sjzhotpot.mp4', caption: '石家庄独去闲小火锅' },
 
-            // 从 localStorage 读取保存的主题，若没有则默认 'theme-original'
-            const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
-            body.className = savedTheme;
+                ];
 
-            function setActiveButtonFromBodyClass() {
-                allBtns.forEach(btn => btn.classList.remove('active'));
-                if (body.classList.contains('theme-original')) {
-                    btnOriginal.classList.add('active');
-                } else if (body.classList.contains('theme-candy')) {
-                    btnCandy.classList.add('active');
-                } else if (body.classList.contains('theme-forest')) {
-                    btnForest.classList.add('active');
-                } else if (body.classList.contains('theme-pixel')) {
-                    btnPixel.classList.add('active');
+                const itemsPerPage = 1;          // 每页1个视频
+                let currentPage = 1;
+                const totalPages = Math.ceil(videoItems.length / itemsPerPage);
+
+                const galleryGrid = document.querySelector('.gallery-grid');
+                const prevBtn = document.getElementById('prevPage');
+                const nextBtn = document.getElementById('nextPage');
+                const pageInfo = document.getElementById('pageInfo');
+                const jumpInput = document.getElementById('jumpPage');
+                const jumpBtn = document.getElementById('jumpBtn');
+
+                function renderPage(page) {
+                    const start = (page - 1) * itemsPerPage;
+                    const end = start + itemsPerPage;
+                    const pageData = videoItems.slice(start, end);
+
+                    galleryGrid.innerHTML = '';
+                    pageData.forEach(item => {
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'gallery-item';
+                        itemDiv.innerHTML = `
+                            <video src="${item.src}" controls playsinline preload="metadata"></video>
+                            <div class="caption">${item.caption}</div>
+                        `;
+                        galleryGrid.appendChild(itemDiv);
+                    });
+
+                    prevBtn.disabled = (page === 1);
+                    nextBtn.disabled = (page === totalPages);
+                    pageInfo.textContent = `第 ${page} / ${totalPages} 页`;
                 }
-            }
 
-            setActiveButtonFromBodyClass();
+                renderPage(currentPage);
 
-            function saveTheme(themeClass) {
-                localStorage.setItem('selectedTheme', themeClass);
-            }
+                prevBtn.addEventListener('click', function() {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderPage(currentPage);
+                    }
+                });
 
-            btnOriginal.addEventListener('click', function() {
-                body.className = 'theme-original';
+                nextBtn.addEventListener('click', function() {
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        renderPage(currentPage);
+                    }
+                });
+
+                function goToPage() {
+                    let page = parseInt(jumpInput.value, 10);
+                    if (isNaN(page) || page < 1) page = 1;
+                    if (page > totalPages) page = totalPages;
+                    if (page !== currentPage) {
+                        currentPage = page;
+                        renderPage(currentPage);
+                    }
+                    jumpInput.value = '';
+                }
+
+                jumpBtn.addEventListener('click', goToPage);
+                jumpInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') goToPage();
+                });
+
+                // ---------- 主题切换 (带localStorage) ----------
+                const btnOriginal = document.getElementById('btn-original');
+                const btnCandy = document.getElementById('btn-candy');
+                const btnForest = document.getElementById('btn-forest');
+                const btnPixel = document.getElementById('btn-pixel');
+                const body = document.body;
+                const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
+
+                const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
+                body.className = savedTheme;
+
+                function setActiveButtonFromBodyClass() {
+                    allBtns.forEach(btn => btn.classList.remove('active'));
+                    if (body.classList.contains('theme-original')) btnOriginal.classList.add('active');
+                    else if (body.classList.contains('theme-candy')) btnCandy.classList.add('active');
+                    else if (body.classList.contains('theme-forest')) btnForest.classList.add('active');
+                    else if (body.classList.contains('theme-pixel')) btnPixel.classList.add('active');
+                }
                 setActiveButtonFromBodyClass();
-                saveTheme('theme-original');
+
+                function saveTheme(themeClass) {
+                    localStorage.setItem('selectedTheme', themeClass);
+                }
+
+                btnOriginal.addEventListener('click', function() {
+                    body.className = 'theme-original';
+                    setActiveButtonFromBodyClass();
+                    saveTheme('theme-original');
+                });
+                btnCandy.addEventListener('click', function() {
+                    body.className = 'theme-candy';
+                    setActiveButtonFromBodyClass();
+                    saveTheme('theme-candy');
+                });
+                btnForest.addEventListener('click', function() {
+                    body.className = 'theme-forest';
+                    setActiveButtonFromBodyClass();
+                    saveTheme('theme-forest');
+                });
+                btnPixel.addEventListener('click', function() {
+                    body.className = 'theme-pixel';
+                    setActiveButtonFromBodyClass();
+                    saveTheme('theme-pixel');
+                });
             });
-            btnCandy.addEventListener('click', function() {
-                body.className = 'theme-candy';
-                setActiveButtonFromBodyClass();
-                saveTheme('theme-candy');
-            });
-            btnForest.addEventListener('click', function() {
-                body.className = 'theme-forest';
-                setActiveButtonFromBodyClass();
-                saveTheme('theme-forest');
-            });
-            btnPixel.addEventListener('click', function() {
-                body.className = 'theme-pixel';
-                setActiveButtonFromBodyClass();
-                saveTheme('theme-pixel');
-            });
-        });
+        })();
     </script>
 </body>
 </html>

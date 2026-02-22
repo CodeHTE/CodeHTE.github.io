@@ -120,17 +120,17 @@
             align-items: center;
             justify-content: center;
             gap: 20px;
-            margin: 10px 0 20px;
+            margin: 20px 0;
         }
         .side-gif {
-            width: 60px;
+            width: 80px;
             border-radius: 50%;
         }
         h1 {
-            font-size: 32px;
-            margin: 0;
+            font-size: 36px;
+            margin: 20px 0;
             text-align: center;
-            padding: 10px 20px;
+            padding: 15px;
             border-radius: 12px;
         }
 
@@ -293,6 +293,7 @@
             padding: 10px;
             border-top: 1px solid #e5e7eb;
             flex-wrap: wrap;
+            margin-bottom: 30px;
 
         }
         .action-btn {
@@ -724,8 +725,15 @@
             font-size: 24px;
             text-shadow: 3px 3px 0 #000;
             background: #808080;
+            background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h4v4H0V0zm1 1h2v2H1V1zm2 0h2v2H3V1zm-2 2h2v2H1V3zm2 0h2v2H3V3z' fill='%23696969' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+            padding: 10px;
             border: 4px solid #000;
-            padding: 8px;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            letter-spacing: 2px;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
         }
         .theme-pixel .nav {
             background: #4040a0;
@@ -880,6 +888,74 @@
             }
         }
         @media (min-width:601px) and (max-width:768px) { .nav { flex-direction:row; } }
+
+        /*----- 底部校徽样式 -----*/
+        .svg-image {
+            width: 280px;          /* 相对父容器宽度 */
+            max-width: 250px;    /* 最大宽度限制，避免过大 */
+            height: auto;        /* 保持比例 */
+            }
+            @media (max-width: 768px){
+            .svg-image {
+            width: 60%;          /* 相对父容器宽度 */
+            max-width: 150px;    /* 最大宽度限制，避免过大 */
+            height: auto;        /* 保持比例 */
+            }
+        }
+.svg-image {
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+.theme-original .svg-image {
+    border: 4px dashed #ff6b8b;
+    border-radius: 16px;
+}
+.theme-candy .svg-image {
+    border: 4px solid #ff85a2;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(255, 133, 162, 0.2);
+}
+.theme-forest .svg-image {
+    border: 4px solid #6b8e23;
+    border-radius: 8px;
+}      
+        .theme-pixel .svg-image {
+    border: 4px solid #000;
+    border-radius: 0;
+    box-shadow: 4px 4px 0 #2a3a2a;
+}
+        /*----- 标题gif样式 -----*/
+        .theme-candy .side-gif {
+            border: 4px solid #ffdd55;
+            box-shadow: 0 0 0 4px rgba(255,221,85,0.2);
+        }
+        .theme-forest .side-gif {
+            border: 3px solid #c19a6b;
+        }
+        .theme-pixel .side-gif {
+            border-radius: 0;
+            border: 4px solid #ffaa00;
+            box-shadow: 4px 4px 0 #000;
+            padding: 4px;
+            background-color: #f0f0f0;
+            image-rendering: pixelated;
+        }
+        @media (max-width: 768px){
+            .side-gif {
+                width: 50px;
+            }
+            .theme-pixel .side-gif {
+                border-width: 3px;
+                box-shadow: 3px 3px 0 #000;
+            }
+            .title-with-images {
+                gap: 15px;
+            }
+        }
+
+                    
     </style>
 </head>
 <body class="theme-original">
@@ -899,7 +975,7 @@
             <ul class="nav">
                 <li><a href="../index.html">首页</a></li>
                 <li><a href="../gallery.html">相册</a></li>
-                <li><a href="#">影集</a></li>
+                <li><a href="../viewport.html">影集</a></li>
                 <li><a href="../maptest.html">地图</a></li>
                 <li><a href="BNUindex.html" class="active">BNU</a></li>
             </ul>
@@ -1082,7 +1158,16 @@
             <div class="table-footer" id="footerButtons">
                 <button class="action-btn edit-btn" id="editModeBtn">编辑</button>
             </div>
+
+            <div style="text-align: center;">
+                <a href="https://www.bnu.edu.cn/" target="_blank">
+                <img src="images/BNUlogo.svg" alt="BNU矢量图" class="svg-image" >
+                </a>
+            </div>
+            
         </div>
+
+        
     </div>
 
     <!-- 浮动编辑面板 (课程编辑) -->
@@ -1135,6 +1220,8 @@
             <button class="modal-btn cancel" id="confirmCancelBtn">取消</button>
         </div>
     </div>
+
+    
 
     <!-- 遮罩层 -->
     <div class="modal-overlay" id="modalOverlay"></div>

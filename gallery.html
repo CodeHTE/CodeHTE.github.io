@@ -143,6 +143,7 @@
             box-shadow: 0 8px 16px rgba(0,0,0,0.1);
             padding: 4px;
             transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;  /* 提示可点击 */
         }
         .gallery-item:hover {
             transform: translateY(-5px);
@@ -155,6 +156,7 @@
             object-fit: contain;
             display: block;
             border-radius: 12px;
+            pointer-events: none;  /* 让点击事件由父级处理，便于获取索引 */
         }
         .gallery-item .caption {
             padding: 12px;
@@ -824,6 +826,165 @@
         font-size: 14px;
     }
 }
+
+/* ========== 新增：模态框 (图片放大) 样式 ========== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+    transition: opacity 0.2s ease;
+}
+
+.modal-container {
+    background: #fff;
+    padding: 20px 20px 25px;
+    border-radius: 24px;
+    max-width: 90vw;
+    max-height: 90vh;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.modal-close {
+    position: absolute;
+    top: 8px;
+    right: 18px;
+    font-size: 32px;
+    font-weight: bold;
+    color: #666;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+    z-index: 10;
+}
+.modal-close:hover {
+    color: #000;
+}
+
+.modal-image {
+    max-width: 75vw;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
+.modal-caption {
+    font-size: 18px;
+    color: #333;
+    margin: 8px 0 12px;
+    font-weight: 500;
+    text-align: center;
+    padding: 0 15px;
+}
+
+.modal-nav {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-top: 8px;
+}
+.modal-nav button {
+    background: #f0f0f0;
+    border: none;
+    font-size: 28px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.1s;
+    color: #333;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.modal-nav button:hover:not(:disabled) {
+    background: #ff9eaa;
+    color: white;
+    transform: scale(1.05);
+}
+.modal-nav button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+.modal-counter {
+    font-size: 16px;
+    color: #555;
+    font-weight: bold;
+    min-width: 80px;
+    text-align: center;
+}
+
+/* 像素主题下微调模态框 */
+.theme-pixel .modal-container {
+    border-radius: 0;
+    border: 6px solid #8b5a2b;
+    box-shadow: 10px 10px 0 #4a3218;
+    background: #c69c6d;
+    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm8 8h8v8H8V8zM0 8h8v8H0V8zm8 0h8v8H8V8z' fill='%23966c42' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+.theme-pixel .modal-close {
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    font-family: 幼圆;
+}
+.theme-pixel .modal-caption {
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    font-family: "Minecraft AE", monospace;
+}
+.theme-pixel .modal-nav button {
+    border-radius: 0;
+    border: 3px solid #000;
+    background: #6060c0;
+    color: white;
+    box-shadow: 4px 4px 0 #202080;
+    font-family: "Minecraft AE", monospace;
+}
+.theme-pixel .modal-nav button:hover:not(:disabled) {
+    background: #7070d0;
+    transform: translate(2px,2px);
+    box-shadow: 2px 2px 0 #202080;
+}
+.theme-pixel .modal-counter {
+    color: #fff;
+    text-shadow: 2px 2px 0 #000;
+    font-family: "Minecraft AE", monospace;
+}
+
+/* 移动端适配模态框 */
+@media (max-width: 768px) {
+    .modal-image {
+        max-width: 85vw;
+        max-height: 60vh;
+    }
+    .modal-container {
+        padding: 15px;
+    }
+    .modal-close {
+        font-size: 28px;
+        top: 2px;
+        right: 10px;
+    }
+    .modal-nav button {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+}
     </style>
 </head>
 <body class="theme-original">
@@ -839,7 +1000,7 @@
             <ul class="nav">
                 <li><a href="index.html">首页</a></li>
                 <li><a href="gallery.html" class="active">相册</a></li>
-                <li><a href="#">影集</a></li>
+                <li><a href="viewport.html">影集</a></li>
                 <li><a href="maptest.html">地图</a></li>
                 <li><a href="BNU/BNUindex.html">BNU</a></li>
             </ul>
@@ -867,48 +1028,7 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const btnOriginal = document.getElementById('btn-original');
-            const btnCandy = document.getElementById('btn-candy');
-            const btnForest = document.getElementById('btn-forest');
-            const btnPixel = document.getElementById('btn-pixel');
-            const body = document.body;
-            const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
-
-            function setActiveButtonFromBodyClass() {
-                allBtns.forEach(btn => btn.classList.remove('active'));
-                if (body.classList.contains('theme-original')) {
-                    btnOriginal.classList.add('active');
-                } else if (body.classList.contains('theme-candy')) {
-                    btnCandy.classList.add('active');
-                } else if (body.classList.contains('theme-forest')) {
-                    btnForest.classList.add('active');
-                } else if (body.classList.contains('theme-pixel')) {
-                    btnPixel.classList.add('active');
-                }
-            }
-
-            setActiveButtonFromBodyClass();
-
-            btnOriginal.addEventListener('click', function() {
-                body.className = 'theme-original';
-                setActiveButtonFromBodyClass();
-            });
-            btnCandy.addEventListener('click', function() {
-                body.className = 'theme-candy';
-                setActiveButtonFromBodyClass();
-            });
-            btnForest.addEventListener('click', function() {
-                body.className = 'theme-forest';
-                setActiveButtonFromBodyClass();
-            });
-            btnPixel.addEventListener('click', function() {
-                body.className = 'theme-pixel';
-                setActiveButtonFromBodyClass();
-            });
-        });
-
-        //<----- 分页逻辑 ----->
+        //<----- 分页逻辑 (保留原数据) ----->
         // 相册数据（请根据实际图片路径和说明填写）
 const galleryItems = [
     { src: 'images/bears.jpg', caption: '玫熊和恩熊在冬天的秦皇岛' },
@@ -968,30 +1088,8 @@ const pageInfo = document.getElementById('pageInfo');
 // 计算总页数
 const totalPages = Math.ceil(galleryItems.length / itemsPerPage);
 
-// 渲染指定页码
-function renderPage(page) {
-    // 计算当前页数据起始索引
-    const start = (page - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const pageData = galleryItems.slice(start, end);
-
-    // 清空网格并重新填充
-    galleryGrid.innerHTML = '';
-    pageData.forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'gallery-item';
-        itemDiv.innerHTML = `
-            <img src="${item.src}" alt="${item.caption}">
-            <div class="caption">${item.caption}</div>
-        `;
-        galleryGrid.appendChild(itemDiv);
-    });
-
-    // 更新分页按钮状态
-    prevBtn.disabled = (page === 1);
-    nextBtn.disabled = (page === totalPages);
-    pageInfo.textContent = `第 ${page} / ${totalPages} 页`;
-}
+// 渲染指定页码 (稍后在DOMContentLoaded中会重新定义以添加data索引，但这里保留原始定义以防后续代码使用)
+// 为了避免冲突，先保留原函数，后面在DOMContentLoaded中重新赋值覆盖
 
 // 上一页
 prevBtn.addEventListener('click', () => {
@@ -1009,7 +1107,25 @@ nextBtn.addEventListener('click', () => {
     }
 });
 
-// 初始化渲染第一页
+// 初始化渲染第一页 (但稍后会重新渲染以添加索引，所以先调用一次，之后覆盖)
+function renderPage(page) {
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageData = galleryItems.slice(start, end);
+    galleryGrid.innerHTML = '';
+    pageData.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'gallery-item';
+        itemDiv.innerHTML = `
+            <img src="${item.src}" alt="${item.caption}">
+            <div class="caption">${item.caption}</div>
+        `;
+        galleryGrid.appendChild(itemDiv);
+    });
+    prevBtn.disabled = (page === 1);
+    nextBtn.disabled = (page === totalPages);
+    pageInfo.textContent = `第 ${page} / ${totalPages} 页`;
+}
 renderPage(currentPage);
 
 // 获取跳转相关元素
@@ -1038,65 +1154,192 @@ jumpInput.addEventListener('keypress', (e) => {
     }
 });
 
-// 可选：输入框失去焦点时自动跳转（根据需求）
-// jumpInput.addEventListener('blur', goToPage);
+        // ----- 新增：照片点击放大 (模态框) 功能 -----
+        document.addEventListener('DOMContentLoaded', function() {
+            // ---------- 主题切换 & localStorage (原最后一个DOMContentLoaded内容) ----------
+            const btnOriginal = document.getElementById('btn-original');
+            const btnCandy = document.getElementById('btn-candy');
+            const btnForest = document.getElementById('btn-forest');
+            const btnPixel = document.getElementById('btn-pixel');
+            const body = document.body;
+            const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
 
-document.addEventListener('DOMContentLoaded', function() {
-        const btnOriginal = document.getElementById('btn-original');
-        const btnCandy = document.getElementById('btn-candy');
-        const btnForest = document.getElementById('btn-forest');
-        const btnPixel = document.getElementById('btn-pixel');
-        const body = document.body;
-        const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
+            // 从 localStorage 读取保存的主题，若没有则默认 'theme-original'
+            const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
+            body.className = savedTheme;
 
-        // 从 localStorage 读取保存的主题，若没有则默认 'theme-original'
-        const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
-        body.className = savedTheme;
-
-        // 根据当前 body 类名设置对应按钮为 active
-        function setActiveButtonFromBodyClass() {
-            allBtns.forEach(btn => btn.classList.remove('active'));
-            if (body.classList.contains('theme-original')) {
-                btnOriginal.classList.add('active');
-            } else if (body.classList.contains('theme-candy')) {
-                btnCandy.classList.add('active');
-            } else if (body.classList.contains('theme-forest')) {
-                btnForest.classList.add('active');
-            } else if (body.classList.contains('theme-pixel')) {
-                btnPixel.classList.add('active');
+            function setActiveButtonFromBodyClass() {
+                allBtns.forEach(btn => btn.classList.remove('active'));
+                if (body.classList.contains('theme-original')) {
+                    btnOriginal.classList.add('active');
+                } else if (body.classList.contains('theme-candy')) {
+                    btnCandy.classList.add('active');
+                } else if (body.classList.contains('theme-forest')) {
+                    btnForest.classList.add('active');
+                } else if (body.classList.contains('theme-pixel')) {
+                    btnPixel.classList.add('active');
+                }
             }
-        }
+            setActiveButtonFromBodyClass();
 
-        // 初始化按钮激活状态
-        setActiveButtonFromBodyClass();
+            function saveTheme(themeClass) {
+                localStorage.setItem('selectedTheme', themeClass);
+            }
 
-        // 保存主题到 localStorage 的函数
-        function saveTheme(themeClass) {
-            localStorage.setItem('selectedTheme', themeClass);
-        }
+            btnOriginal.addEventListener('click', function() {
+                body.className = 'theme-original';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-original');
+            });
+            btnCandy.addEventListener('click', function() {
+                body.className = 'theme-candy';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-candy');
+            });
+            btnForest.addEventListener('click', function() {
+                body.className = 'theme-forest';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-forest');
+            });
+            btnPixel.addEventListener('click', function() {
+                body.className = 'theme-pixel';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-pixel');
+            });
 
-        // 为每个按钮绑定点击事件，切换主题并保存
-        btnOriginal.addEventListener('click', function() {
-            body.className = 'theme-original';
-            setActiveButtonFromBodyClass();
-            saveTheme('theme-original');
+            // ---------- 重写 renderPage 以添加 data-global-index 属性，方便模态框获取索引 ----------
+            window.renderPage = function(page) {
+                const start = (page - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+                const pageData = galleryItems.slice(start, end);
+                galleryGrid.innerHTML = '';
+                pageData.forEach((item, idx) => {
+                    const globalIndex = start + idx; // 全局索引
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'gallery-item';
+                    itemDiv.setAttribute('data-global-index', globalIndex); // 关键：存储全局索引
+                    itemDiv.innerHTML = `
+                        <img src="${item.src}" alt="${item.caption}">
+                        <div class="caption">${item.caption}</div>
+                    `;
+                    galleryGrid.appendChild(itemDiv);
+                });
+                prevBtn.disabled = (page === 1);
+                nextBtn.disabled = (page === totalPages);
+                pageInfo.textContent = `第 ${page} / ${totalPages} 页`;
+            };
+
+            // 用新函数重新渲染当前页，确保每个 .gallery-item 都有 data-global-index
+            renderPage(currentPage);
+
+            // ---------- 创建模态框 DOM (如果不存在) ----------
+            let modalOverlay = document.querySelector('.modal-overlay');
+            if (!modalOverlay) {
+                modalOverlay = document.createElement('div');
+                modalOverlay.className = 'modal-overlay';
+                modalOverlay.style.display = 'none';
+                modalOverlay.innerHTML = `
+                    <div class="modal-container">
+                        <span class="modal-close">&times;</span>
+                        <img class="modal-image" src="" alt="大图">
+                        <div class="modal-caption"></div>
+                        <div class="modal-nav">
+                            <button class="modal-prev" id="modalPrev">❮</button>
+                            <span class="modal-counter"></span>
+                            <button class="modal-next" id="modalNext">❯</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modalOverlay);
+            }
+
+            const modalImg = modalOverlay.querySelector('.modal-image');
+            const modalCaption = modalOverlay.querySelector('.modal-caption');
+            const modalPrev = modalOverlay.querySelector('#modalPrev');
+            const modalNext = modalOverlay.querySelector('#modalNext');
+            const modalCounter = modalOverlay.querySelector('.modal-counter');
+            const modalClose = modalOverlay.querySelector('.modal-close');
+
+            let currentModalIndex = 0;          // 当前显示的图片索引
+            const totalImages = galleryItems.length;
+
+            // 更新模态框内容 (根据索引)
+            function updateModalByIndex(index) {
+                if (index < 0 || index >= totalImages) return;
+                const item = galleryItems[index];
+                modalImg.src = item.src;
+                modalImg.alt = item.caption;
+                modalCaption.textContent = item.caption;
+                modalCounter.textContent = `${index + 1} / ${totalImages}`;
+                // 控制前后按钮禁用
+                modalPrev.disabled = (index === 0);
+                modalNext.disabled = (index === totalImages - 1);
+                currentModalIndex = index;
+            }
+
+            // 打开模态框
+            function openModal(index) {
+                if (index < 0 || index >= totalImages) return;
+                updateModalByIndex(index);
+                modalOverlay.style.display = 'flex';
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+
+                // 键盘事件监听
+                document.addEventListener('keydown', modalKeyHandler);
+            }
+
+            // 关闭模态框
+            function closeModal() {
+                modalOverlay.style.display = 'none';
+                document.body.style.overflow = ''; // 恢复滚动
+                document.removeEventListener('keydown', modalKeyHandler);
+            }
+
+            // 键盘控制
+            function modalKeyHandler(e) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                } else if (e.key === 'ArrowLeft' && !modalPrev.disabled) {
+                    modalPrev.click();
+                } else if (e.key === 'ArrowRight' && !modalNext.disabled) {
+                    modalNext.click();
+                }
+            }
+
+            // 事件监听：点击网格中的图片 (利用事件委托)
+            galleryGrid.addEventListener('click', (e) => {
+                const item = e.target.closest('.gallery-item');
+                if (!item) return;
+                const index = item.getAttribute('data-global-index');
+                if (index !== null) {
+                    openModal(parseInt(index));
+                }
+            });
+
+            // 关闭按钮
+            modalClose.addEventListener('click', closeModal);
+            // 点击遮罩关闭
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+
+            // 上一张 / 下一张
+            modalPrev.addEventListener('click', () => {
+                if (currentModalIndex > 0) {
+                    updateModalByIndex(currentModalIndex - 1);
+                }
+            });
+            modalNext.addEventListener('click', () => {
+                if (currentModalIndex < totalImages - 1) {
+                    updateModalByIndex(currentModalIndex + 1);
+                }
+            });
+
+            // 防止点击容器内部关闭
+            modalOverlay.querySelector('.modal-container').addEventListener('click', (e) => e.stopPropagation());
         });
-        btnCandy.addEventListener('click', function() {
-            body.className = 'theme-candy';
-            setActiveButtonFromBodyClass();
-            saveTheme('theme-candy');
-        });
-        btnForest.addEventListener('click', function() {
-            body.className = 'theme-forest';
-            setActiveButtonFromBodyClass();
-            saveTheme('theme-forest');
-        });
-        btnPixel.addEventListener('click', function() {
-            body.className = 'theme-pixel';
-            setActiveButtonFromBodyClass();
-            saveTheme('theme-pixel');
-        });
-    });
     </script>
 </body>
 </html>
