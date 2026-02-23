@@ -1092,13 +1092,20 @@
             gap: 15px;
         }
         .memo-app {
-            height: 60vh;
+            height: 90vh;
             min-height: 400px;
         }
         .memo-app .sidebar {
-            width: 220px;
-            padding: 16px 10px;
+            width: 180px;
+            padding: 12px 8px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
+        .memo-app .sidebar .sidebar-header {size: .7em}
+        .memo-app .memo-item {
+            size: 0.8em;
+        }
+        
         .memo-app .editor {
             padding: 16px;
         }
