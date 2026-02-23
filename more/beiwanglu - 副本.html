@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="../icons/favicon.ico">
+    <title>✨熊熊Land · 备忘录 (主题集成版)</title>
+<style>
+    /* ----- 基础重置 & 全局变量 (与主页完全一致) ----- */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        list-style: none;
+        text-decoration: none;
+    }
+    body {
+        min-height: 100vh;
+        padding: 20px;
+        transition: all 0.3s ease;
+        font-family: "幼圆", "Comic Sans MS", monospace;
+    }
+    .page-layout {
+        display: flex;
+        gap: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+        align-items: flex-start;
+    }
+    .theme-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #444;
+        text-align: center;
+        width: 100%;
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 5px;
+    }
+    .theme-switcher {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 120px;
+        margin-top: 20px;
+    }
+    .theme-btn {
+        padding: 12px 8px;
+        border: none;
+        border-radius: 8px;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-weight: bold;
+        width: 100%;
+    }
+    .theme-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .theme-btn.active {
+        position: relative;
+        animation: pulse 1.5s infinite ease-in-out;
+        padding-left: 36px;
+    }
+    .theme-btn.active::before {
+        content: "☞";
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 20px;
+        font-weight: bold;
+        color: #fff;
+        text-shadow: 0 0 2px #000;
+        font-family: "幼圆";
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        50% { transform: scale(1.02); box-shadow: 0 4px 14px rgba(0,0,0,0.2); }
+        100% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    }
+
+    .container {
+        flex: 1;
+        padding: 30px;
+        border-radius: 16px;
+    }
+
+    /* 导航菜单 */
+    .nav {
+        justify-content: center;
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        padding: 10px;
+        border-radius: 10px;
+        flex-wrap: wrap;
+    }
+    .nav li a {
+        display: block;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: #fff;
+        font-weight: bold;
+        transition: all 0.2s ease;
+    }
+    .nav li a:hover {
+        transform: translateY(-2px);
+    }
+
+    /* 标题区域 (保留, 放在备忘录上方) */
+    .title-with-images {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin: 20px 0;
+    }
+    .side-gif {
+        width: 80px;
+        border-radius: 50%;
+    }
+    h1 {
+        font-size: 36px;
+        margin: 20px 0;
+        text-align: center;
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    /* ----- 像素主题专用字体 ----- */
+    @font-face {
+        font-family: "Minecraft AE";
+        src: url("../fonts/Minecraft AE(ch).ttf") format("truetype");
+    }
+
+    /* ========== 四个主题的基础样式 (与more_index一致) ========== */
+    /* ---- 卡通童趣风 ---- */
+    body.theme-original {
+        background-color: #fff9e6;
+        color: #333;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffb6c1' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    .theme-original .container {
+        background: #fff;
+        border: 4px solid #ff9eaa;
+        box-shadow: 0 0 0 8px rgba(255,158,170,0.1);
+    }
+    .theme-original h1 {
+        color: #ff6b8b;
+        text-shadow: 2px 2px 0 #ffe0e7;
+    }
+    .theme-original .nav {
+        background-color: #87ceeb;
+        border: 3px solid #4fc3f7;
+    }
+    .theme-original .nav li a {
+        background-color: #4fc3f7;
+        box-shadow: 0 4px 0 #d45e7a;
+    }
+    .theme-original .nav li a:hover {
+        background-color: #2196f3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 #d45e7a;
+    }
+    .theme-original .nav li a.active {
+        background-color: #ff6b8b;
+    }
+
+    /* ---- 糖果缤纷风 ---- */
+    body.theme-candy {
+        background-color: #fff0f5;
+        color: #555;
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffc0cb' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .theme-candy .container {
+        background: linear-gradient(145deg,#fff 0,#fff9fb 100%);
+        border: 5px solid #ff85a2;
+        border-radius: 24px;
+        box-shadow: 0 0 0 10px rgba(255,133,162,0.1), 0 8px 24px rgba(0,0,0,0.08);
+    }
+    .theme-candy h1 {
+        background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        font-size: 38px;
+        text-shadow: none;
+        letter-spacing: 1px;
+    }
+    .theme-candy .nav {
+        background: linear-gradient(90deg,#87cefa,#99ddff);
+        border: 3px solid #66c2ff;
+        border-radius: 50px;
+    }
+    .theme-candy .nav li a {
+        background: linear-gradient(145deg,#66c2ff,#4fc3f7);
+        border-radius: 50px;
+        border: 2px solid rgba(255,255,255,0.3);
+    }
+    .theme-candy .nav li a:hover {
+        background: linear-gradient(145deg,#4fc3f7,#2196f3);
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        border-color: #fff;
+    }
+    .theme-candy .nav li a.active {
+        background: linear-gradient(145deg,#ff6b8b,#ff85a2);
+    }
+    .theme-candy .side-gif {
+        border: 4px solid #ffdd55;
+        box-shadow: 0 0 0 4px rgba(255,221,85,0.2);
+    }
+
+    /* ---- 森林治愈风 ---- */
+    body.theme-forest {
+        background-color: #f5f9f0;
+        color: #4a5a45;
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23a8d08d' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    .theme-forest .container {
+        background: #fff;
+        border: 4px solid #c19a6b;
+        box-shadow: 0 0 0 8px rgba(193,154,107,0.1), 0 8px 16px rgba(0,0,0,0.08);
+        background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.8 2.8c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6zm29 0c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6zm29 0c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6zm29 0c3.12 0 5.6 2.48 5.6 5.6s-2.48 5.6-5.6 5.6c-3.12 0-5.6-2.48-5.6-5.6s2.48-5.6 5.6-5.6z' fill='%23f8f5f0' fill-opacity='0.6' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    .theme-forest h1 {
+        color: #6b8e23;
+        text-shadow: 2px 2px 0 #e8f0d6;
+    }
+    .theme-forest .nav {
+        background-color: #8fbc8f;
+        border: 3px solid #6f9e6f;
+    }
+    .theme-forest .nav li a {
+        background-color: #7ccd7c;
+        border: 2px solid #4f7317;
+    }
+    .theme-forest .nav li a:hover {
+        background-color: #66c266;
+    }
+    .theme-forest .nav li a.active {
+        background-color: #c19a6b;
+    }
+    .theme-forest .side-gif {
+        border: 3px solid #c19a6b;
+    }
+
+    /* ---- 我的世界像素风 ---- */
+    body.theme-pixel {
+        font-family: "Minecraft AE", "幼圆", "Comic Sans MS", monospace;
+        background-color: #e0e0e0;
+        color: #2a2a2a;
+        background-image: url("data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8 16c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zm33.414-6l5.95-5.95L45.95.636 40 6.586 34.05.636 32.636 2.05 38.586 8l-5.95 5.95 1.414 1.414L40 9.414l5.95 5.95 1.414-1.414L41.414 8zM40 48c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm0-2c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6zM9.414 40l5.95-5.95-1.414-1.414L8 38.586l-5.95-5.95L.636 34.05 6.586 40l-5.95 5.95 1.414 1.414L8 41.414l5.95 5.95 1.414-1.414L9.414 40z' fill='%23969696' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        font-size: 16px;
+        line-height: 1;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        -webkit-font-smoothing: none;
+        -moz-osx-font-smoothing: grayscale;
+        font-smooth: never;
+        text-rendering: optimizeSpeed;
+    }
+    .theme-pixel .container {
+        background: #c69c6d;
+        background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm8 8h8v8H8V8zM0 8h8v8H0V8zm8 0h8v8H8V8z' fill='%23966c42' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+        border-radius: 0;
+        border: 6px solid #8b5a2b;
+        box-shadow: 8px 8px 0 #4a3218;
+    }
+    .theme-pixel h1 {
+        color: #fff;
+        font-size: 24px;
+        text-shadow: 3px 3px 0 #000;
+        background: #808080;
+        background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h4v4H0V0zm1 1h2v2H1V1zm2 0h2v2H3V1zm-2 2h2v2H1V3zm2 0h2v2H3V3z' fill='%23696969' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+        padding: 10px;
+        border: 4px solid #000;
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+        letter-spacing: 2px;
+    }
+    .theme-pixel .nav {
+        background: #4040a0;
+        border: 4px solid #000;
+        border-radius: 0;
+        gap: 8px;
+        background-image: url("data:image/svg+xml,%3Csvg width='8' height='8' viewBox='0 0 8 8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm1 1h6v6H1V1z' fill='%23303080' fill-opacity='0.3' fill-rule='evenodd'/%3E%3C/svg%3E");
+    }
+    .theme-pixel .nav li a {
+        border-radius: 0;
+        background-color: #6060c0;
+        border: 4px solid #000;
+        text-shadow: 2px 2px 0 #000;
+        box-shadow: 4px 4px 0 #202080;
+        color: #fff;
+        -webkit-font-smoothing: none;
+    }
+    .theme-pixel .nav li a:hover {
+        background-color: #7070d0;
+        transform: translate(2px,2px);
+        box-shadow: 2px 2px 0 #202080;
+    }
+    .theme-pixel .nav li a.active {
+        background-color: #ff3030;
+        border: 4px solid #000;
+        box-shadow: 4px 4px 0 #a01010;
+    }
+    .theme-pixel .side-gif {
+        border-radius: 0;
+        border: 4px solid #ffaa00;
+        box-shadow: 4px 4px 0 #000;
+        padding: 4px;
+        background-color: #f0f0f0;
+    }
+
+    /* 主题按钮配色 */
+    #btn-original { background-color: #ff6b8b; }
+    #btn-candy { background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa); }
+    #btn-forest { background-color: #6b8e23; }
+    #btn-pixel {
+        background-color: #8b5a2b;
+        font-family: "Minecraft AE", monospace;
+        font-size: 13px;
+        text-shadow: 1px 1px 0 #000;
+        -webkit-font-smoothing: none;
+    }
+
+    /* ---------- 备忘录基础布局样式 (无主题颜色，只控制尺寸/布局) ---------- */
+    .memo-app {
+        width: 100%;
+        height: 70vh;          /* 适应container，可滚动 */
+        min-height: 500px;
+        background: rgba(255,255,255,0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 36px;
+        box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.5);
+        margin-top: 20px;
+        transition: all 0.2s ease;
+    }
+    .memo-app .timeline {
+        height: 130px;
+        background: rgba(255,255,255,0.5);
+        backdrop-filter: blur(4px);
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+        padding: 15px 40px 20px 40px;
+        position: relative;
+        flex-shrink: 0;
+        overflow: visible;
+        z-index: 10;
+    }
+    .memo-app .timeline-line {
+        position: relative;
+        height: 2px;
+        top: 30px;
+        width: 100%;
+        border-radius: 2px;
+    }
+    .memo-app .timeline-dots {
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 40px;
+        z-index: 15;
+    }
+    .memo-app .timeline-dot {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        transform: translateX(-50%);
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        transition: transform 0.1s, box-shadow 0.1s;
+        border: 2px solid white;
+        z-index: 20;
+    }
+    .memo-app .timeline-dot:hover {
+        transform: translateX(-50%) scale(1.2);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 30;
+    }
+    .memo-app .timeline-dates {
+        position: relative;
+        width: 100%;
+        height: 40px;
+        margin-top: 5px;
+        font-size: 0.7rem;
+        color: #475569;
+        z-index: 5;
+    }
+    .memo-app .timeline-date-marker {
+        position: absolute;
+        transform: translateX(-50%);
+        text-align: center;
+        white-space: nowrap;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+    }
+    .memo-app .timeline-date-marker .line {
+        width: 1px;
+        height: 8px;
+        background: #94a3b8;
+        margin: 0 auto 2px;
+    }
+    .memo-app .timeline-card {
+        position: absolute;
+        background: white;
+        border-radius: 28px;
+        padding: 16px 20px;
+        width: 260px;
+        box-shadow: 0 20px 35px -10px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.7);
+        backdrop-filter: blur(4px);
+        z-index: 2000;
+        display: none;
+        pointer-events: none;
+        left: 0;
+        top: 60px;
+    }
+    .memo-app .timeline-card.show { display: block; }
+    .memo-app .main-row {
+        display: flex;
+        flex: 1;
+        overflow: hidden;
+    }
+    .memo-app .sidebar {
+        width: 320px;
+        background: rgba(255,255,255,0.5);
+        backdrop-filter: blur(4px);
+        border-right: 1px solid rgba(0,0,0,0.08);
+        display: flex;
+        flex-direction: column;
+        padding: 24px 16px;
+        gap: 18px;
+        overflow-y: auto;
+    }
+    .memo-app .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 8px;
+    }
+    .memo-app .sidebar-header h2 { font-size: 1.3rem; font-weight: 600; color: #1e293b; }
+    .memo-app #new-memo {
+        background: #ffffffcc;
+        border: none;
+        border-radius: 40px;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255,255,255,0.9);
+    }
+    .memo-app .filter-section {
+        padding: 12px 8px;
+        background: rgba(255,255,255,0.3);
+        border-radius: 28px;
+        margin-bottom: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .memo-app .filter-row {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .memo-app .filter-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #475569;
+        width: 35px;
+        text-align: center;
+    }
+    .memo-app .filter-select {
+        flex: 1;
+        background: rgba(255,255,255,0.8);
+        border: 1px solid rgba(148,163,184,0.4);
+        border-radius: 40px;
+        padding: 8px 16px;
+        padding-right: 32px;
+        font-size: 0.8rem;
+        color: #0f172a;
+        outline: none;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475669' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        background-size: 14px;
+    }
+    .memo-app .clear-filters {
+        background: transparent;
+        border: 1px dashed #94a3b8;
+        border-radius: 30px;
+        padding: 6px 12px;
+        font-size: 0.7rem;
+        color: #556b84;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 4px;
+    }
+    .memo-app .memo-list {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .memo-app .memo-item {
+        background: rgba(255,255,255,0.6);
+        backdrop-filter: blur(2px);
+        border-radius: 24px;
+        padding: 16px 16px 14px 20px;
+        border: 1px solid rgba(255,255,255,0.9);
+        box-shadow: 0 6px 12px -8px rgba(0,0,0,0.1);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+    .memo-app .memo-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 20px -10px rgba(0,0,0,0.2);
+    }
+    .memo-app .memo-item.active {
+        border-left: 5px solid #3b82f6;
+        box-shadow: 0 12px 22px -10px #3b82f640;
+    }
+    .memo-app .status-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 12px;
+        margin-top: 4px;
+        flex-shrink: 0;
+    }
+    .memo-app .status-green { background-color: #22c55e; }
+    .memo-app .status-yellow { background-color: #eab308; }
+    .memo-app .status-orange { background-color: #f97316; }
+    .memo-app .status-red {
+        background-color: #ef4444;
+        animation: breathe 1.8s ease-in-out infinite;
+    }
+    @keyframes breathe {
+        0% { opacity: 1; box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+        50% { opacity: 0.7; box-shadow: 0 0 0 4px rgba(239,68,68,0.2); transform: scale(1.1); }
+        100% { opacity: 1; box-shadow: 0 0 0 0 rgba(239,68,68,0.4); }
+    }
+    .memo-app .memo-info { flex: 1; overflow: hidden; }
+    .memo-app .memo-name { font-weight: 600; font-size: 1rem; color: #0f172a; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .memo-app .meta-tags { display: flex; flex-wrap: wrap; gap: 8px; font-size: 0.7rem; }
+    .memo-app .tag {
+        background: rgba(59,130,246,0.1);
+        padding: 4px 10px;
+        border-radius: 50px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        border: 1px solid rgba(59,130,246,0.2);
+        max-width: 120px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .memo-app .delete-memo {
+        background: transparent;
+        border: none;
+        font-size: 18px;
+        color: #94a3b8;
+        cursor: pointer;
+        padding: 6px;
+    }
+    .memo-app .delete-memo:hover { color: #dc2626; }
+    .memo-app .editor {
+        flex: 1;
+        padding: 28px 32px;
+        background: rgba(255,255,255,0.3);
+        backdrop-filter: blur(4px);
+        display: flex;
+        flex-direction: column;
+        overflow-y: auto;
+    }
+    .memo-app .editor-form { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+    .memo-app .field-group { display: flex; flex-direction: column; gap: 6px; }
+    .memo-app .field-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+        color: #475569;
+        margin-left: 8px;
+    }
+    .memo-app .field-input,
+    .memo-app .field-textarea,
+    .memo-app .field-datetime,
+    .memo-app .field-select {
+        background: rgba(255,255,255,0.8);
+        border: 1px solid rgba(148,163,184,0.3);
+        border-radius: 24px;
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        outline: none;
+        transition: 0.2s;
+    }
+    .memo-app .field-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23475669' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        background-size: 14px;
+        padding-right: 40px;
+        cursor: pointer;
+    }
+    .memo-app .field-input:focus,
+    .memo-app .field-textarea:focus,
+    .memo-app .field-datetime:focus,
+    .memo-app .field-select:focus { border-color: #3b82f6; background: white; }
+    .memo-app .field-input[readonly] { background: rgba(240,240,240,0.5); color: #4b5563; cursor: default; }
+    .memo-app .field-textarea { min-height: 150px; resize: vertical; }
+    .memo-app .row-double { display: flex; gap: 20px; }
+    .memo-app .row-double .field-group { flex: 1; }
+    .memo-app .custom-subject-row { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+    .memo-app .custom-subject-row input[type="text"] { flex: 1; }
+    .memo-app .custom-subject-row input[type="color"] {
+        width: 60px;
+        height: 45px;
+        border-radius: 50%;
+        border: 2px solid white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        cursor: pointer;
+        background: transparent;
+        padding: 0;
+        overflow: hidden;
+    }
+    .memo-app .custom-subject-row input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    .memo-app .custom-subject-row input[type="color"]::-webkit-color-swatch { border: none; border-radius: 50%; }
+    .memo-app .editor-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 20px;
+        border-top: 1px solid rgba(148,163,184,0.2);
+        padding-top: 24px;
+        flex-wrap: wrap;
+    }
+    .memo-app .btn {
+        background: white;
+        border: 1px solid rgba(148,163,184,0.4);
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-weight: 550;
+        color: #334155;
+        cursor: pointer;
+        transition: 0.1s;
+        font-size: 0.9rem;
+    }
+    .memo-app .btn-primary { background: #1e293b; border-color: #1e293b; color: white; }
+    .memo-app .btn-primary:hover { background: #0f172a; }
+    .memo-app .btn:hover { background: #f1f5f9; }
+    .memo-app .empty-editor-message { height: 100%; display: flex; align-items: center; justify-content: center; color: #64748b; font-style: italic; }
+    #fileImport { display: none; }
+
+    /* ========== 各主题对备忘录组件的样式覆盖 ========== */
+    /* ----- 卡通童趣风 备忘录覆盖 ----- */
+    body.theme-original .memo-app {
+        background: rgba(255,255,255,0.85);
+        border: 3px dashed #ff9eaa;
+        box-shadow: 0 0 0 8px rgba(255,158,170,0.1);
+    }
+    body.theme-original .memo-app .sidebar {
+        background: rgba(255,240,245,0.7);
+        border-right: 2px dashed #ff9eaa;
+    }
+    body.theme-original .memo-app .memo-item {
+        background: rgba(255,255,255,0.8);
+        border: 2px dashed #ff6b8b;
+        color: #333;
+    }
+    body.theme-original .memo-app .memo-item.active {
+        border-left: 5px solid #ff6b8b;
+    }
+    body.theme-original .memo-app .editor {
+        background: rgba(255,240,245,0.3);
+    }
+    body.theme-original .memo-app .field-input,
+    body.theme-original .memo-app .field-textarea,
+    body.theme-original .memo-app .field-datetime,
+    body.theme-original .memo-app .field-select {
+        border: 2px dashed #ffb6c1;
+        background: rgba(255,255,255,0.9);
+    }
+    body.theme-original .memo-app .btn {
+        border: 2px dashed #ff6b8b;
+        background: #fff0f0;
+        color: #ff6b8b;
+    }
+    body.theme-original .memo-app .btn-primary {
+        background: #ff6b8b;
+        border: 2px dashed #fff;
+        color: white;
+    }
+    body.theme-original .memo-app .btn-primary:hover{color: #ff6b8b;}
+    /* 新增：筛选器、新建按钮、按钮悬浮、删除按钮悬浮 */
+    body.theme-original .memo-app #new-memo {
+        background: #ffe0e7;
+        border: 2px dashed #ff6b8b;
+        color: #ff6b8b;
+    }
+    body.theme-original .memo-app #new-memo:hover {
+        background: #ffc1cd;
+        transform: scale(1.05);
+    }
+    body.theme-original .memo-app .filter-select {
+        border: 2px dashed #ffb6c1;
+        background: rgba(255,255,255,0.9);
+    }
+    body.theme-original .memo-app .filter-select:hover {
+        border-color: #ff6b8b;
+        background: #fff0f5;
+    }
+    body.theme-original .memo-app .field-select:hover {
+        border-color: #ff6b8b;
+        background: #fff0f5;
+    }
+    body.theme-original .memo-app .clear-filters {
+        border: 2px dashed #ffb6c1;
+        color: #ff6b8b;
+    }
+    body.theme-original .memo-app .clear-filters:hover {
+        background: #ffe0e7;
+        border-color: #ff4d6d;
+    }
+    body.theme-original .memo-app .btn:hover {
+        background: #ffd9e2;
+        border-color: #ff4d6d;
+    }
+    body.theme-original .memo-app .delete-memo:hover {
+        color: #ff1a1a;
+        transform: scale(1.2);
+    }
+
+    /* ----- 糖果缤纷风 备忘录覆盖 ----- */
+    body.theme-candy .memo-app {
+        background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(255,249,251,0.9));
+        border: 5px solid #ff85a2;
+        border-radius: 36px;
+        box-shadow: 0 0 0 10px rgba(255,133,162,0.15);
+    }
+    body.theme-candy .memo-app .sidebar {
+        background: rgba(255,220,235,0.6);
+        backdrop-filter: blur(8px);
+        border-right: 2px solid #ff99cc;
+    }
+    body.theme-candy .memo-app .memo-item {
+        background: rgba(255,255,255,0.7);
+        border: 2px solid rgba(255,133,162,0.5);
+        border-radius: 30px;
+    }
+    body.theme-candy .memo-app .memo-item.active {
+        border-left: 5px solid #ff6b8b;
+        background: rgba(255,255,255,0.9);
+    }
+    body.theme-candy .memo-app .editor {
+        background: rgba(255,200,220,0.2);
+    }
+    body.theme-candy .memo-app .field-input,
+    body.theme-candy .memo-app .field-textarea,
+    body.theme-candy .memo-app .field-datetime,
+    body.theme-candy .memo-app .field-select {
+        border: 2px solid #ffb6c1;
+        background: rgba(255,240,245,0.8);
+        border-radius: 30px;
+    }
+    body.theme-candy .memo-app .btn {
+        background: #ffe6f0;
+        border: 2px solid #ff85a2;
+        border-radius: 30px;
+        color: #ff6b8b;
+    }
+    body.theme-candy .memo-app .btn-primary {
+        background: linear-gradient(90deg,#ff6b8b,#ff99cc);
+        border: none;
+        color: white;
+    }
+    body.theme-candy .memo-app .btn-primary:hover{color: #ff6b8b;}
+    /* 新增：筛选器、新建按钮、按钮悬浮、删除按钮悬浮 */
+    body.theme-candy .memo-app #new-memo {
+        background: linear-gradient(145deg, #ffd9e6, #ffe6f0);
+        border: 2px solid #ff85a2;
+        color: #ff6b8b;
+    }
+    body.theme-candy .memo-app #new-memo:hover {
+        background: linear-gradient(145deg, #ffc0d0, #ffd9e6);
+        transform: scale(1.05);
+    }
+    body.theme-candy .memo-app .filter-select {
+        border: 2px solid #ffb6c1;
+        background: rgba(255,255,255,0.8);
+        border-radius: 30px;
+    }
+    body.theme-candy .memo-app .filter-select:hover {
+        border-color: #ff6b8b;
+        background: #fff0f5;
+    }
+    body.theme-candy .memo-app .field-select:hover {
+        border-color: #ff6b8b;
+        background: #fff0f5;
+    }
+    body.theme-candy .memo-app .clear-filters {
+        border: 2px solid #ffb6c1;
+        color: #ff6b8b;
+        border-radius: 30px;
+    }
+    body.theme-candy .memo-app .clear-filters:hover {
+        background: #ffe6f0;
+        border-color: #ff4d6d;
+    }
+    body.theme-candy .memo-app .btn:hover {
+        background: #ffd9e6;
+        border-color: #ff4d6d;
+    }
+    body.theme-candy .memo-app .delete-memo:hover {
+        color: #ff4d6d;
+        transform: scale(1.2);
+    }
+
+    /* ----- 森林治愈风 备忘录覆盖 ----- */
+    body.theme-forest .memo-app {
+        background: rgba(245,240,230,0.85);
+        border: 4px solid #c19a6b;
+        box-shadow: 0 0 0 8px rgba(193,154,107,0.1);
+    }
+    body.theme-forest .memo-app .sidebar {
+        background: rgba(225,215,200,0.7);
+        border-right: 2px solid #a58b6f;
+    }
+    body.theme-forest .memo-app .memo-item {
+        background: #f2eadc;
+        border: 2px solid #6b8e23;
+        border-radius: 12px;
+    }
+    body.theme-forest .memo-app .memo-item.active {
+        border-left: 5px solid #6b8e23;
+        background: #f7f1e2;
+    }
+    body.theme-forest .memo-app .editor {
+        background: rgba(210,200,180,0.2);
+    }
+    body.theme-forest .memo-app .field-input,
+    body.theme-forest .memo-app .field-textarea,
+    body.theme-forest .memo-app .field-datetime,
+    body.theme-forest .memo-app .field-select {
+        border: 2px solid #c19a6b;
+        background: #f9f3e9;
+        border-radius: 16px;
+    }
+    body.theme-forest .memo-app .btn {
+        background: #e0d6c0;
+        border: 2px solid #6b8e23;
+        color: #3a5e1c;
+    }
+    body.theme-forest .memo-app .btn-primary {
+        background: #6b8e23;
+        border: 2px solid #c19a6b;
+        color: white;
+    }
+    body.theme-forest .memo-app .btn-primary:hover{color:#6b8e23;}
+    /* 新增：筛选器、新建按钮、按钮悬浮、删除按钮悬浮 */
+    body.theme-forest .memo-app #new-memo {
+        background: #d2c5a8;
+        border: 2px solid #6b8e23;
+        color: #3a5e1c;
+    }
+    body.theme-forest .memo-app #new-memo:hover {
+        background: #b8a882;
+        transform: scale(1.05);
+    }
+    body.theme-forest .memo-app .filter-select {
+        border: 2px solid #c19a6b;
+        background: #f9f3e9;
+    }
+    body.theme-forest .memo-app .filter-select:hover {
+        border-color: #6b8e23;
+        background: #efe6d5;
+    }
+    body.theme-forest .memo-app .field-select:hover {
+        border-color: #6b8e23;
+        background: #efe6d5;
+    }
+    body.theme-forest .memo-app .clear-filters {
+        border: 2px solid #c19a6b;
+        color: #3a5e1c;
+    }
+    body.theme-forest .memo-app .clear-filters:hover {
+        background: #d2c5a8;
+        border-color: #4f7317;
+    }
+    body.theme-forest .memo-app .btn:hover {
+        background: #cfbc9a;
+        border-color: #4f7317;
+    }
+    body.theme-forest .memo-app .delete-memo:hover {
+        color: #b33c1f;
+        transform: scale(1.2);
+    }
+
+    /* ----- 像素风 备忘录覆盖 ----- */
+    body.theme-pixel .memo-app {
+        font-family: "Minecraft AE", monospace;
+        background: #c69c6d;
+        border: 6px solid #000;
+        border-radius: 0;
+        box-shadow: 8px 8px 0 #4a3218;
+        backdrop-filter: none;
+    }
+    body.theme-pixel .memo-app .timeline {
+        background: #8b5a2b;
+        border-bottom: 4px solid #000;
+    }
+    body.theme-pixel .memo-app .sidebar {
+        background: #a07d56;
+        border-right: 4px solid #000;
+        backdrop-filter: none;
+    }
+    body.theme-pixel .memo-app .memo-item {
+        background: #b89a7a;
+        border: 4px solid #000;
+        border-radius: 0;
+        box-shadow: 4px 4px 0 #2a2a2a;
+        color: #fff;
+    }
+    body.theme-pixel .memo-app .memo-item.active {
+        border-left: 6px solid #ffaa00;
+        background: #caac8a;
+    }
+    body.theme-pixel .memo-app .editor {
+        background: #8b6f4a;
+        backdrop-filter: none;
+    }
+    body.theme-pixel .memo-app .field-input,
+    body.theme-pixel .memo-app .field-textarea,
+    body.theme-pixel .memo-app .field-datetime,
+    body.theme-pixel .memo-app .field-select {
+        border: 4px solid #000;
+        border-radius: 0;
+        background: #d4b28c;
+        color: #000;
+        font-family: "Minecraft AE", monospace;
+        box-shadow: inset 2px 2px 0 #6b4f2a;
+    }
+    body.theme-pixel .memo-app .btn {
+        border: 4px solid #000;
+        border-radius: 0;
+        background: #7a7a7a;
+        color: #fff;
+        text-shadow: 2px 2px 0 #000;
+        box-shadow: 4px 4px 0 #2a2a2a;
+        font-family: "Minecraft AE", monospace;
+    }
+    body.theme-pixel .memo-app .btn-primary {
+        background: #3c9c3c;
+    }
+    body.theme-pixel .memo-app .btn-primary:hover{
+        color: #3c9c3c;
+    }
+    body.theme-pixel .memo-app .timeline-dot {
+        border: 2px solid #000;
+        box-shadow: 2px 2px 0 #000;
+    }
+    body.theme-pixel .memo-app .timeline-card {
+        border-radius: 0;
+        border: 4px solid #000;
+        background: #c6c6c6;
+        color: #000;
+    }
+    /* 新增：筛选器、新建按钮、按钮悬浮、删除按钮悬浮 */
+    body.theme-pixel .memo-app #new-memo {
+        background: #8b7a5a;
+        border: 4px solid #000;
+        border-radius: 0;
+        color: #fff;
+        text-shadow: 2px 2px 0 #000;
+        box-shadow: 4px 4px 0 #2a2a2a;
+        font-family: "Minecraft AE", monospace;
+    }
+    body.theme-pixel .memo-app #new-memo:hover {
+        background: #a08e6a;
+        transform: translate(2px,2px);
+        box-shadow: 2px 2px 0 #2a2a2a;
+    }
+    body.theme-pixel .memo-app .filter-select {
+        border: 4px solid #000;
+        border-radius: 0;
+        background: #d4b28c;
+        color: #000;
+        box-shadow: inset 2px 2px 0 #6b4f2a;
+    }
+    body.theme-pixel .memo-app .filter-select:hover {
+        background: #e0c4a0;
+    }
+    body.theme-pixel .memo-app .field-select:hover {
+        background: #e0c4a0;
+    }
+    body.theme-pixel .memo-app .clear-filters {
+        border: 4px solid #000;
+        border-radius: 0;
+        background: #7a7a7a;
+        color: #fff;
+        text-shadow: 2px 2px 0 #000;
+        box-shadow: 4px 4px 0 #2a2a2a;
+    }
+    body.theme-pixel .memo-app .clear-filters:hover {
+        background: #909090;
+        transform: translate(2px,2px);
+        box-shadow: 2px 2px 0 #2a2a2a;
+    }
+    body.theme-pixel .memo-app .btn:hover {
+        background: #909090;
+        transform: translate(2px,2px);
+        box-shadow: 2px 2px 0 #2a2a2a;
+    }
+    body.theme-pixel .memo-app .delete-memo:hover {
+        color: #ffaa00;
+        transform: scale(1.2);
+    }
+     body.theme-pixel .memo-app .filter-section {border-radius: 0;}
+
+    /* 移动端适配 (保持与more_index一致，并微调备忘录高度) */
+    @media (max-width: 768px) {
+        .page-layout {
+            flex-direction: column;
+            gap: 15px;
+            max-width: 100%;
+            padding: 10px;
+        }
+        .theme-switcher {
+            width: 100%;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 0;
+        }
+        .theme-btn {
+            padding: 10px 15px;
+            font-size: 12px;
+            width: auto;
+        }
+        .theme-btn.active::before {
+            left: 12px;
+        }
+        .container {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            border-width: 3px !important;
+        }
+        h1 {
+            font-size: 28px;
+        }
+        .nav {
+            flex-direction: column;
+            gap: 8px;
+            padding: 8px;
+        }
+        .nav li a {
+            padding: 5px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .side-gif {
+            width: 50px;
+        }
+        .title-with-images {
+            gap: 15px;
+        }
+        .memo-app {
+            height: 60vh;
+            min-height: 400px;
+        }
+        .memo-app .sidebar {
+            width: 220px;
+            padding: 16px 10px;
+        }
+        .memo-app .editor {
+            padding: 16px;
+        }
+        .memo-app .row-double {
+            flex-direction: column;
+            gap: 10px;
+        }
+.memo-app .main-row {
+    overflow-x: auto;                /* 允许横向滚动 */
+    -webkit-overflow-scrolling: touch; /* iOS 平滑滚动 */
+}
+
+.memo-app .sidebar {
+    flex-shrink: 0;                  /* 禁止侧边栏缩小 */
+    width: 220px;                    /* 保持原有宽度 */
+}
+
+.memo-app .editor {
+    min-width: 280px;                /* 设置编辑器最小宽度，避免过窄 */
+    flex-shrink: 0;                  /* 禁止缩小 */
+}
+    }
+
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator{cursor: pointer;}
+</style>
+    <!-- 第一部分结束，请紧接着复制第二部分（HTML结构） -->
+</head>
+<body class="theme-original">
+    <div class="page-layout">
+        <div class="theme-switcher">
+            <div class="theme-title">主题选择</div>
+            <button class="theme-btn" id="btn-original">卡通童趣</button>
+            <button class="theme-btn" id="btn-candy">糖果缤纷</button>
+            <button class="theme-btn" id="btn-forest">森林治愈</button>
+            <button class="theme-btn" id="btn-pixel">复古像素</button>
+        </div>
+        <div class="container">
+            <!-- 导航菜单 (与more_index完全相同，高亮“更多”) -->
+            <ul class="nav">
+                <li><a href="../index.html">首页</a></li>
+                <li><a href="../gallery.html">相册</a></li>
+                <li><a href="../videos.html">影集</a></li>
+                <li><a href="#">故事</a></li>
+                <li><a href="../maptest.html">地图</a></li>
+                <li><a href="../BNU/BNUindex.html">BNU</a></li>
+                <li><a href="more_index.html" class="active">更多</a></li>
+            </ul>
+
+            <!-- 标题区域 (两侧动图) -->
+            <div class="title-with-images">
+                <img src="images/dudubird.webp" alt="左侧动图" class="side-gif">
+                <h1>熊熊备忘录</h1>
+                <img src="images/pigeating.webp" alt="右侧动图" class="side-gif">
+            </div>
+            <p style="text-align:center; margin-bottom:10px;">📒 记录点滴，熊心满满 ~</p>
+
+            <!-- ===== 备忘录完整界面 (嵌入.memo-app容器) ===== -->
+            <div class="memo-app">
+                <!-- 顶部时间线 -->
+                <div class="timeline">
+                    <div class="timeline-line" id="timeline-line"></div>
+                    <div class="timeline-dots" id="timeline-dots"></div>
+                    <div class="timeline-dates" id="timeline-dates"></div>
+                    <div class="timeline-card" id="timeline-card">
+                        <div class="card-title" id="card-title"></div>
+                        <div class="card-meta">
+                            <span class="card-subject" id="card-subject"></span>
+                            <span class="card-time" id="card-time"></span>
+                        </div>
+                        <div class="card-content" id="card-content"></div>
+                    </div>
+                </div>
+                <!-- 主内容区：侧边栏 + 编辑器 -->
+                <div class="main-row">
+                    <div class="sidebar">
+                        <div class="sidebar-header">
+                            <h2>所有备忘录</h2>
+                            <button id="new-memo" title="新建备忘录">+</button>
+                        </div>
+                        <div class="filter-section">
+                            <div class="filter-row">
+                                <span class="filter-label">主题</span>
+                                <select id="filter-subject" class="filter-select">
+                                    <option value="">所有主题</option>
+                                </select>
+                            </div>
+                            <div class="filter-row">
+                                <span class="filter-label">月份</span>
+                                <select id="filter-month" class="filter-select">
+                                    <option value="">所有月份</option>
+                                </select>
+                            </div>
+                            <div class="filter-row">
+                                <span class="filter-label">日期</span>
+                                <select id="filter-day" class="filter-select">
+                                    <option value="">所有日期</option>
+                                </select>
+                            </div>
+                            <div class="clear-filters" id="clear-filters-btn">✕ 清除筛选</div>
+                        </div>
+                        <!-- 备忘录列表容器 -->
+                        <div class="memo-list" id="memo-list-container"></div>
+                    </div>
+                    <div class="editor">
+                        <!-- 编辑器表单会由JS动态填充 -->
+                        <div id="memo-editor-form" class="editor-form"></div>
+                        <div class="editor-actions">
+                            <button class="btn" id="delete-current">删除当前</button>
+                            <button class="btn btn-primary" id="save-current">保存编辑</button>
+                            <button class="btn" id="export-current">导出文件</button>
+                            <button class="btn" id="import-file">导入文件</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 隐藏的文件输入，用于导入 -->
+            <input type="file" id="fileImport" accept=".txt,.md,.text,text/plain" />
+            <!-- 原备忘录中的额外提示文字已整合，无需重复 -->
+        </div> <!-- container结束 -->
+    </div> <!-- page-layout结束 -->
+
+    <!-- 第二部分结束。接下来请复制第三部分（功能脚本）并粘贴在此处之后 -->
+         <script>
+        // 主题切换逻辑 (与more_index完全一致)
+        document.addEventListener('DOMContentLoaded', function() {
+            const btnOriginal = document.getElementById('btn-original');
+            const btnCandy = document.getElementById('btn-candy');
+            const btnForest = document.getElementById('btn-forest');
+            const btnPixel = document.getElementById('btn-pixel');
+            const body = document.body;
+            const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
+
+            // 从 localStorage 读取保存的主题，若没有则默认 'theme-original'
+            const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
+            body.className = savedTheme;
+
+            function setActiveButtonFromBodyClass() {
+                allBtns.forEach(btn => btn.classList.remove('active'));
+                if (body.classList.contains('theme-original')) {
+                    btnOriginal.classList.add('active');
+                } else if (body.classList.contains('theme-candy')) {
+                    btnCandy.classList.add('active');
+                } else if (body.classList.contains('theme-forest')) {
+                    btnForest.classList.add('active');
+                } else if (body.classList.contains('theme-pixel')) {
+                    btnPixel.classList.add('active');
+                }
+            }
+
+            setActiveButtonFromBodyClass();
+
+            function saveTheme(themeClass) {
+                localStorage.setItem('selectedTheme', themeClass);
+            }
+
+            btnOriginal.addEventListener('click', function() {
+                body.className = 'theme-original';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-original');
+            });
+            btnCandy.addEventListener('click', function() {
+                body.className = 'theme-candy';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-candy');
+            });
+            btnForest.addEventListener('click', function() {
+                body.className = 'theme-forest';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-forest');
+            });
+            btnPixel.addEventListener('click', function() {
+                body.className = 'theme-pixel';
+                setActiveButtonFromBodyClass();
+                saveTheme('theme-pixel');
+            });
+        });
+
+        // 备忘录全部功能 (原封不动移植，保证所有ID一致)
+        (function() {
+            // --- 数据结构 ---
+            let memos = [];
+            let currentId = null;
+            let filters = { subject: null, month: null, day: null };
+
+            const STORAGE_MEMOS = 'memoApp_v19'; // 版本更新
+            const STORAGE_CURRENT_ID = 'memoApp_currentId_v19';
+
+            const PREDEFINED_SUBJECTS = {
+                '待办': '#fbbf24',
+                '学习': '#3b82f6',
+                '生活': '#22c55e',
+                '工作': '#a855f7',
+                '社交': '#ec4899',
+                '重要': '#ef4444'
+            };
+
+            // DOM 元素
+            const memoListEl = document.getElementById('memo-list-container');
+            const editorFormEl = document.getElementById('memo-editor-form');
+            const newBtn = document.getElementById('new-memo');
+            const deleteCurrentBtn = document.getElementById('delete-current');
+            const saveCurrentBtn = document.getElementById('save-current');
+            const exportBtn = document.getElementById('export-current');
+            const importBtn = document.getElementById('import-file');
+            const fileInput = document.getElementById('fileImport');
+            const filterSubject = document.getElementById('filter-subject');
+            const filterMonth = document.getElementById('filter-month');
+            const filterDay = document.getElementById('filter-day');
+            const clearFiltersBtn = document.getElementById('clear-filters-btn');
+
+            const timelineLine = document.getElementById('timeline-line');
+            const timelineDots = document.getElementById('timeline-dots');
+            const timelineDates = document.getElementById('timeline-dates');
+            const timelineCard = document.getElementById('timeline-card');
+            const cardTitle = document.getElementById('card-title');
+            const cardSubject = document.getElementById('card-subject');
+            const cardTime = document.getElementById('card-time');
+            const cardContent = document.getElementById('card-content');
+
+            // --- 工具函数 ---
+            function generateId() { return Date.now() + '-' + Math.random().toString(36).substr(2, 9); }
+            function escapeHtml(unsafe) {
+                if (!unsafe) return '';
+                return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            }
+
+            function getTimePeriod(hours) {
+                if (hours >= 0 && hours < 6) return '深夜';
+                if (hours >= 6 && hours < 9) return '凌晨';
+                if (hours >= 9 && hours < 12) return '上午';
+                if (hours >= 12 && hours < 14) return '中午';
+                if (hours >= 14 && hours < 18) return '下午';
+                if (hours >= 18 && hours < 21) return '傍晚';
+                return '晚上';
+            }
+
+            function formatCreatedFull(createdAt) {
+                if (!createdAt) return '未知时间';
+                const d = new Date(createdAt);
+                const year = d.getFullYear();
+                const month = d.getMonth() + 1;
+                const day = d.getDate();
+                const period = getTimePeriod(d.getHours());
+                return `${year}年${month}月${day}日 ${period}`;
+            }
+
+            function formatDueDateOnly(dueTime) {
+                if (!dueTime) return '无截止';
+                const datePart = dueTime.split('T')[0];
+                const [year, month, day] = datePart.split('-');
+                return `${year}-${month}-${day}`;
+            }
+
+            function getCurrentLocalDateTimeString() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+
+            function getDueStatusAndColor(dueTime) {
+                if (!dueTime) return { className: '', color: '#94a3b8' };
+                const now = new Date();
+                const due = new Date(dueTime);
+                if (isNaN(due.getTime())) return { className: '', color: '#94a3b8' };
+                const diffMs = due - now;
+                const diffHours = diffMs / (1000 * 60 * 60);
+                if (diffHours > 36) return { className: 'status-green', color: '#22c55e' };
+                if (diffHours > 24) return { className: 'status-yellow', color: '#eab308' };
+                if (diffHours > 6) return { className: 'status-orange', color: '#f97316' };
+                return { className: 'status-red', color: '#ef4444' };
+            }
+
+            function getSubjectColor(memo) {
+                if (memo.subjectColor) return memo.subjectColor;
+                return PREDEFINED_SUBJECTS[memo.subject] || '#94a3b8';
+            }
+
+            function migrateOldMemos(oldMemos) {
+                return oldMemos.map(m => {
+                    if (m.createdAt !== undefined) return m;
+                    const color = PREDEFINED_SUBJECTS[m.subject] || '#94a3b8';
+                    return {
+                        id: m.id,
+                        name: m.name || '未命名',
+                        subject: m.subject || '',
+                        subjectColor: color,
+                        createdAt: Date.now(),
+                        dueTime: m.time || '',
+                        content: m.content || ''
+                    };
+                });
+            }
+
+            function saveToStorage() {
+                try {
+                    localStorage.setItem(STORAGE_MEMOS, JSON.stringify(memos));
+                    if (currentId) localStorage.setItem(STORAGE_CURRENT_ID, currentId);
+                    else localStorage.removeItem(STORAGE_CURRENT_ID);
+                } catch (e) {}
+            }
+
+            // --- 加载数据 ---
+            function loadFromStorage() {
+                const stored = localStorage.getItem(STORAGE_MEMOS);
+                if (stored) {
+                    try {
+                        const parsed = JSON.parse(stored);
+                        memos = migrateOldMemos(parsed);
+                    } catch (e) { memos = []; }
+                } else {
+                    const now = new Date();
+                    const nowStr = getCurrentLocalDateTimeString();
+                    const yesterday = new Date(now.getTime() - 86400000);
+                    const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth()+1).padStart(2,'0')}-${String(yesterday.getDate()).padStart(2,'0')}T23:59`;
+                    memos = [
+                        { id: generateId(), name: '📌 工作计划', subject: '工作', subjectColor: PREDEFINED_SUBJECTS['工作'], createdAt: now.getTime(), dueTime: nowStr, content: '1. 用户调研总结\n2. 原型评审会' },
+                        { id: generateId(), name: '🛒 购物清单', subject: '生活', subjectColor: PREDEFINED_SUBJECTS['生活'], createdAt: now.getTime() - 86400000, dueTime: yesterdayStr, content: '牛奶、鸡蛋' }
+                    ];
+                }
+
+                const storedId = localStorage.getItem(STORAGE_CURRENT_ID);
+                if (storedId && memos.some(m => m.id === storedId)) currentId = storedId;
+                else currentId = memos.length > 0 ? memos[0].id : null;
+
+                if (memos.length === 0) createNewMemoInternal(true);
+            }
+
+            function getCurrentMemo() { return memos.find(m => m.id === currentId) || null; }
+
+            function getFilteredMemos() {
+                return memos.filter(memo => {
+                    if (filters.subject && memo.subject !== filters.subject) return false;
+                    if (filters.month) {
+                        if (!memo.dueTime) return false;
+                        const monthPart = memo.dueTime.substring(0, 7);
+                        if (monthPart !== filters.month) return false;
+                    }
+                    if (filters.day) {
+                        if (!memo.dueTime) return false;
+                        const dayPart = memo.dueTime.substring(0, 10);
+                        if (dayPart !== filters.day) return false;
+                    }
+                    return true;
+                });
+            }
+
+            function sortByDueTime(memoArray) {
+                return memoArray.sort((a, b) => {
+                    const aTime = a.dueTime || '9999-12-31T23:59';
+                    const bTime = b.dueTime || '9999-12-31T23:59';
+                    return aTime.localeCompare(bTime);
+                });
+            }
+
+            function renderFilterSelects() {
+                const subjects = [...new Set(memos.map(m => m.subject).filter(Boolean))].sort();
+                filterSubject.innerHTML = '<option value="">所有主题</option>';
+                subjects.forEach(s => {
+                    const opt = document.createElement('option');
+                    opt.value = s; opt.textContent = s;
+                    filterSubject.appendChild(opt);
+                });
+                if (filters.subject && subjects.includes(filters.subject)) filterSubject.value = filters.subject;
+                else filters.subject = null;
+
+                const months = [...new Set(memos.filter(m => m.dueTime).map(m => m.dueTime.substring(0, 7)))].sort().reverse();
+                filterMonth.innerHTML = '<option value="">所有月份</option>';
+                months.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m; opt.textContent = m;
+                    filterMonth.appendChild(opt);
+                });
+                if (filters.month && months.includes(filters.month)) filterMonth.value = filters.month;
+                else filters.month = null;
+
+                const days = [...new Set(memos.filter(m => m.dueTime).map(m => m.dueTime.substring(0, 10)))].sort().reverse();
+                filterDay.innerHTML = '<option value="">所有日期</option>';
+                days.forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d; opt.textContent = d;
+                    filterDay.appendChild(opt);
+                });
+                if (filters.day && days.includes(filters.day)) filterDay.value = filters.day;
+                else filters.day = null;
+            }
+
+            function syncCurrentIdWithFiltered(sortedFiltered) {
+                if (sortedFiltered.length === 0) currentId = null;
+                else if (!currentId || !sortedFiltered.some(m => m.id === currentId)) {
+                    currentId = sortedFiltered[0].id;
+                }
+            }
+
+            // --- 渲染左侧列表 ---
+            function renderMemoList() {
+                renderFilterSelects();
+                let filtered = getFilteredMemos();
+                const sorted = sortByDueTime(filtered);
+                syncCurrentIdWithFiltered(sorted);
+
+                if (sorted.length === 0) {
+                    memoListEl.innerHTML = '<div style="padding:20px; text-align:center;color:#64748b;">无备忘录</div>';
+                    return;
+                }
+                let html = '';
+                sorted.forEach(m => {
+                    const activeClass = (currentId === m.id) ? 'active' : '';
+                    const { className } = getDueStatusAndColor(m.dueTime);
+                    const subject = m.subject || '无主题';
+                    const subjectColor = getSubjectColor(m);
+                    const dueDate = formatDueDateOnly(m.dueTime);
+                    html += `
+                        <div class="memo-item ${activeClass}" data-id="${m.id}">
+                            <div class="status-dot ${className}"></div>
+                            <div class="memo-info">
+                                <div class="memo-name">${escapeHtml(m.name) || '未命名'}</div>
+                                <div class="meta-tags">
+                                    <span class="tag" style="background-color: ${subjectColor}20; color: ${subjectColor}; border-color: ${subjectColor}40;">🏷️ ${escapeHtml(subject)}</span>
+                                    <span class="tag">📅 ${escapeHtml(dueDate)}</span>
+                                </div>
+                            </div>
+                            <button class="delete-memo" data-id="${m.id}" title="删除">✕</button>
+                        </div>
+                    `;
+                });
+                memoListEl.innerHTML = html;
+
+                memoListEl.classList.add('reordering');
+                setTimeout(() => {
+                    memoListEl.classList.remove('reordering');
+                }, 300);
+            }
+
+            function setActiveMemo(id) {
+                const items = memoListEl.querySelectorAll('.memo-item');
+                items.forEach(item => {
+                    if (item.getAttribute('data-id') === id) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+            }
+
+            // --- 渲染右侧编辑器 ---
+            function renderEditor() {
+                const memo = getCurrentMemo();
+                if (!memo) {
+                    editorFormEl.innerHTML = '<div class="empty-editor-message">✨ 选择或新建备忘录</div>';
+                    return;
+                }
+                const createdFull = formatCreatedFull(memo.createdAt);
+                const dueValue = memo.dueTime || '';
+                const minDue = getCurrentLocalDateTimeString();
+
+                const currentSubject = memo.subject || '';
+                const currentSubjectColor = memo.subjectColor || '#94a3b8';
+
+                const predefinedOptions = Object.keys(PREDEFINED_SUBJECTS).map(key => 
+                    `<option value="${key}" ${currentSubject === key ? 'selected' : ''}>${key}</option>`
+                ).join('');
+                const newSelected = !Object.keys(PREDEFINED_SUBJECTS).includes(currentSubject) ? 'selected' : '';
+
+                editorFormEl.innerHTML = `
+                    <div class="field-group">
+                        <span class="field-label">备忘录名称</span>
+                        <input type="text" class="field-input" id="edit-name" value="${escapeHtml(memo.name)}" placeholder="名称">
+                    </div>
+                    <div class="field-group">
+                        <span class="field-label">主题标签</span>
+                        <select class="field-select" id="edit-subject-select">
+                            ${predefinedOptions}
+                            <option value="__new__" ${newSelected}>自定义</option>
+                        </select>
+                        <div id="custom-subject-container" style="display: ${newSelected ? 'flex' : 'none'};" class="custom-subject-row">
+                            <input type="text" id="edit-subject-custom" class="field-input" placeholder="输入新主题名称" value="${newSelected ? escapeHtml(currentSubject) : ''}">
+                            <input type="color" id="edit-subject-color" value="${currentSubjectColor}">
+                        </div>
+                    </div>
+                    <div class="row-double">
+                        <div class="field-group">
+                            <span class="field-label">创建时间</span>
+                            <input type="text" class="field-input" readonly value="${escapeHtml(createdFull)}">
+                        </div>
+                        <div class="field-group">
+                            <span class="field-label">待办时间</span>
+                            <input type="datetime-local" class="field-datetime" id="edit-dueTime" value="${dueValue}" min="${minDue}">
+                        </div>
+                    </div>
+                    <div class="field-group">
+                        <span class="field-label">内容</span>
+                        <textarea class="field-textarea" id="edit-content" placeholder="写点什么...">${escapeHtml(memo.content || '')}</textarea>
+                    </div>
+                `;
+
+                const selectEl = document.getElementById('edit-subject-select');
+                const customContainer = document.getElementById('custom-subject-container');
+                selectEl.addEventListener('change', () => {
+                    if (selectEl.value === '__new__') {
+                        customContainer.style.display = 'flex';
+                    } else {
+                        customContainer.style.display = 'none';
+                    }
+                });
+            }
+
+            // --- 保存编辑 ---
+            function saveCurrentMemo() {
+                const memo = getCurrentMemo();
+                if (!memo) return;
+
+                const nameInput = document.getElementById('edit-name');
+                const selectEl = document.getElementById('edit-subject-select');
+                const dueTimeInput = document.getElementById('edit-dueTime');
+                const contentInput = document.getElementById('edit-content');
+
+                if (!nameInput || !selectEl || !dueTimeInput || !contentInput) return;
+
+                let newSubject, newColor;
+
+                if (selectEl.value === '__new__') {
+                    const customInput = document.getElementById('edit-subject-custom');
+                    const colorInput = document.getElementById('edit-subject-color');
+                    if (!customInput || !colorInput) return;
+                    newSubject = customInput.value.trim();
+                    if (!newSubject) {
+                        alert('请输入自定义主题名称');
+                        return;
+                    }
+                    newColor = colorInput.value;
+                } else {
+                    newSubject = selectEl.value;
+                    newColor = PREDEFINED_SUBJECTS[newSubject];
+                }
+
+                const newName = nameInput.value.trim() || '未命名';
+                const newDueTime = dueTimeInput.value;
+                const newContent = contentInput.value;
+
+                memo.name = newName;
+                memo.subject = newSubject;
+                memo.subjectColor = newColor;
+                memo.dueTime = newDueTime;
+                memo.content = newContent;
+
+                saveToStorage();
+                renderMemoList();
+                renderEditor();
+                renderTimeline();
+            }
+
+            // --- 新建备忘录 ---
+            function createNewMemoInternal(skipSave = false) {
+                const nowStr = getCurrentLocalDateTimeString();
+                const newId = generateId();
+                memos.push({
+                    id: newId,
+                    name: `新备忘录 ${memos.length + 1}`,
+                    subject: '待办',
+                    subjectColor: PREDEFINED_SUBJECTS['待办'],
+                    createdAt: Date.now(),
+                    dueTime: nowStr,
+                    content: ''
+                });
+                currentId = newId;
+                filters.subject = null;
+                filters.month = null;
+                filters.day = null;
+                if (!skipSave) saveToStorage();
+                renderMemoList();
+                renderEditor();
+                renderTimeline();
+            }
+            function createNewMemo() { createNewMemoInternal(false); }
+
+            // --- 删除备忘录 ---
+            function deleteMemoById(id) {
+                const idx = memos.findIndex(m => m.id === id);
+                if (idx === -1) return;
+
+                if (!confirm('确定要删除这个备忘录吗？此操作不可撤销。')) return;
+
+                memos.splice(idx, 1);
+                if (memos.length === 0) createNewMemoInternal(false);
+                else {
+                    if (currentId === id) {
+                        const filtered = getFilteredMemos();
+                        const sorted = sortByDueTime(filtered);
+                        currentId = sorted.length ? sorted[0].id : null;
+                    }
+                    saveToStorage();
+                    renderMemoList();
+                    renderEditor();
+                    renderTimeline();
+                }
+            }
+            function deleteCurrentMemo() { if (currentId) deleteMemoById(currentId); }
+
+            // --- 导出单个 ---
+            function exportCurrentMemo() {
+                const memo = getCurrentMemo();
+                if (!memo) { alert('无选中备忘录'); return; }
+                const createdFull = formatCreatedFull(memo.createdAt);
+                const due = memo.dueTime ? memo.dueTime.replace('T', ' ') : '无截止';
+                const content = `========== 备忘录 ==========
+名称：${memo.name}
+主题：${memo.subject || '（无）'}
+编辑时间：${createdFull}
+待办时间：${due}
+内容：
+${memo.content || '（空）'}
+===========================`;
+                const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = (memo.name || '备忘录').replace(/[\\/*?:"<>|]/g, '_') + '.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            // --- 导入单个文件 ---
+            function importFromFile() {
+                fileInput.click();
+                fileInput.onchange = async () => {
+                    const file = fileInput.files[0];
+                    if (!file) return;
+                    try {
+                        const text = await file.text();
+                        const name = file.name.replace(/\.[^/.]+$/, '') || '导入的备忘录';
+                        const nowStr = getCurrentLocalDateTimeString();
+                        memos.push({
+                            id: generateId(),
+                            name: name,
+                            subject: '导入',
+                            subjectColor: '#94a3b8',
+                            createdAt: Date.now(),
+                            dueTime: nowStr,
+                            content: text
+                        });
+                        currentId = memos[ memos.length-1 ].id;
+                        filters.subject = null;
+                        filters.month = null;
+                        filters.day = null;
+                        saveToStorage();
+                        renderMemoList();
+                        renderEditor();
+                        renderTimeline();
+                    } catch (err) { alert('读取失败: ' + err.message); }
+                    fileInput.value = '';
+                };
+            }
+
+            // --- 时间线渲染 ---
+            function renderTimeline() {
+                const events = memos.filter(m => m.dueTime && m.dueTime.trim() !== '');
+                if (events.length === 0) {
+                    timelineDots.innerHTML = '<div style="text-align:center; color:#94a3b8; padding-top:15px;">暂无待办事项</div>';
+                    timelineDates.innerHTML = '';
+                    timelineLine.style.background = '#cbd5e1';
+                    return;
+                }
+
+                const times = events.map(e => new Date(e.dueTime).getTime());
+                const minTime = Math.min(...times);
+                const maxTime = Math.max(...times);
+                const range = maxTime - minTime;
+                const now = Date.now();
+
+                let dotsHtml = '';
+                events.forEach(e => {
+                    const time = new Date(e.dueTime).getTime();
+                    let leftPercent = 0;
+                    if (range === 0) leftPercent = 50;
+                    else leftPercent = ((time - minTime) / range) * 100;
+                    const color = getSubjectColor(e);
+                    dotsHtml += `<div class="timeline-dot" style="left: ${leftPercent}%; background-color: ${color};" data-id="${e.id}" title="${escapeHtml(e.name)}"></div>`;
+                });
+                timelineDots.innerHTML = dotsHtml;
+
+                const sixHours = 6 * 3600 * 1000;
+                const twentyFourHours = 24 * 3600 * 1000;
+                const thirtySixHours = 36 * 3600 * 1000;
+
+                const grayEnd = now;
+                const redEnd = now + sixHours;
+                const orangeEnd = now + twentyFourHours;
+                const yellowEnd = now + thirtySixHours;
+
+                function mapTimeToPercent(t) {
+                    if (range === 0) return 50;
+                    return ((t - minTime) / range) * 100;
+                }
+
+                const pGray = Math.min(100, Math.max(0, mapTimeToPercent(grayEnd)));
+                const pRed = Math.min(100, Math.max(0, mapTimeToPercent(redEnd)));
+                const pOrange = Math.min(100, Math.max(0, mapTimeToPercent(orangeEnd)));
+                const pYellow = Math.min(100, Math.max(0, mapTimeToPercent(yellowEnd)));
+
+                let gradientStops = [];
+                if (pGray > 0) {
+                    gradientStops.push(`#94a3b8 0%`);
+                    gradientStops.push(`#94a3b8 ${pGray}%`);
+                }
+                if (pRed > pGray) {
+                    gradientStops.push(`#ef4444 ${pGray}%`);
+                    gradientStops.push(`#ef4444 ${pRed}%`);
+                }
+                if (pOrange > pRed) {
+                    gradientStops.push(`#f97316 ${pRed}%`);
+                    gradientStops.push(`#f97316 ${pOrange}%`);
+                }
+                if (pYellow > pOrange) {
+                    gradientStops.push(`#eab308 ${pOrange}%`);
+                    gradientStops.push(`#eab308 ${pYellow}%`);
+                }
+                if (100 > pYellow) {
+                    gradientStops.push(`#22c55e ${pYellow}%`);
+                    gradientStops.push(`#22c55e 100%`);
+                }
+                if (gradientStops.length === 0) gradientStops = ['#22c55e 0%', '#22c55e 100%'];
+                timelineLine.style.background = `linear-gradient(to right, ${gradientStops.join(', ')})`;
+
+                const startDate = new Date(minTime);
+                startDate.setHours(0, 0, 0, 0);
+                const endDate = new Date(maxTime);
+                endDate.setHours(0, 0, 0, 0);
+                const totalDays = Math.ceil((endDate - startDate) / (24 * 3600 * 1000)) + 1;
+
+                let stepDays;
+                if (totalDays <= 15) stepDays = 1;
+                else if (totalDays <= 30) stepDays = 2;
+                else if (totalDays <= 90) stepDays = 7;
+                else stepDays = 30;
+
+                let datesHtml = '';
+                let currentDate = new Date(startDate);
+                let isFirst = true;
+                while (currentDate <= endDate) {
+                    if (isFirst) {
+                        isFirst = false;
+                        currentDate.setDate(currentDate.getDate() + stepDays);
+                        continue;
+                    }
+                    const dateTime = currentDate.getTime();
+                    let leftPercent = 0;
+                    if (range === 0) leftPercent = 50;
+                    else leftPercent = ((dateTime - minTime) / range) * 100;
+                    leftPercent = Math.max(0, Math.min(100, leftPercent));
+                    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(currentDate.getDate()).padStart(2, '0');
+                    const dateLabel = `${month}-${day}`;
+                    datesHtml += `<div class="timeline-date-marker" style="left: ${leftPercent}%;"><div class="line"></div><div>${dateLabel}</div></div>`;
+                    currentDate.setDate(currentDate.getDate() + stepDays);
+                }
+                timelineDates.innerHTML = datesHtml;
+
+                document.querySelectorAll('.timeline-dot').forEach(dot => {
+                    dot.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const id = dot.dataset.id;
+                        const memo = memos.find(m => m.id === id);
+                        if (!memo) return;
+                        cardTitle.innerText = memo.name;
+                        cardSubject.innerText = memo.subject || '无主题';
+                        cardSubject.style.backgroundColor = getSubjectColor(memo) + '20';
+                        cardSubject.style.color = getSubjectColor(memo);
+                        cardTime.innerText = memo.dueTime ? memo.dueTime.replace('T', ' ') : '无截止';
+                        cardContent.innerText = memo.content || '（空）';
+                        const rect = dot.getBoundingClientRect();
+                        const timelineRect = document.querySelector('.timeline').getBoundingClientRect();
+                        let left = rect.left - timelineRect.left - 130;
+                        const maxLeft = timelineRect.width - 260;
+                        left = Math.max(10, Math.min(maxLeft, left));
+                        timelineCard.style.left = left + 'px';
+                        timelineCard.style.top = '60px';
+                        timelineCard.classList.add('show');
+                    });
+                });
+            }
+
+            // --- 事件绑定 ---
+            newBtn.addEventListener('click', createNewMemo);
+            deleteCurrentBtn.addEventListener('click', deleteCurrentMemo);
+            saveCurrentBtn.addEventListener('click', saveCurrentMemo);
+            exportBtn.addEventListener('click', exportCurrentMemo);
+            importBtn.addEventListener('click', importFromFile);
+
+            memoListEl.addEventListener('click', (e) => {
+                if (e.target.classList.contains('delete-memo')) {
+                    e.stopPropagation();
+                    deleteMemoById(e.target.getAttribute('data-id'));
+                    return;
+                }
+                const item = e.target.closest('.memo-item');
+                if (item) {
+                    const id = item.getAttribute('data-id');
+                    if (id && id !== currentId) {
+                        currentId = id;
+                        saveToStorage();
+                        setActiveMemo(id);
+                        renderEditor();
+                    }
+                }
+            });
+
+            filterSubject.addEventListener('change', () => {
+                filters.subject = filterSubject.value || null;
+                renderMemoList();
+                renderEditor();
+                renderTimeline();
+            });
+            filterMonth.addEventListener('change', () => {
+                filters.month = filterMonth.value || null;
+                renderMemoList();
+                renderEditor();
+                renderTimeline();
+            });
+            filterDay.addEventListener('change', () => {
+                filters.day = filterDay.value || null;
+                renderMemoList();
+                renderEditor();
+                renderTimeline();
+            });
+            clearFiltersBtn.addEventListener('click', () => {
+                filters.subject = null;
+                filters.month = null;
+                filters.day = null;
+                renderFilterSelects();
+                renderMemoList();
+                renderEditor();
+                renderTimeline();
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('timeline-dot') && !timelineCard.contains(e.target)) {
+                    timelineCard.classList.remove('show');
+                }
+            });
+
+            // --- 启动 ---
+            loadFromStorage();
+            renderFilterSelects();
+            renderMemoList();
+            renderEditor();
+            renderTimeline();
+        })();
+    </script>
+</body>
+</html>
