@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../icons/favicon.ico">
-    <title>📒熊熊Land - 备忘录</title>
+    <title>📒熊熊Land - Todos</title>
 <style>
     /* ----- 基础重置 & 全局变量 (与主页完全一致) ----- */
     * {
@@ -331,7 +331,7 @@
     /* ---------- 备忘录基础布局样式 (无主题颜色，只控制尺寸/布局) ---------- */
     .memo-app {
         width: 100%;
-        height: 70vh;          /* 适应container，可滚动 */
+        height: 85vh;          /* 适应container，可滚动 */
         min-height: 500px;
         background: rgba(255,255,255,0.7);
         backdrop-filter: blur(12px);
@@ -525,7 +525,7 @@
         background: rgba(255,255,255,0.6);
         backdrop-filter: blur(2px);
         border-radius: 24px;
-        padding: 16px 16px 14px 20px;
+        padding: 10px 10px 9px 12px;
         border: 1px solid rgba(255,255,255,0.9);
         box-shadow: 0 6px 12px -8px rgba(0,0,0,0.1);
         transition: all 0.2s ease;
@@ -1040,7 +1040,67 @@
         transform: scale(1.2);
     }
      body.theme-pixel .memo-app .filter-section {border-radius: 0;}
-
+        .back-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            color: #fff;
+            margin: 0 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .theme-original .back-btn {
+            background-color: #ff6b8b;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        .theme-original .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+        .theme-candy .back-btn {
+            background: linear-gradient(145deg,#ff6b8b,#ff85a2);
+            border: 2px solid transparent;
+            border-radius: 50px;
+            box-shadow: 0 4px 0 #cc6a7a;
+        }
+        .theme-candy .back-btn:hover {
+            background: linear-gradient(145deg,#ff85a2,#ff6b8b);
+            transform: translateY(-2px) scale(1.05);
+            border-color: #fff;
+            box-shadow: 0 6px 0 #cc6a7a;
+        }
+        .theme-forest .back-btn {
+            background-color: #6b8e23;
+            box-shadow: 0 4px 0 #4f7317;
+            border: 2px solid #4f7317;
+        }
+        .theme-forest .back-btn:hover {
+            background-color: #4f7317;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #4f7317;
+        }
+        .theme-pixel .back-btn {
+            background-color: #507050;
+            border: 4px solid #000;
+            border-radius: 0;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 4px 4px 0 #2a3a2a;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .theme-pixel .back-btn:hover {
+            background-color: #60a060;
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #2a3a2a;
+        }
     /* 移动端适配 (保持与more_index一致，并微调备忘录高度) */
     @media (max-width: 768px) {
         .page-layout {
@@ -1092,13 +1152,20 @@
             gap: 15px;
         }
         .memo-app {
-            height: 60vh;
+            height: 90vh;
             min-height: 400px;
         }
         .memo-app .sidebar {
-            width: 220px;
-            padding: 16px 10px;
+            width: 180px;
+            padding: 12px 8px;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
+        .memo-app .sidebar .sidebar-header {size: .7em}
+        .memo-app .memo-item {
+            size: 0.8em;
+        }
+        
         .memo-app .editor {
             padding: 16px;
         }
@@ -1120,6 +1187,8 @@
     min-width: 280px;                /* 设置编辑器最小宽度，避免过窄 */
     flex-shrink: 0;                  /* 禁止缩小 */
 }
+
+            .back-btn { padding:6px 12px; font-size:14px; }
     }
 
         input[type="datetime-local"]::-webkit-calendar-picker-indicator{cursor: pointer;}
@@ -1150,8 +1219,11 @@
             <!-- 标题区域 (两侧动图) -->
             <div class="title-with-images">
                 <img src="images/dudubird.webp" alt="左侧动图" class="side-gif">
-                <h1>熊熊备忘录</h1>
+                <h1>熊熊Todo-List</h1>
                 <img src="images/pigeating.webp" alt="右侧动图" class="side-gif">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <a href="more_index.html" class="back-btn">← 返回</a>
             </div>
             <p style="text-align:center; margin-bottom:10px;">记录点滴，熊心满满 ~</p>
 
@@ -1175,8 +1247,8 @@
                 <div class="main-row">
                     <div class="sidebar">
                         <div class="sidebar-header">
-                            <h2>所有备忘录</h2>
-                            <button id="new-memo" title="新建备忘录">+</button>
+                            <h2>所有规划</h2>
+                            <button id="new-memo" title="新建Todo">+</button>
                         </div>
                         <div class="filter-section">
                             <div class="filter-row">
@@ -1326,12 +1398,12 @@
             }
 
             function getTimePeriod(hours) {
-                if (hours >= 0 && hours < 6) return '深夜';
-                if (hours >= 6 && hours < 9) return '凌晨';
-                if (hours >= 9 && hours < 12) return '上午';
-                if (hours >= 12 && hours < 14) return '中午';
-                if (hours >= 14 && hours < 18) return '下午';
-                if (hours >= 18 && hours < 21) return '傍晚';
+                if (hours >= 22.5 || hours < 3.5) return '深夜';
+                if (hours >= 3.5 && hours < 6) return '凌晨';
+                if (hours >= 6 && hours < 11) return '上午';
+                if (hours >= 11 && hours < 12.5) return '中午';
+                if (hours >= 12.5 && hours < 17) return '下午';
+                if (hours >= 17 && hours < 18.5) return '傍晚';
                 return '晚上';
             }
 
@@ -1504,7 +1576,7 @@
                 syncCurrentIdWithFiltered(sorted);
 
                 if (sorted.length === 0) {
-                    memoListEl.innerHTML = '<div style="padding:20px; text-align:center;color:#64748b;">无备忘录</div>';
+                    memoListEl.innerHTML = '<div style="padding:20px; text-align:center;color:#64748b;">无Todo</div>';
                     return;
                 }
                 let html = '';
@@ -1551,7 +1623,7 @@
             function renderEditor() {
                 const memo = getCurrentMemo();
                 if (!memo) {
-                    editorFormEl.innerHTML = '<div class="empty-editor-message">✨ 选择或新建备忘录</div>';
+                    editorFormEl.innerHTML = '<div class="empty-editor-message">✨ 选择或新建Todo</div>';
                     return;
                 }
                 const createdFull = formatCreatedFull(memo.createdAt);
@@ -1568,7 +1640,7 @@
 
                 editorFormEl.innerHTML = `
                     <div class="field-group">
-                        <span class="field-label">备忘录名称</span>
+                        <span class="field-label">Todo名称</span>
                         <input type="text" class="field-input" id="edit-name" value="${escapeHtml(memo.name)}" placeholder="名称">
                     </div>
                     <div class="field-group">
@@ -1660,7 +1732,7 @@
                 const newId = generateId();
                 memos.push({
                     id: newId,
-                    name: `新备忘录 ${memos.length + 1}`,
+                    name: `新Todo ${memos.length + 1}`,
                     subject: '待办',
                     subjectColor: PREDEFINED_SUBJECTS['待办'],
                     createdAt: Date.now(),
@@ -1683,7 +1755,7 @@
                 const idx = memos.findIndex(m => m.id === id);
                 if (idx === -1) return;
 
-                if (!confirm('确定要删除这个备忘录吗？此操作不可撤销。')) return;
+                if (!confirm('确定要删除这个Todo吗？此操作不可撤销。')) return;
 
                 memos.splice(idx, 1);
                 if (memos.length === 0) createNewMemoInternal(false);
@@ -1704,10 +1776,10 @@
             // --- 导出单个 ---
             function exportCurrentMemo() {
                 const memo = getCurrentMemo();
-                if (!memo) { alert('无选中备忘录'); return; }
+                if (!memo) { alert('无选中Todo'); return; }
                 const createdFull = formatCreatedFull(memo.createdAt);
                 const due = memo.dueTime ? memo.dueTime.replace('T', ' ') : '无截止';
-                const content = `========== 备忘录 ==========
+                const content = `========== Todo ==========
 名称：${memo.name}
 主题：${memo.subject || '（无）'}
 编辑时间：${createdFull}
@@ -1719,7 +1791,7 @@ ${memo.content || '（空）'}
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = (memo.name || '备忘录').replace(/[\\/*?:"<>|]/g, '_') + '.txt';
+                a.download = (memo.name || 'Todo').replace(/[\\/*?:"<>|]/g, '_') + '.txt';
                 a.click();
                 URL.revokeObjectURL(url);
             }
@@ -1732,7 +1804,7 @@ ${memo.content || '（空）'}
                     if (!file) return;
                     try {
                         const text = await file.text();
-                        const name = file.name.replace(/\.[^/.]+$/, '') || '导入的备忘录';
+                        const name = file.name.replace(/\.[^/.]+$/, '') || '导入的Todo';
                         const nowStr = getCurrentLocalDateTimeString();
                         memos.push({
                             id: generateId(),

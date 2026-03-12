@@ -239,6 +239,7 @@
                 padding: 6px 12px;
                 font-size: 14px;
             }
+            .back-btn { padding:6px 12px; font-size:14px; }
         }
         @media (min-width: 601px) and (max-width: 768px) {
             .nav {
@@ -590,6 +591,69 @@
     border-radius: 0;
     box-shadow: 4px 4px 0 #2a3a2a;
 }
+
+        .back-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            color: #fff;
+            margin: 0 5px;
+            border: none;
+            cursor: pointer;
+        }
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .theme-original .back-btn {
+            background-color: #ff6b8b;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        .theme-original .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+        .theme-candy .back-btn {
+            background: linear-gradient(145deg,#ff6b8b,#ff85a2);
+            border: 2px solid transparent;
+            border-radius: 50px;
+            box-shadow: 0 4px 0 #cc6a7a;
+        }
+        .theme-candy .back-btn:hover {
+            background: linear-gradient(145deg,#ff85a2,#ff6b8b);
+            transform: translateY(-2px) scale(1.05);
+            border-color: #fff;
+            box-shadow: 0 6px 0 #cc6a7a;
+        }
+        .theme-forest .back-btn {
+            background-color: #6b8e23;
+            box-shadow: 0 4px 0 #4f7317;
+            border: 2px solid #4f7317;
+        }
+        .theme-forest .back-btn:hover {
+            background-color: #4f7317;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #4f7317;
+        }
+        .theme-pixel .back-btn {
+            background-color: #507050;
+            border: 4px solid #000;
+            border-radius: 0;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+            box-shadow: 4px 4px 0 #2a3a2a;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .theme-pixel .back-btn:hover {
+            background-color: #60a060;
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #2a3a2a;
+        }
+
     </style>
 </head>
 <body class="theme-original">
@@ -617,6 +681,9 @@
                 <img src="images/dudubird.webp" alt="左侧动图" class="side-gif">
                 <h1>科学计算器</h1>
                 <img src="images/pigeating.webp" alt="右侧动图" class="side-gif">
+            </div>
+            <div style="margin-bottom: 15px;">
+                <a href="more_index.html" class="back-btn">← 返回</a>
             </div>
             <p>Desmos 计算器家族 · 一键切换类型</p>
 

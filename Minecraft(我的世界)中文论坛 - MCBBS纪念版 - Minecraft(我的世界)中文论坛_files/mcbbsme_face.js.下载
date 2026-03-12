@@ -1,0 +1,49 @@
+window.onload = function () {
+    const imgs = document.getElementsByTagName("img");
+    const imgs_len = imgs.length;
+
+    for (let i = 0; i < imgs_len; i++) {
+        const src = imgs[i].src.split("##SJ##");
+
+        if (typeof src[1] === "string" && src[1]) {
+            // 检测是否有 "noface" 类
+            if (imgs[i].classList.contains("vm")) {
+                //console.log("Skipping noface image:", imgs[i].src);
+                continue; // 跳过不添加头像框
+            }
+
+            // 为图片添加头像框
+            imgs[i].src = src[0];
+            imgs[i].className = imgs[i].className ? imgs[i].className + " mcbbsme_face" : "mcbbsme_face";
+
+            const imgCopy = imgs[i].cloneNode(true);
+            const w1 = imgs[i].width;
+            const w0 = w1 * 7 / 4;
+            const w2 = w1 * 3 / 8;
+
+            const parent = document.createElement("div");
+            parent.className = "mcbbsme_facemall_main";
+            parent.setAttribute("style", "width:" + w1 + "px;height:" + w1 + "px");
+            parent.appendChild(imgCopy);
+
+            const img = document.createElement("img");
+            img.className = "mcbbsme_facemall";
+            img.src = src[1];
+            img.setAttribute("style", "display:block;width:" + w0 + "px;height:" + w0 + "px;left:-" + w2 + "px;top:-" + w2 + "px;");
+            parent.appendChild(img);
+
+            imgs[i].parentNode.replaceChild(parent, imgs[i]);
+        } else if (imgs[i].className === "mcbbsme_facemall") {
+            // 如果已经是头像框，调整样式
+            const pp = imgs[i].parentNode;
+            const w1 = pp.firstChild.width;
+            const w0 = w1 * 7 / 4;
+            const w2 = w1 * 3 / 8;
+            pp.setAttribute("style", "width:" + w1 + "px;height:" + w1 + "px");
+            imgs[i].setAttribute("style", "display:block;width:" + w0 + "px;height:" + w0 + "px;left:-" + w2 + "px;top:-" + w2 + "px;");
+            pp.firstChild.className = pp.firstChild.className ? pp.firstChild.className + " mcbbsme_face" : "mcbbsme_face";
+        }
+    }
+
+    //console.log("All images processed.");
+};

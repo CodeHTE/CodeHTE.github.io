@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>仿MC书籍边框 · 纪念版风格</title>
+    <style>
+        /* 全局重置 & 背景基调 (模仿原站深邃质感) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #2d2a1e;  /* 深色衬底，模仿工作台背景 */
+            background-image: url('https://www.mcbbs.co/template/mcbbs/image/bedrock.png'); /* 可选背景纹理，与原站footer类似，但保留原站引用仅示意，实际可用本地图片替换，不影响主要边框 */
+            font-family: 'Microsoft YaHei', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+        }
+
+        /* 主容器 — 仿mc_map_wp，书籍边框总成 */
+        .mc_map_wp {
+            width: 1130px;                /* 与原站new_wp宽度一致 */
+            max-width: 90%;                /* 小屏自适应 */
+            margin: 0 auto;
+            min-height: 600px;              /* 保证边框可见，实际由内容撑开 */
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+
+        /* 顶部边框 — 使用本地图片 (assests/border_top.png) */
+.mc_map_border_top {
+    float: left;
+    width: 1130px;
+    height: 59px;
+    background: url(../../template/mcbbs/image/bg_border_top.png) center center no-repeat;
+    background-size: 1130px 59px;
+    margin-bottom: -1px;
+}
+
+.mc_map_border_left {
+    float: left;
+    width: 1130px;
+    background: #fbf2dc url(../../template/mcbbs/image/bg_border_left.png) left top repeat-y;
+    background-size: 84px 100px;
+}
+
+.mc_map_border_right {
+    float: left;
+    width: 1130px;
+    background: url(../../template/mcbbs/image/bg_border_right.png) right top repeat-y;
+    background-size: 84px 100px;
+}
+
+#hd {
+    border-bottom: 0 solid #99876C;
+}
+
+#hd .wp {
+    padding: 0;
+    margin: 0 85px;
+    float: left;
+}
+
+.wp {
+    margin: 0 auto;
+}
+        /* 内容区域 — 羊皮纸质感，与原站内容区呼应 */
+        .content-panel {
+            background-color: rgba(247, 237, 218, 0.92);  /* 暖黄半透明，模仿书页 */
+            border: 2px solid #b58b5b;        /* 装饰细边，增强书籍感 */
+            border-style: inset;
+            padding: 30px 35px;
+            min-height: 500px;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.1);
+            font-size: 16px;
+            color: #3e2e1f;
+        }
+
+        /* 底部边框 — 使用本地图片 */
+        /* 内部版心宽度（可选，与原站new_wp对应）*/
+        .inner-wp {
+            max-width: 1060px;               /* 略小于总宽，让左右边框更明显 */
+            margin: 0 auto;
+        }
+
+        /* 装饰性标题，模仿原站版块 */
+        .book-title {
+            font-family: 'Unifont', 'Pixelify Sans', 'Courier New', monospace;
+            font-size: 28px;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px dashed #9b7e5c;
+            text-shadow: 2px 2px 0 #d0b48a;
+            letter-spacing: 1px;
+        }
+        .book-title small {
+            font-size: 16px;
+            color: #6b4f32;
+            margin-left: 15px;
+        }
+
+        /* 模拟一些论坛版块列表 */
+        .forum-list {
+            list-style: none;
+        }
+        .forum-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #dac29c;
+            display: flex;
+            align-items: center;
+        }
+        .forum-list li:last-child {
+            border-bottom: none;
+        }
+        .forum-icon {
+            width: 48px;
+            height: 48px;
+            background: #bc9b6e;
+            border: 3px solid #7d5f3a;
+            margin-right: 20px;
+            border-radius: 0;            /* 方块感 */
+            box-shadow: 2px 2px 0 #4d3a24;
+        }
+        .forum-info {
+            flex: 1;
+        }
+        .forum-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2f4a2f;
+        }
+        .forum-meta {
+            color: #6e4e2b;
+            font-size: 14px;
+        }
+        .latest-post {
+            font-size: 14px;
+            color: #a0522d;
+            text-align: right;
+            min-width: 200px;
+        }
+
+        /* 回到顶部书签 — 完全本地图片，悬浮仿原站scrolltop */
+        #scrolltop {
+            position: fixed;
+            bottom: 50px;
+            right: 40px;
+            width: 64px;
+            height: 64px;
+            background: url('assests/scrolltop.png') no-repeat center center;
+            background-size: contain;
+            cursor: pointer;
+            z-index: 999;
+            display: none;                /* 默认隐藏，滚动后显示 */
+            filter: drop-shadow(2px 4px 6px #1f1a10);
+            transition: transform 0.2s, opacity 0.3s;
+            opacity: 0.9;
+            border: none;
+            image-rendering: pixelated;   /* 保持像素风 */
+        }
+        #scrolltop:hover {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+
+        /* 页脚彩蛋：一言（仿原站） */
+        #hitokoto {
+            background: #ecdec1;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 15px;
+            color: #2a3f2a;
+            box-shadow: inset 0 1px 5px #b59b6b;
+            display: inline-block;
+            margin-top: 20px;
+            border: 2px solid #8f6f42;
+        }
+
+        /* 确保边框容器正确包裹 */
+        .mc_map_border_left, .mc_map_border_right {
+            width: 100%;
+        }
+
+        /* 小屏适配 */
+        @media (max-width: 768px) {
+            .mc_map_wp {
+                width: 95%;
+            }
+            .content-panel {
+                padding: 15px;
+            }
+            .latest-post {
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 仿MC书籍边框 · 主容器开始 -->
+    <div class="mc_map_wp">
+        <!-- 顶部边框（独立） -->
+        <div class="mc_map_border_top"></div>
+
+        <!-- 左边框层（背景平铺） -->
+        <div class="mc_map_border_left">
+            <!-- 右边框层（背景平铺+内边距留空） -->
+            <div class="mc_map_border_right">
+                <!-- 内容面板 — 核心区域，类似原站的new_wp内部 -->
+                <div class="content-panel">
+                    <div class="inner-wp">
+                        <!-- 标题区仿纪念版风格 -->
+                        <div class="book-title">
+                            📖 我的世界 · 纪念书卷 
+                            <small>— 仿MCBBS纪念版边框 —</small>
+                        </div>
+
+                        <!-- 模拟一些版块列表，展示边框效果 -->
+                        <ul class="forum-list">
+                            <li>
+                                <div class="forum-icon"></div>
+                                <div class="forum-info">
+                                    <div class="forum-name">矿工茶馆</div>
+                                    <div class="forum-meta">今日: 8 | 主题: 1.4k</div>
+                                </div>
+                                <div class="latest-post">
+                                    最后: nicocat · 半小时前
+                                </div>
+                            </li>
+                            <li>
+                                <div class="forum-icon" style="background:#7c9e7c;"></div>
+                                <div class="forum-info">
+                                    <div class="forum-name">皮肤分享</div>
+                                    <div class="forum-meta">今日: 7 | 主题: 4.4k</div>
+                                </div>
+                                <div class="latest-post">
+                                    最后: LYSANDER · 1小时前
+                                </div>
+                            </li>
+                            <li>
+                                <div class="forum-icon" style="background:#b58f6e;"></div>
+                                <div class="forum-info">
+                                    <div class="forum-name">整合包发布</div>
+                                    <div class="forum-meta">今日: 1 | 主题: 104</div>
+                                </div>
+                                <div class="latest-post">
+                                    最后: 宿perman · 半小时前
+                                </div>
+                            </li>
+                            <li>
+                                <div class="forum-icon" style="background:#997e54;"></div>
+                                <div class="forum-info">
+                                    <div class="forum-name">周边创作</div>
+                                    <div class="forum-meta">今日: 3 | 主题: 57</div>
+                                </div>
+                                <div class="latest-post">
+                                    最后: MCnyan · 原创插画
+                                </div>
+                            </li>
+                        </ul>
+
+                        <!-- 占位段落，撑高内容，让边框效果更明显 -->
+                        <div style="margin-top: 30px; background: rgba(210, 180, 140, 0.3); padding: 20px; border: 2px inset #c3a076;">
+                            <h3 style="color:#3b5e3b;">📜 关于这个边框</h3>
+                            <p>这里完美复现了MCBBS纪念版标志性的“书籍边框”风格：顶部与底部使用平铺的像素纹理，左右两侧为纵向连续装饰，中央为羊皮纸内容区。所有图片均来自本地 <strong>assests/</strong> 文件夹，您只需将下载的以下图片放入该目录：</p>
+                            <ul style="margin-top: 10px; margin-left: 25px; list-style-type: square; color:#4f3e2b;">
+                                <li><code>border_top.png</code> — 顶部边框</li>
+                                <li><code>border_left.png</code> — 左侧边框</li>
+                                <li><code>border_right.png</code> — 右侧边框</li>
+                                <li><code>border_bottom.png</code> — 底部边框</li>
+                                <li><code>scrolltop.png</code> — 返回顶部书签图标</li>
+                            </ul>
+                            <p style="margin-top: 10px;">滚动页面，右下角会出现书签按钮，点击即可平滑回到顶部，完全模仿原站功能。</p>
+                        </div>
+
+                        <!-- 仿原站“在线会员”简约卡片 -->
+                        <div style="margin-top: 30px; background: #dac29c; padding: 10px 20px; border: 2px solid #8f6f42; color: #2d2a1e;">
+                            <strong>⚡ 在线会员</strong> - 总计 531 人在线 - 最高记录 17223 于 2025-12-19
+                        </div>
+                    </div>
+                </div> <!-- content-panel 结束 -->
+            </div> <!-- mc_map_border_right 结束 -->
+        </div> <!-- mc_map_border_left 结束 -->
+
+        <!-- 底部边框 -->
+        <div class="mc_map_border_foot"></div>
+    </div> <!-- mc_map_wp 结束 -->
+
+    <!-- 回到顶部书签 (本地图片) -->
+    <div id="scrolltop" title="返回顶部"></div>
+
+    <!-- 底部一言 (纯装饰，与原站呼应) -->
+    <div style="text-align: center; margin-top: 20px;">
+        <span id="hitokoto">风声细碎烛影乱，相思浓时情转淡。—— 影视·月中天</span>
+    </div>
+
+    <!-- 简单的滚动监听 + 回到顶部功能 (原生JS) -->
+    <script>
+        (function() {
+            const scrollBtn = document.getElementById('scrolltop');
+            if (!scrollBtn) return;
+
+            // 显示/隐藏逻辑
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 200) {
+                    scrollBtn.style.display = 'block';
+                } else {
+                    scrollBtn.style.display = 'none';
+                }
+            });
+
+            // 点击回到顶部 (平滑动画)
+            scrollBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // 立即执行一次，判断初始状态
+            if (window.scrollY > 200) {
+                scrollBtn.style.display = 'block';
+            } else {
+                scrollBtn.style.display = 'none';
+            }
+        })();
+
+        // 一个小彩蛋：控制台输出 (仿原站)
+        console.log(`
+███    ███ ██████ ███████ ███████ ██████   
+████  ████ ███    ███ ███ ███ ███ ███      
+██████████ ███    ██████▄ ██████▄ ███████  
+███ ██ ███ ███    ███ ███ ███ ███     ███  
+███    ███ ██████ ███████ ███████ ███████  纪
+        `);
+        console.log("边框样式·本地图片版 | 图片资源放在 /assests 目录下");
+    </script>
+
+    <!-- 注：本示例不依赖任何外部图片，所有url均为本地 assests/ 路径，请将您的图片放入相应文件夹 -->
+</body>
+</html>

@@ -44,6 +44,7 @@
             width: 120px;
             margin-top: 20px;
             flex-shrink: 0;
+            position: relative;
         }
         .theme-btn {
             padding: 12px 8px;
@@ -88,6 +89,177 @@
             border-radius: 16px;
             background: #fff;
             overflow: hidden; /* 确保容器本身不滚动，滚动由内部wrapper控制 */
+        }
+
+        /* 备注区 */
+        .notes-panel {
+            width: 220px;
+            padding: 16px;
+            border-radius: 12px;
+            background: #fff;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: auto;
+            position: absolute;
+            top: calc(100% + 24px);
+            right: 0;
+            z-index: 2;
+        }
+        .notes-header {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+        .notes-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        .notes-add-btn {
+            padding: 8px 10px;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .notes-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .note-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: #f8fafc;
+            cursor: grab;
+        }
+        .note-item.dragging {
+            opacity: 0.6;
+        }
+        .note-text {
+            font-size: 12px;
+            color: #334155;
+            word-break: break-word;
+        }
+        .note-actions {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+        .note-action-btn {
+            padding: 4px 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #fff;
+            color: #334155;
+        }
+        .note-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .notes-panel {
+                display: none;
+            }
+        }
+
+        /* 备注区 */
+        .notes-panel {
+            width: 220px;
+            padding: 16px;
+            border-radius: 12px;
+            background: #fff;
+            border: 2px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
+            align-self: stretch;
+        }
+        .notes-header {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed #cbd5e1;
+        }
+        .notes-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        .notes-add-btn {
+            padding: 8px 10px;
+            border: none;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .notes-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .note-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            background: #f8fafc;
+        }
+        .note-text {
+            font-size: 12px;
+            color: #334155;
+            word-break: break-word;
+        }
+        .note-actions {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+        .note-action-btn {
+            padding: 4px 8px;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 11px;
+            cursor: pointer;
+            background: #fff;
+            color: #334155;
+        }
+        .note-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .notes-panel {
+                display: none;
+            }
         }
 
         /* 导航菜单 */
@@ -152,6 +324,10 @@
             background: transparent;
             /* 确保表格最小宽度，使滚动生效 */
             min-width: 800px; /* 根据实际列宽调整，确保窄屏时滚动 */
+            /* 添加表格外边框 */
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
         }
         th, td {
             border: 1px solid #e5e7eb;
@@ -187,7 +363,7 @@
             cursor: default;
             transition: background-color 0.2s;
             vertical-align: top;
-            padding: 4px;
+            padding: 2px;
         }
         .course-cell.editable {
             cursor: pointer;
@@ -229,27 +405,6 @@
             overflow-y: auto;
             word-break: break-word;
         }
-        .course-content.type-none { background: #dbeafe; }
-        .course-content.type-none .course-name { color: #1e3a8a; }
-        .course-content.type-none .course-location-teacher { border-top-color: #a5c0fa; }
-        .course-content.type-required-major { background: #ffe485; }
-        .course-content.type-required-major .course-name { color: #78350f; }
-        .course-content.type-required-major .course-location-teacher { border-top-color: #fbbf24; }
-        .course-content.type-elective-major { background: #bae6fd; }
-        .course-content.type-elective-major .course-name { color: #0c4a6e; }
-        .course-content.type-elective-major .course-location-teacher { border-top-color: #38bdf8; }
-        .course-content.type-required-public { background: #fed7aa; }
-        .course-content.type-required-public .course-name { color: #9a3412; }
-        .course-content.type-required-public .course-location-teacher { border-top-color: #fb923c; }
-        .course-content.type-elective-public { background: #bfdbfe; }
-        .course-content.type-elective-public .course-name { color: #1e40af; }
-        .course-content.type-elective-public .course-location-teacher { border-top-color: #60a5fa; }
-        .course-content.type-pe { background: #bbf7d0; }
-        .course-content.type-pe .course-name { color: #14532d; }
-        .course-content.type-pe .course-location-teacher { border-top-color: #4ade80; }
-        .course-content.type-extra { background: #fbcfe8; }
-        .course-content.type-extra .course-name { color: #831843; }
-        .course-content.type-extra .course-location-teacher { border-top-color: #f472b6; }
 
         .course-type-tag {
             font-size: 10px;
@@ -259,13 +414,6 @@
             color: white;
             vertical-align: middle;
         }
-        .tag-none { display: none; }
-        .tag-required-major { background: #78350f; }
-        .tag-elective-major { background: #0c4a6e; }
-        .tag-required-public { background: #9a3412; }
-        .tag-elective-public { background: #1e40af; }
-        .tag-pe { background: #14532d; }
-        .tag-extra { background: #831843; }
 
         .course-location-teacher {
             display: flex;
@@ -285,6 +433,25 @@
         }
         .empty { background: #f9f9fc; }
         .empty .course-content { display: none; }
+
+        /* 合并课表样式 */
+        .merged-course-content {
+            display: flex;
+            flex-direction: row;
+            height: 100%;
+        }
+        .course-part {
+            flex: 1;
+            padding: 2px;
+            overflow: hidden;
+            font-size: 11px;
+        }
+        .course-part.top {
+            border-right: none;
+        }
+        .course-part.bottom {
+            border-left: none;
+        }
 
         /* 底部按钮组 (基础样式) */
         .table-footer {
@@ -307,10 +474,103 @@
             transition: all 0.2s;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
+        
+        /* 课表管理按钮样式 */
+        #scheduleManager .action-btn {
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 20px;
+        }
+        
+        #scheduleManager select.action-btn {
+            appearance: none;
+            background: #415fff;
+            color: white;
+            padding: 8px 30px 8px 15px;
+            border-radius: 20px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        
+        #scheduleManager select.action-btn:focus {
+            outline: none;
+        }
+        
+        #scheduleManager h2 {
+            font-size: 24px;
+            margin: 0 0 15px 0;
+            color: #333;
+        }
+        
+        /* 课表标题在编辑模式下才可点击 */
+        body:not(.editing) #scheduleManager h2 {
+            cursor: default;
+        }
+        
+        body.editing #scheduleManager h2 {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        body.editing #scheduleManager h2:hover {
+            color: #415fff;
+        }
+        
+        /* 课表管理器通用样式 */
+        #scheduleManager {
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 15px;
+            background: #f9f9f9;
+            margin: 15px 0;
+        }
+        
+        #scheduleManager .action-btn {
+            transition: all 0.2s ease;
+        }
+        
+        /* 课表容器通用样式 */
+        #scheduleContainer {
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 15px;
+            background: #f9f9f9;
+            margin: 15px 0;
+        }
+        
+        /* 课表标题输入框通用样式 */
+        #scheduleTitleInput {
+            font-size: 24px;
+            padding: 5px;
+            margin-bottom: 10px;
+            border: 2px solid #415fff;
+            border-radius: 5px;
+            min-width: 200px;
+        }
+        
+        #scheduleManager .action-btn {
+            transition: all 0.2s ease;
+        }
+        
+        #scheduleManager .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+
         .edit-btn { background: #415fff; color: white; }
         .edit-btn:hover { background: #2e4ad6; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(65,95,255,0.3); }
         .save-all { background: #415fff; color: white; }
         .save-all:hover { background: #2e4ad6; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(65,95,255,0.3); }
+        .color-preset-btn { background: #8b5cf6; color: white; }
+        .color-preset-btn:hover { background: #7c3aed; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(139,92,246,0.3); }
         .clear-all { background: #ffffff; color: #4b5563; border:1px solid #d1d5db; }
         .clear-all:hover { background: #f3f4f6; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
         .exit-edit { background: #f97316; color: white; }
@@ -318,7 +578,8 @@
         .delete-btn, .split-btn { background: #ffffff; color: #4b5563; border:1px solid #d1d5db; }
         .delete-btn:not(:disabled):hover { background: #fee2e2; border-color:#f87171; color:#b91c1c; transform:translateY(-2px); box-shadow:0 6px 12px rgba(239,68,68,0.2); }
         .split-btn:not(:disabled):hover { background: #e0f2e0; border-color:#2e7d32; color:#1b5e20; transform:translateY(-2px); box-shadow:0 6px 12px rgba(46,125,50,0.2); }
-        .delete-btn:disabled, .split-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none; }
+        .delete-btn:disabled, .split-btn:disabled, .clear-all:disabled, .save-all:disabled, .color-preset-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none; }
+        .delete-btn:disabled:hover, .split-btn:disabled:hover, .clear-all:disabled:hover, .save-all:disabled:hover, .color-preset-btn:disabled:hover { opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none; }
 
         /* 浮动编辑面板 */
         .float-edit-panel {
@@ -366,6 +627,20 @@
         .panel-save { background: #415fff; color: white; padding:5px 14px; border:none; border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; }
         .panel-cancel { background: #f1f5f9; color: #334155; padding:5px 14px; border:none; border-radius:20px; font-size:12px; font-weight:500; cursor:pointer; }
 
+        /* 表格外边框通用样式 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            background: transparent;
+            /* 确保表格最小宽度，使滚动生效 */
+            min-width: 800px; /* 根据实际列宽调整，确保窄屏时滚动 */
+            /* 添加表格外边框 */
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
         /* 操作弹窗 */
         .action-modal, .confirm-modal {
             position: fixed;
@@ -379,7 +654,6 @@
             z-index: 2000;
             display: none;
             flex-direction: column;
-            gap: 16px;
             min-width: 280px;
         }
         .modal-title { font-size:16px; font-weight:600; color:#333; text-align:center; }
@@ -437,6 +711,48 @@
             border: 4px solid #ff9eaa;
             box-shadow: 0 0 0 8px rgba(255,158,170,0.1);
         }
+        .theme-original .notes-panel {
+            background: #fff9f0;
+            border: 3px solid #ff9eaa;
+            box-shadow: 0 4px 8px rgba(255,158,170,0.2);
+        }
+        .theme-original .notes-header {
+            color: #ff6b8b;
+        }
+        .theme-original .notes-add-btn {
+            background: #ff6b8b;
+            color: #fff;
+            box-shadow: 0 3px 0 #d45e7a;
+        }
+        .theme-original .note-item {
+            background: #fff;
+            border: 2px dashed #ff9eaa;
+        }
+        .theme-original .note-action-btn {
+            border: 1px solid #ff9eaa;
+            color: #ff6b8b;
+        }
+        .theme-original .notes-panel {
+            background: #fff9f0;
+            border: 3px solid #ff9eaa;
+            box-shadow: 0 4px 8px rgba(255,158,170,0.2);
+        }
+        .theme-original .notes-header {
+            color: #ff6b8b;
+        }
+        .theme-original .notes-add-btn {
+            background: #ff6b8b;
+            color: #fff;
+            box-shadow: 0 3px 0 #d45e7a;
+        }
+        .theme-original .note-item {
+            background: #fff;
+            border: 2px dashed #ff9eaa;
+        }
+        .theme-original .note-action-btn {
+            border: 1px solid #ff9eaa;
+            color: #ff6b8b;
+        }
         .theme-original h1 {
             color: #ff6b8b;
             text-shadow: 2px 2px 0 #ffe0e7;
@@ -455,62 +771,7 @@
         .theme-original .nav li a.active {
             background-color: #ff6b8b;
         }
-        .theme-original th {
-            background: #87ceeb;
-            color: #333;
-        }
-        .theme-original .time-block {
-            background: #ffd9e6;
-        }
-        .theme-original .morning { background: #fff2f5; }
-        .theme-original .afternoon { background: #fff0e7; }
-        .theme-original .evening { background: #e6f3ff; }
 
-        /* 按钮主题化 */
-        .theme-original .action-btn.edit-btn,
-        .theme-original .action-btn.save-all {
-            background: #ff6b8b;
-            box-shadow: 0 4px 0 #d45e7a;
-        }
-        .theme-original .action-btn.exit-edit {
-            background: #ffaa5e;
-            box-shadow: 0 4px 0 #cc8844;
-        }
-        .theme-original .action-btn.delete-btn {
-            background: #ffe0e7;
-            color: #b34b6b;
-            border: 1px solid #ff9eaa;
-        }
-        .theme-original .action-btn.delete-btn:not(:disabled):hover {
-            background: #ffc0d0;
-            border-color: #ff6b8b;
-            color: #b34b6b;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(255,107,139,0.3);
-        }
-        .theme-original .action-btn.split-btn {
-            background: #e0f0ff;
-            color: #2d7a9e;
-            border: 1px solid #87ceeb;
-        }
-        .theme-original .action-btn.split-btn:not(:disabled):hover {
-            background: #c0e0ff;
-            border-color: #4fc3f7;
-            color: #1a5a7a;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(79,195,247,0.3);
-        }
-        .theme-original .action-btn.clear-all {
-            background: #fff5e6;
-            color: #cc7a4d;
-            border: 1px solid #ffb27a;
-        }
-        .theme-original .action-btn.clear-all:hover {
-            background: #ffe5cc;
-            border-color: #ff8c5a;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(255,140,90,0.2);
-        }
         /* 返回按钮样式 */
         .theme-original .back-btn {
             background-color: #ff6b8b;
@@ -521,8 +782,143 @@
             box-shadow: 0 6px 0 #d45e7a;
         }
         .theme-original .float-edit-panel { border-color: #ff9eaa; }
+        .theme-original #colorPresetModal,
+        .theme-original .action-modal, 
+        .theme-original .confirm-modal {
+            background: #fff9fb;
+            border: 3px solid #ff9eaa;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(255, 158, 170, 0.3);
+        }
+        .theme-original .modal-title {
+            color: #ff6b8b;
+            text-shadow: 1px 1px 0 #ffe0e7;
+        }
         .theme-original .modal-btn.copy { background: #ff6b8b; }
         .theme-original .modal-btn.merge { background: #87ceeb; color: #000; }
+        
+        /* 卡通童趣主题 - 表格外边框样式 */
+        .theme-original table {
+            border: 3px solid #ff9eaa;
+            border-radius: 12px;
+        }
+        
+        /* 卡通童趣主题 - 课表管理器样式 */
+        .theme-original #scheduleManager h2 {
+            color: #ff6b8b;
+            text-shadow: 1px 1px 0 #ffe0e7;
+        }
+        
+        .theme-original #scheduleManager {
+            border: 3px solid #ff9eaa;
+            border-radius: 12px;
+            padding: 15px;
+            background: #fff9f0;
+            box-shadow: 0 4px 8px rgba(255,158,170,0.2);
+            margin: 15px 0;
+        }
+        
+        /* 卡通童趣主题 - 课表标题输入框样式 */
+        .theme-original #scheduleTitleInput {
+            color: #ff6b8b;
+            border: 2px solid #ff9eaa;
+            border-radius: 8px;
+            background: #fff9f0;
+            box-shadow: 0 2px 4px rgba(255,158,170,0.2);
+        }
+        
+        .theme-original .action-btn.edit-btn {
+            background: #ff6b8b;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.edit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.save-all {
+            background: #415fff;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.save-all:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.color-preset-btn {
+            background: #c084fc;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.color-preset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.exit-edit {
+            background: #f97316;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.exit-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.delete-btn {
+            background: #ff85a2;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.delete-btn:not(:disabled):hover {
+            background: #ff6b8b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.split-btn {
+            background: #4fc3f7;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.split-btn:not(:disabled):hover {
+            background: #29b6f6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.clear-all {
+            background: #ffb74d;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #d45e7a;
+        }
+        
+        .theme-original .action-btn.clear-all:not(:disabled):hover {
+            background: #ffa726;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #d45e7a;
+        }
+        
+        .theme-original select.action-btn {
+            background: #ff6b8b;
+            border: none;
+            box-shadow: 0 4px 0 #d45e7a;
+            color: white;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
 
         /* ---- 糖果缤纷 theme-candy ---- */
         body.theme-candy {
@@ -535,6 +931,50 @@
             border: 5px solid #ff85a2;
             border-radius: 24px;
             box-shadow: 0 0 0 10px rgba(255,133,162,0.1), 0 8px 24px rgba(0,0,0,0.08);
+        }
+        .theme-candy .notes-panel {
+            background: linear-gradient(145deg,#fff 0,#fff5f7 100%);
+            border: 3px solid #ff85a2;
+            border-radius: 20px;
+            box-shadow: 0 6px 16px rgba(255,133,162,0.2);
+        }
+        .theme-candy .notes-header {
+            color: #ff6b8b;
+        }
+        .theme-candy .notes-add-btn {
+            background: linear-gradient(145deg,#ff85a2,#ff6b8b);
+            color: #fff;
+            box-shadow: 0 3px 0 #cc6a7a;
+        }
+        .theme-candy .note-item {
+            background: #fff;
+            border: 2px solid #ff85a2;
+        }
+        .theme-candy .note-action-btn {
+            border: 1px solid #ff85a2;
+            color: #ff6b8b;
+        }
+        .theme-candy .notes-panel {
+            background: linear-gradient(145deg,#fff 0,#fff5f7 100%);
+            border: 3px solid #ff85a2;
+            border-radius: 20px;
+            box-shadow: 0 6px 16px rgba(255,133,162,0.2);
+        }
+        .theme-candy .notes-header {
+            color: #ff6b8b;
+        }
+        .theme-candy .notes-add-btn {
+            background: linear-gradient(145deg,#ff85a2,#ff6b8b);
+            color: #fff;
+            box-shadow: 0 3px 0 #cc6a7a;
+        }
+        .theme-candy .note-item {
+            background: #fff;
+            border: 2px solid #ff85a2;
+        }
+        .theme-candy .note-action-btn {
+            border: 1px solid #ff85a2;
+            color: #ff6b8b;
         }
         .theme-candy h1 {
             background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa);
@@ -574,38 +1014,55 @@
             background: linear-gradient(145deg,#ffb07a,#ff8c5a);
             box-shadow: 0 4px 0 #cc6a4a;
         }
+        .theme-candy .action-btn.color-preset-btn {
+            background: linear-gradient(145deg,#c084fc,#a855f7);
+            box-shadow: 0 4px 0 #9333ea;
+        }
         .theme-candy .action-btn.delete-btn {
-            background: #ffe0f0;
-            color: #b34b7a;
-            border: 1px solid #ff99cc;
+            background: linear-gradient(145deg,#ff99cc,#ff6b9e);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #d45e85;
         }
         .theme-candy .action-btn.delete-btn:not(:disabled):hover {
-            background: #ffc0e0;
-            border-color: #ff6b9e;
+            background: linear-gradient(145deg,#ff6b9e,#ff4d88);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(255,107,158,0.3);
+            box-shadow: 0 6px 0 #d45e85;
         }
         .theme-candy .action-btn.split-btn {
-            background: #e0f0ff;
-            color: #2d7a9e;
-            border: 1px solid #87cefa;
+            background: linear-gradient(145deg,#87cefa,#66c2ff);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #4fa3d1;
         }
         .theme-candy .action-btn.split-btn:not(:disabled):hover {
-            background: #c0e0ff;
-            border-color: #4fc3f7;
+            background: linear-gradient(145deg,#66c2ff,#4fc3f7);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(79,195,247,0.3);
+            box-shadow: 0 6px 0 #4fa3d1;
         }
         .theme-candy .action-btn.clear-all {
-            background: #fff5f0;
-            color: #cc7a6b;
-            border: 1px solid #ffb0a0;
+            background: linear-gradient(145deg,#ffcc99,#ffb366);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #d98c40;
         }
-        .theme-candy .action-btn.clear-all:hover {
-            background: #ffe5e0;
-            border-color: #ff8a7a;
+        .theme-candy .action-btn.clear-all:not(:disabled):hover {
+            background: linear-gradient(145deg,#ffb366,#ff9933);
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(255,138,122,0.2);
+            box-shadow: 0 6px 0 #d98c40;
+        }
+        .theme-candy select.action-btn {
+            background: linear-gradient(145deg,#ff85a2,#ff6b8b);
+            border: none;
+            box-shadow: 0 4px 0 #cc6a7a;
+            color: white;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
         /* 返回按钮样式 */
         .theme-candy .back-btn {
@@ -621,19 +1078,118 @@
             box-shadow: 0 6px 0 #cc6a7a;
         }
         .theme-candy .float-edit-panel { border-color: #ff85a2; border-radius: 20px; }
+        .theme-candy #colorPresetModal,
+        .theme-candy .action-modal, 
+        .theme-candy .confirm-modal {
+            background: linear-gradient(145deg, #fff5f7, #fff0f5);
+            border: 3px solid #ff85a2;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 133, 162, 0.4);
+        }
+        .theme-candy .modal-title {
+            color: #ff6b8b;
+            text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+        }
         .theme-candy .modal-btn.copy { background: #ff85a2; }
         .theme-candy .modal-btn.merge { background: #87cefa; color: #000; }
+        
+        /* 糖果缤纷主题 - 表格外边框样式 */
+        .theme-candy table {
+            border: 3px solid #ff85a2;
+            border-radius: 16px;
+        }
+        
+        /* 糖果缤纷主题 - 课表管理器样式 */
+        .theme-candy #scheduleManager h2 {
+            background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .theme-candy #scheduleManager {
+            border: 3px solid #ff85a2;
+            border-radius: 16px;
+            padding: 15px;
+            background: linear-gradient(145deg, #fff 0, #fff9fb 100%);
+            box-shadow: 0 4px 12px rgba(255,133,162,0.3);
+            margin: 15px 0;
+        }
+        
+        /* 糖果缤纷主题 - 课表标题输入框样式 */
+        .theme-candy #scheduleTitleInput {
+            background: linear-gradient(145deg, #fff 0, #fff9fb 100%);
+            border: 2px solid #ff85a2;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(255,133,162,0.3);
+        }
+        
+        .theme-candy #scheduleManager select.action-btn {
+            background: linear-gradient(145deg,#ff85a2,#ff6b8b);
+            border: none;
+            box-shadow: 0 4px 0 #cc6a7a;
+            color: white;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
 
         /* ---- 森林治愈 theme-forest ---- */
         body.theme-forest {
             background-color: #f5f9f0;
             color: #4a5a45;
-            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23a8d08d' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.343-3 3 1.343 3 3 3zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23a8d08d' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
         }
         .theme-forest .container {
             background: #fff;
             border: 4px solid #c19a6b;
             box-shadow: 0 0 0 8px rgba(193,154,107,0.1);
+        }
+        .theme-forest .notes-panel {
+            background: #f8fdf8;
+            border: 3px solid #8fbc8f;
+            box-shadow: 0 4px 10px rgba(143,188,143,0.2);
+        }
+        .theme-forest .notes-header {
+            color: #6b8e23;
+        }
+        .theme-forest .notes-add-btn {
+            background: #6b8e23;
+            color: #fff;
+            box-shadow: 0 3px 0 #4f7317;
+        }
+        .theme-forest .note-item {
+            background: #fff;
+            border: 2px solid #8fbc8f;
+        }
+        .theme-forest .note-action-btn {
+            border: 1px solid #8fbc8f;
+            color: #3d6b2d;
+        }
+        .theme-forest .notes-panel {
+            background: #f8fdf8;
+            border: 3px solid #8fbc8f;
+            box-shadow: 0 4px 10px rgba(143,188,143,0.2);
+        }
+        .theme-forest .notes-header {
+            color: #6b8e23;
+        }
+        .theme-forest .notes-add-btn {
+            background: #6b8e23;
+            color: #fff;
+            box-shadow: 0 3px 0 #4f7317;
+        }
+        .theme-forest .note-item {
+            background: #fff;
+            border: 2px solid #8fbc8f;
+        }
+        .theme-forest .note-action-btn {
+            border: 1px solid #8fbc8f;
+            color: #3d6b2d;
         }
         .theme-forest h1 { color: #6b8e23; text-shadow: 2px 2px 0 #e8f0d6; }
         .theme-forest .nav { background-color: #8fbc8f; border: 3px solid #6f9e6f; }
@@ -654,40 +1210,137 @@
             box-shadow: 0 4px 0 #8e6b45;
         }
         .theme-forest .action-btn.delete-btn {
-            background: #ecd9c6;
-            color: #8b5a2b;
-            border: 1px solid #c19a6b;
+            background: #e5989b;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #b56568;
+        }
+        .theme-forest .action-btn.delete-btn:not(:disabled):hover {
+            background: #d5888b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #b56568;
+        }
+        .theme-forest .action-btn.split-btn {
+            background: #8fbc8f;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #5c8a5c;
+        }
+        .theme-forest .action-btn.split-btn:not(:disabled):hover {
+            background: #7fac7f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #5c8a5c;
+        }
+        .theme-forest .action-btn.clear-all {
+            background: #deb887;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #a88151;
+        }
+        .theme-forest .action-btn.clear-all:not(:disabled):hover {
+            background: #cea877;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #a88151;
         }
         .theme-forest .action-btn.delete-btn:not(:disabled):hover {
             background: #e0c4a8;
             border-color: #a5774a;
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(165,119,74,0.3);
+            box-shadow: 0 6px 0 #a5774a;
         }
         .theme-forest .action-btn.split-btn {
             background: #d0e0b0;
             color: #3d6b2d;
             border: 1px solid #8fbc8f;
+            box-shadow: 0 4px 0 #8fbc8f;
         }
         .theme-forest .action-btn.split-btn:not(:disabled):hover {
             background: #b8d090;
             border-color: #6f9e6f;
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(111,158,111,0.3);
+            box-shadow: 0 6px 0 #6f9e6f;
         }
         .theme-forest .action-btn.clear-all {
             background: #e8e0d0;
             color: #6b4a2a;
             border: 1px solid #c0a080;
+            box-shadow: 0 4px 0 #c0a080;
         }
         .theme-forest .action-btn.clear-all:hover {
             background: #d8c8b0;
             border-color: #a08060;
             transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(160,128,96,0.2);
+            box-shadow: 0 6px 0 #a08060;
         }
         .theme-forest .nav li a.active {
             background-color: #c19a6b;
+        }
+
+        .theme-forest .action-btn.edit-btn,
+        .theme-forest .action-btn.save-all {
+            background: #6b8e23;
+            box-shadow: 0 4px 0 #4f7317;
+            color: white;
+            border: none;
+        }
+        .theme-forest .action-btn.exit-edit {
+            background: #b78a5a;
+            box-shadow: 0 4px 0 #8e6b45;
+            color: white;
+            border: none;
+        }
+        .theme-forest .action-btn.color-preset-btn {
+            background: #7e5bef;
+            box-shadow: 0 4px 0 #5b21b6;
+            color: white;
+            border: none;
+        }
+        .theme-forest .action-btn.delete-btn {
+            background: #e5989b;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #b56568;
+        }
+        .theme-forest .action-btn.delete-btn:not(:disabled):hover {
+            background: #d5888b;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #b56568;
+        }
+        .theme-forest .action-btn.split-btn {
+            background: #8fbc8f;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #5c8a5c;
+        }
+        .theme-forest .action-btn.split-btn:not(:disabled):hover {
+            background: #7fac7f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #5c8a5c;
+        }
+        .theme-forest .action-btn.clear-all {
+            background: #deb887;
+            color: white;
+            border: none;
+            box-shadow: 0 4px 0 #a88151;
+        }
+        .theme-forest .action-btn.clear-all:not(:disabled):hover {
+            background: #cea877;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #a88151;
+        }
+        
+        .theme-forest .action-btn.edit-btn:not(:disabled):hover,
+        .theme-forest .action-btn.save-all:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #4f7317;
+        }
+        .theme-forest .action-btn.exit-edit:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #8e6b45;
+        }
+        .theme-forest .action-btn.color-preset-btn:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #5b21b6;
         }
 
         /* 返回按钮样式 */
@@ -702,8 +1355,62 @@
             box-shadow: 0 6px 0 #4f7317;
         }
         .theme-forest .float-edit-panel { border-color: #6b8e23; }
+        .theme-forest #colorPresetModal,
+        .theme-forest .action-modal, 
+        .theme-forest .confirm-modal {
+            background: #f0f7e6;
+            border: 3px solid #8fbc8f;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(143, 188, 143, 0.3);
+        }
+        .theme-forest .modal-title {
+            color: #6b8e23;
+        }
         .theme-forest .modal-btn.copy { background: #6b8e23; }
         .theme-forest .modal-btn.merge { background: #c19a6b; color: #fff; }
+        
+        /* 森林治愈主题 - 表格外边框样式 */
+        .theme-forest table {
+            border: 3px solid #8fbc8f;
+            border-radius: 12px;
+        }
+        
+        /* 森林治愈主题 - 课表管理器样式 */
+        .theme-forest #scheduleManager h2 {
+            color: #6b8e23;
+        }
+        
+        .theme-forest #scheduleManager {
+            border: 3px solid #8fbc8f;
+            border-radius: 12px;
+            padding: 15px;
+            background: #f8fdf8;
+            box-shadow: 0 4px 8px rgba(143,188,143,0.2);
+            margin: 15px 0;
+        }
+        
+        /* 森林治愈主题 - 课表标题输入框样式 */
+        .theme-forest #scheduleTitleInput {
+            color: #6b8e23;
+            border: 2px solid #8fbc8f;
+            border-radius: 8px;
+            background: #f8fdf8;
+            box-shadow: 0 2px 4px rgba(143,188,143,0.2);
+        }
+        
+        .theme-forest #scheduleManager select.action-btn {
+            background: #6b8e23;
+            border: none;
+            box-shadow: 0 4px 0 #4f7317;
+            color: white;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
 
         /* ---- 复古像素 theme-pixel (使用Minecraft字体) ---- */
         body.theme-pixel {
@@ -720,6 +1427,66 @@
             border-radius: 0;
             border: 6px solid #8b5a2b;
             box-shadow: 8px 8px 0 #4a3218;
+        }
+        .theme-pixel .notes-panel {
+            background: #c69c6d;
+            border: 4px solid #000;
+            border-radius: 0;
+            box-shadow: 6px 6px 0 #4a3218;
+            font-family: "Minecraft AE", monospace;
+        }
+        .theme-pixel .notes-header {
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+        }
+        .theme-pixel .notes-add-btn {
+            background: #6060c0;
+            color: #fff;
+            border: 2px solid #000;
+            box-shadow: 3px 3px 0 #2a2a2a;
+            border-radius: 0;
+        }
+        .theme-pixel .note-item {
+            background: #efe3d0;
+            border: 2px solid #000;
+            border-radius: 0;
+        }
+        .theme-pixel .note-action-btn {
+            border: 2px solid #000;
+            border-radius: 0;
+            background: #a0a0a0;
+            color: #000;
+            box-shadow: 2px 2px 0 #2a2a2a;
+        }
+        .theme-pixel .notes-panel {
+            background: #c69c6d;
+            border: 4px solid #000;
+            border-radius: 0;
+            box-shadow: 6px 6px 0 #4a3218;
+            font-family: "Minecraft AE", monospace;
+        }
+        .theme-pixel .notes-header {
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+        }
+        .theme-pixel .notes-add-btn {
+            background: #6060c0;
+            color: #fff;
+            border: 2px solid #000;
+            box-shadow: 3px 3px 0 #2a2a2a;
+            border-radius: 0;
+        }
+        .theme-pixel .note-item {
+            background: #efe3d0;
+            border: 2px solid #000;
+            border-radius: 0;
+        }
+        .theme-pixel .note-action-btn {
+            border: 2px solid #000;
+            border-radius: 0;
+            background: #a0a0a0;
+            color: #000;
+            box-shadow: 2px 2px 0 #2a2a2a;
         }
         .theme-pixel h1 {
             color: #fff;
@@ -773,6 +1540,10 @@
         .theme-pixel .afternoon { background: #909090; }
         .theme-pixel .evening { background: #707070; }
 
+.theme-pixel .course-cell:not(.empty) {
+    background: #e0e0e0; /* 在这里填入你有课时的单元格想要透出的底色 */
+}
+
         /* 像素按钮：统一使用像素风格边框和阴影 */
         .theme-pixel .action-btn {
             border-radius: 0;
@@ -788,6 +1559,7 @@
             box-shadow: 2px 2px 0 #2a2a2a;
         }
         .theme-pixel .action-btn.edit-btn { background: #60a060; }
+        .theme-pixel .action-btn.color-preset-btn { background: #a060a0; }
         .theme-pixel .action-btn.save-all { background: #6060c0; }
         .theme-pixel .action-btn.exit-edit { background: #c06060; }
         .theme-pixel .action-btn.delete-btn {
@@ -843,6 +1615,21 @@
             border: 2px solid #000;
             background: #efe3d0;
         }
+        .theme-pixel #colorPresetModal,
+        .theme-pixel .action-modal, 
+        .theme-pixel .confirm-modal {
+            background: #c69c6d;
+            background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0h8v8H0V0zm8 8h8v8H8V8zM0 8h8v8H0V8zm8 0h8v8H8V8z' fill='%23966c42' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+            border: 4px solid #000;
+            border-radius: 0;
+            box-shadow: 8px 8px 0 #4a3218;
+        }
+        .theme-pixel .modal-title {
+            color: #fff;
+            font-family: "Minecraft AE", monospace;
+            text-shadow: 2px 2px 0 #000;
+            font-size: 18px;
+        }
         .theme-pixel .modal-btn {
             border-radius: 0;
             border: 2px solid #000;
@@ -852,8 +1639,81 @@
         .theme-pixel .modal-btn.copy { background: #60a060; }
         .theme-pixel .modal-btn.merge { background: #6060c0; }
         .theme-pixel .modal-btn.cancel { background: #a0a0a0; }
+        
+        /* 复古像素主题 - 表格外边框样式 */
+        .theme-pixel table {
+            border: 4px solid #000;
+            border-radius: 0;
+        }
+        
+        /* 复古像素主题 - 课表管理器样式 */
+        .theme-pixel #scheduleManager h2 {
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+        }
+        
+        .theme-pixel #scheduleManager {
+            border: 4px solid #000;
+            border-radius: 0;
+            padding: 15px;
+            background: #c69c6d;
+            box-shadow: 6px 6px 0 #4a3218;
+            margin: 15px 0;
+        }
+        
+        /* 复古像素主题 - 课表标题输入框样式 */
+        .theme-pixel #scheduleTitleInput {
+            color: #000;
+            border: 3px solid #000;
+            border-radius: 0;
+            background: #efe3d0;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+        }
+        
+        .theme-pixel #scheduleManager .action-btn {
+            border-radius: 0;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0 #2a2a2a;
+            font-family: "Minecraft AE", monospace;
+            -webkit-font-smoothing: none;
+            text-shadow: 1px 1px 0 #000;
+        }
+        
+        .theme-pixel #scheduleManager .action-btn:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #2a2a2a;
+        }
+        
+        .theme-pixel #scheduleManager .action-btn.edit-btn { background: #60a060; }
+        .theme-pixel #scheduleManager .action-btn.color-preset-btn { background: #a060a0; }
+        .theme-pixel #scheduleManager .action-btn.clear-all {
+            background: #a0a0a0;
+            color: white;
+            border-color: #6a6a6a;
+        }
+        
+        .theme-pixel #scheduleManager select.action-btn {
+            background: #6060c0;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0 #2a2a2a;
+            color: white;
+            font-family: "Minecraft AE", monospace;
+            text-shadow: 1px 1px 0 #000;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            padding: 8px 30px 8px 15px;
+            border-radius: 0;
+        }
 
-        /* 主题按钮配色 (不变) */
+        /* 主题按钮配色 (恢复原样) */
         #btn-original { background-color: #ff6b8b; }
         #btn-candy { background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa); }
         #btn-forest { background-color: #6b8e23; }
@@ -887,8 +1747,114 @@
                 -webkit-overflow-scrolling: touch;
                 margin-bottom: -1px;
             }
-        }
-        @media (min-width:601px) and (max-width:768px) { .nav { flex-direction:row; } }
+            
+            /* 移动端课表管理适配 */
+            #scheduleManager h2 {
+                font-size: 20px;
+            }
+            
+            #scheduleManager .action-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+                margin: 2px;
+            }
+            
+            #scheduleManager select.action-btn {
+                padding: 6px 25px 6px 12px;
+                font-size: 12px;
+                background-position: right 8px center;
+                background-size: 16px;
+            }
+            
+            /* 移动端各主题课表管理适配 */
+            .theme-original #scheduleManager {
+                border-width: 2px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            
+            .theme-candy #scheduleManager {
+                border-width: 2px;
+                border-radius: 12px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            
+            .theme-forest #scheduleManager {
+                border-width: 2px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            
+            .theme-pixel #scheduleManager {
+                border-width: 3px;
+                padding: 10px;
+                margin: 10px 0;
+            }
+            
+            /* 移动端课表标题输入框适配 */
+            #scheduleTitleInput {
+                font-size: 20px;
+                padding: 4px;
+                min-width: 150px;
+            }
+            
+            .theme-original #scheduleTitleInput {
+                border-width: 2px;
+                border-radius: 6px;
+            }
+            
+            .theme-candy #scheduleTitleInput {
+                border-width: 2px;
+                border-radius: 6px;
+            }
+            
+            .theme-forest #scheduleTitleInput {
+                border-width: 2px;
+                border-radius: 6px;
+            }
+            
+            .theme-pixel #scheduleTitleInput {
+                border-width: 2px;
+                border-radius: 0;
+            }
+            
+            /* 移动端表格外边框适配 */
+            table {
+                border-width: 2px;
+                border-radius: 6px;
+            }
+            
+            .theme-original table {
+                border-width: 2px;
+                border-radius: 8px;
+            }
+            
+            .theme-candy table {
+                border-width: 2px;
+                border-radius: 12px;
+            }
+            
+            .theme-forest table {
+                border-width: 2px;
+                border-radius: 8px;
+            }
+            
+            .theme-pixel table {
+                border-width: 3px;
+                border-radius: 0;
+            }
+            
+            .theme-original #scheduleManager select.action-btn {
+                background-position: right 8px center;
+                background-size: 16px;
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+            }
+            
+
+@media (min-width:601px) and (max-width:768px) { .nav { flex-direction:row; } }
 
         /*----- 底部校徽样式 -----*/
         .svg-image {
@@ -952,12 +1918,14 @@
                 box-shadow: 3px 3px 0 #000;
             }
             .title-with-images {
-                gap: 15px;
+                
             }
         }
 
                     
     </style>
+    <!-- html2pdf.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body class="theme-original">
     <div class="page-layout">
@@ -968,6 +1936,14 @@
             <button class="theme-btn" id="btn-candy">糖果缤纷</button>
             <button class="theme-btn" id="btn-forest">森林治愈</button>
             <button class="theme-btn" id="btn-pixel">复古像素</button>
+
+            <!-- 备注区 -->
+            <div class="notes-panel" id="notesPanel">
+                <div class="notes-header">备注</div>
+                <input class="notes-input" id="noteInput" type="text" placeholder="添加备注..." />
+                <button class="notes-add-btn" id="addNoteBtn" type="button">添加备注</button>
+                <div class="notes-list" id="notesList"></div>
+            </div>
         </div>
 
         <!-- 主要内容容器 (课程表) -->
@@ -994,14 +1970,26 @@
             <div style="margin-bottom: 15px;">
                 <a href="BNUindex.html" class="back-btn">← 返回</a>
             </div>
-            <div style="text-align: center; color: black;">
-            <p>点击“编辑”按钮进入编辑模式</b></p>
-            <p>在编辑模式下：</b></p>
-            <p>双击单元格添加课程</b></p>
-            <p>单击单元格选中该单元格</b></p>
-            <p>选中单元格后，可以再单击其他单元格进行合并/复制操作</b></p>
+            <div class="instruction-text" style="text-align: center; color: black;">
+            <p>点击"编辑"按钮进入编辑模式</p>
+            <p>在编辑模式下：</p>
+            <p>双击单元格添加课程</p>
+            <p>单击单元格选中该单元格</p>
+            <p>选中单元格后，可以再单击其他单元格进行合并/复制操作</p>
             </div>
             
+            <!-- 多课表管理功能 -->
+            <div id="scheduleManager" style="text-align: center; margin: 20px 0;">
+                <h2 id="currentScheduleTitle" style="margin-bottom: 10px; display: inline-block; min-width: 100px;"></h2>
+                <input type="text" id="scheduleTitleInput" style="display: none; font-size: 24px; padding: 5px; margin-bottom: 10px; border: 2px solid #415fff; border-radius: 5px; min-width: 200px;" />
+                <div>
+                    <button id="newScheduleBtn" class="action-btn edit-btn" style="margin: 0 5px;">新建课表</button>
+                    <select id="scheduleSelector" class="action-btn" style="margin: 0 5px; padding: 10px 20px;"></select>
+                    <button id="deleteScheduleBtn" class="action-btn clear-all" style="margin: 0 5px;">删除课表</button>
+                    <button id="mergeScheduleBtn" class="action-btn edit-btn" style="margin: 0 5px;">合并课表</button>
+                    <button id="exportPdfBtn" class="action-btn save-all" style="margin: 0 5px;">导出为PDF</button>
+                </div>
+            </div>
 
             <!-- 课程表本体：用table-wrapper包裹以实现横向滚动 -->
             <div class="table-wrapper">
@@ -1161,7 +2149,7 @@
             <div class="table-footer" id="footerButtons">
                 <button class="action-btn edit-btn" id="editModeBtn">编辑</button>
             </div>
-
+            
             <div style="text-align: center;">
                 <a href="https://www.bnu.edu.cn/" target="_blank">
                 <img src="images/BNUlogo.svg" alt="BNU矢量图" class="svg-image" >
@@ -1188,7 +2176,7 @@
                 <option value="required-public">公必课</option>
                 <option value="elective-public">公选课</option>
                 <option value="pe">体育课</option>
-                <option value="extra">额外</option>
+                <option value="extra">其他</option>
             </select>
         </div>
         <div class="field">
@@ -1206,7 +2194,7 @@
     </div>
 
     <!-- 操作选择弹窗 (合并/复制) -->
-    <div class="action-modal" id="actionModal">
+    <div class="action-modal" id="actionModal" style="padding: 20px; gap: 16px;">
         <div class="modal-title">选择你要进行的操作</div>
         <div class="modal-buttons">
             <button class="modal-btn merge" id="modalMergeBtn">合并</button>
@@ -1216,7 +2204,7 @@
     </div>
 
     <!-- 复制确认弹窗 -->
-    <div class="confirm-modal" id="confirmModal">
+    <div class="confirm-modal" id="confirmModal" style="padding: 20px; gap: 16px;">
         <div class="modal-title">确定要复制课程信息吗？</div>
         <div class="modal-buttons">
             <button class="modal-btn copy" id="confirmCopyBtn">确定</button>
@@ -1226,26 +2214,589 @@
 
     
 
+    <!-- 色彩预设弹窗 -->
+    <div class="confirm-modal" id="colorPresetModal" style="padding: 24px; gap: 16px; width: 380px; max-width: 90vw;">
+        <div class="modal-title" style="margin-bottom: 15px;">选择课程色彩预设</div>
+        <div class="color-preset-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;" id="colorPresetContainer">
+            <!-- 动态生成 -->
+        </div>
+        <div class="modal-buttons" style="justify-content: center;">
+            <button class="modal-btn cancel" id="closePresetModalBtn">关闭</button>
+        </div>
+    </div>
+
     <!-- 遮罩层 -->
     <div class="modal-overlay" id="modalOverlay"></div>
 
     <script>
         (function() {
-            // ========== 课程类型配置 ==========
-            const courseTypeConfig = {
-                'none': { name: '无', bgColor: '#dbeafe', textColor: '#1e3a8a', borderColor: '#a5c0fa', tagClass: 'tag-none' },
-                'required-major': { name: '专必课', bgColor: '#ffe485', textColor: '#78350f', borderColor: '#fbbf24', tagClass: 'tag-required-major' },
-                'elective-major': { name: '专选课', bgColor: '#bae6fd', textColor: '#0c4a6e', borderColor: '#38bdf8', tagClass: 'tag-elective-major' },
-                'required-public': { name: '公必课', bgColor: '#fed7aa', textColor: '#9a3412', borderColor: '#fb923c', tagClass: 'tag-required-public' },
-                'elective-public': { name: '公选课', bgColor: '#bfdbfe', textColor: '#1e40af', borderColor: '#60a5fa', tagClass: 'tag-elective-public' },
-                'pe': { name: '体育课', bgColor: '#bbf7d0', textColor: '#14532d', borderColor: '#4ade80', tagClass: 'tag-pe' },
-                'extra': { name: '额外', bgColor: '#fbcfe8', textColor: '#831843', borderColor: '#f472b6', tagClass: 'tag-extra' }
+            // ========== 课程颜色预设配置 ==========
+            const colorPresets = {
+                'preset1': {
+                    name: '原版柔和',
+                    colors: {
+                        'none': { bgColor: '#dbeafe', textColor: '#1e3a8a', borderColor: '#a5c0fa' },
+                        'required-major': { bgColor: '#ffe485', textColor: '#78350f', borderColor: '#fbbf24' },
+                        'elective-major': { bgColor: '#bae6fd', textColor: '#0c4a6e', borderColor: '#38bdf8' },
+                        'required-public': { bgColor: '#fed7aa', textColor: '#9a3412', borderColor: '#fb923c' },
+                        'elective-public': { bgColor: '#bfdbfe', textColor: '#1e40af', borderColor: '#60a5fa' },
+                        'pe': { bgColor: '#bbf7d0', textColor: '#14532d', borderColor: '#4ade80' },
+                        'extra': { bgColor: '#fbcfe8', textColor: '#831843', borderColor: '#f472b6' }
+                    }
+                },
+                'preset2': {
+                    name: '明快马卡龙',
+                    colors: {
+                        'none': { bgColor: '#f3f4f6', textColor: '#374151', borderColor: '#d1d5db' },
+                        'required-major': { bgColor: '#fecaca', textColor: '#9f1239', borderColor: '#f87171' },
+                        'elective-major': { bgColor: '#a7f3d0', textColor: '#065f46', borderColor: '#34d399' },
+                        'required-public': { bgColor: '#fde047', textColor: '#854d0e', borderColor: '#facc15' },
+                        'elective-public': { bgColor: '#c7d2fe', textColor: '#3730a3', borderColor: '#818cf8' },
+                        'pe': { bgColor: '#e9d5ff', textColor: '#4c1d95', borderColor: '#c084fc' },
+                        'extra': { bgColor: '#fecdd3', textColor: '#881337', borderColor: '#fb7185' }
+                    }
+                },
+                'preset3': {
+                    name: '低雅莫兰迪',
+                    colors: {
+                        'none': { bgColor: '#e2e8f0', textColor: '#475569', borderColor: '#cbd5e1' },
+                        'required-major': { bgColor: '#e6c9a8', textColor: '#5c4033', borderColor: '#d4a373' },
+                        'elective-major': { bgColor: '#b0c4de', textColor: '#2c3e50', borderColor: '#8ba6c1' },
+                        'required-public': { bgColor: '#dcd0ff', textColor: '#483d8b', borderColor: '#b19cd9' },
+                        'elective-public': { bgColor: '#c1d2c9', textColor: '#2e4a3d', borderColor: '#9eb8a8' },
+                        'pe': { bgColor: '#f5deb3', textColor: '#6b4423', borderColor: '#deb887' },
+                        'extra': { bgColor: '#e6e6fa', textColor: '#4b0082', borderColor: '#d8bfd8' }
+                    }
+                },
+                'preset4': {
+                    name: '极简灰度',
+                    colors: {
+                        'none': { bgColor: '#f8fafc', textColor: '#334155', borderColor: '#e2e8f0' },
+                        'required-major': { bgColor: '#e2e8f0', textColor: '#1e293b', borderColor: '#cbd5e1' },
+                        'elective-major': { bgColor: '#cbd5e1', textColor: '#0f172a', borderColor: '#94a3b8' },
+                        'required-public': { bgColor: '#f1f5f9', textColor: '#475569', borderColor: '#cbd5e1' },
+                        'elective-public': { bgColor: '#e5e7eb', textColor: '#374151', borderColor: '#d1d5db' },
+                        'pe': { bgColor: '#d1d5db', textColor: '#1f2937', borderColor: '#9ca3af' },
+                        'extra': { bgColor: '#f3f4f6', textColor: '#111827', borderColor: '#e5e7eb' }
+                    }
+                },
+                'preset5': {
+                    name: '暮光星河',
+                    colors: {
+                        'none': { bgColor: '#f1f5f9', textColor: '#475569', borderColor: '#cbd5e1' },
+                        'required-major': { bgColor: '#c7d2fe', textColor: '#312e81', borderColor: '#a5b4fc' },
+                        'elective-major': { bgColor: '#ddd6fe', textColor: '#3730a3', borderColor: '#c4b5fd' },
+                        'required-public': { bgColor: '#e0e7ff', textColor: '#3730a3', borderColor: '#a5b4fc' },
+                        'elective-public': { bgColor: '#fae8ff', textColor: '#4a044e', borderColor: '#f5d0fe' },
+                        'pe': { bgColor: '#f3e8ff', textColor: '#701a75', borderColor: '#f0abfc' },
+                        'extra': { bgColor: '#ede9fe', textColor: '#4c1d95', borderColor: '#d8b4fe' }
+                    }
+                },
+                'preset6': {
+                    name: '秋日暖阳',
+                    colors: {
+                        'none': { bgColor: '#fafaf9', textColor: '#3f3f46', borderColor: '#d6d3d1' },
+                        'required-major': { bgColor: '#ffedd5', textColor: '#78350f', borderColor: '#fdba74' },
+                        'elective-major': { bgColor: '#fff7ed', textColor: '#9a3412', borderColor: '#fdba74' },
+                        'required-public': { bgColor: '#fef08a', textColor: '#713f12', borderColor: '#fde047' },
+                        'elective-public': { bgColor: '#ffedd5', textColor: '#9a3412', borderColor: '#fdba74' },
+                        'pe': { bgColor: '#fecdd3', textColor: '#881337', borderColor: '#fda4af' },
+                        'extra': { bgColor: '#fee2e2', textColor: '#9f1239', borderColor: '#fecdd3' }
+                    }
+                },
+                'preset7': {
+                    name: '夏日清泉',
+                    colors: {
+                        'none': { bgColor: '#f8fafc', textColor: '#0f172a', borderColor: '#cbd5e1' },
+                        'required-major': { bgColor: '#ccfbf1', textColor: '#115e59', borderColor: '#5eead4' },
+                        'elective-major': { bgColor: '#d1fae5', textColor: '#065f46', borderColor: '#6ee7b7' },
+                        'required-public': { bgColor: '#e0f2fe', textColor: '#1e3a8a', borderColor: '#7dd3fc' },
+                        'elective-public': { bgColor: '#dbeafe', textColor: '#1e40af', borderColor: '#93c5fd' },
+                        'pe': { bgColor: '#fef08a', textColor: '#854d0e', borderColor: '#fde047' },
+                        'extra': { bgColor: '#cffafe', textColor: '#1d4ed8', borderColor: '#93c5fd' }
+                    }
+                }
             };
+            
+            let currentColorPreset = localStorage.getItem('courseColorPreset') || 'preset1';
+            if (!colorPresets[currentColorPreset]) currentColorPreset = 'preset1';
+
+            function normalizePresetId(presetId) {
+                return colorPresets[presetId] ? presetId : 'preset1';
+            }
+
+            function findDifferentPresetId(basePresetId) {
+                const normalizedBase = normalizePresetId(basePresetId);
+                const presetIds = Object.keys(colorPresets);
+                for (let i = 0; i < presetIds.length; i++) {
+                    if (presetIds[i] !== normalizedBase) return presetIds[i];
+                }
+                return normalizedBase;
+            }
+
+            function getCourseColorsForPreset(presetId, type) {
+                const normalizedPresetId = normalizePresetId(presetId);
+                const preset = colorPresets[normalizedPresetId];
+                if (!preset || !preset.colors[type]) type = 'none';
+                return preset.colors[type] || preset.colors['none'];
+            }
+
+            const baseCourseTypes = {
+                'none': { name: '无' },
+                'required-major': { name: '专必课' },
+                'elective-major': { name: '专选课' },
+                'required-public': { name: '公必课' },
+                'elective-public': { name: '公选课' },
+                'pe': { name: '体育课' },
+                'extra': { name: '其他' }
+            };
+
+            let courseTypeConfig = {};
+            function updateCourseTypeConfig() {
+                courseTypeConfig = {};
+                currentColorPreset = normalizePresetId(currentColorPreset);
+                for (const type in baseCourseTypes) {
+                    courseTypeConfig[type] = {
+                        ...baseCourseTypes[type],
+                        ...colorPresets[currentColorPreset].colors[type]
+                    };
+                }
+            }
+            updateCourseTypeConfig();
+
+            function initColorPresetUI() {
+                const container = document.getElementById('colorPresetContainer');
+                if (!container) return;
+                container.innerHTML = '';
+
+                // 获取当前主题类名用于动态样式
+                const currentTheme = document.body.className.match(/theme-\w+/) ? document.body.className.match(/theme-\w+/)[0] : '';
+                const modalTitle = document.querySelector('#colorPresetModal .modal-title');
+                const schedule = schedules[currentScheduleId];
+                const isMergedSchedule = schedule && schedule.isMerged;
+                if (modalTitle) {
+                    modalTitle.textContent = isMergedSchedule ? '选择课程色彩预设（左侧 + 右侧）' : '选择课程色彩预设';
+                }
+
+                function createPresetButton(presetId, selectedPresetId) {
+                    const preset = colorPresets[presetId];
+                    const btn = document.createElement('button');
+
+                    btn.style.display = 'flex';
+                    btn.style.flexDirection = 'column';
+                    btn.style.alignItems = 'center';
+                    btn.style.justifyContent = 'center';
+                    btn.style.padding = '12px 8px';
+                    btn.style.borderRadius = '10px';
+                    btn.style.cursor = 'pointer';
+                    btn.style.transition = 'all 0.2s ease';
+                    btn.style.fontSize = '14px';
+
+                    if (currentTheme === 'theme-original') {
+                        btn.style.backgroundColor = '#fff9fb';
+                        btn.style.color = '#ff6b8b';
+                        btn.style.border = '2px solid #ff9eaa';
+                    } else if (currentTheme === 'theme-candy') {
+                        btn.style.background = 'linear-gradient(145deg, #fff5f7, #fff0f5)';
+                        btn.style.color = '#ff6b8b';
+                        btn.style.border = '2px solid #ff85a2';
+                    } else if (currentTheme === 'theme-forest') {
+                        btn.style.backgroundColor = '#f0f7e6';
+                        btn.style.color = '#6b8e23';
+                        btn.style.border = '2px solid #8fbc8f';
+                    } else if (currentTheme === 'theme-pixel') {
+                        btn.style.backgroundColor = '#c69c6d';
+                        btn.style.color = '#fff';
+                        btn.style.border = '3px solid #000';
+                        btn.style.fontFamily = '"Minecraft AE", monospace';
+                        btn.style.textShadow = '1px 1px 0 #000';
+                        btn.style.borderRadius = '0';
+                    } else {
+                        btn.style.backgroundColor = '#f8fafc';
+                        btn.style.color = '#334155';
+                        btn.style.border = '2px solid #e2e8f0';
+                    }
+
+                    if (presetId === selectedPresetId) {
+                        if (currentTheme === 'theme-original') {
+                            btn.style.border = '2px solid #ff6b8b';
+                            btn.style.boxShadow = '0 4px 12px rgba(255, 107, 139, 0.3)';
+                            btn.style.backgroundColor = '#fff0f2';
+                        } else if (currentTheme === 'theme-candy') {
+                            btn.style.border = '2px solid #ff6b8b';
+                            btn.style.boxShadow = '0 4px 12px rgba(255, 107, 139, 0.4)';
+                            btn.style.background = 'linear-gradient(145deg, #fff0f2, #ffe6ea)';
+                        } else if (currentTheme === 'theme-forest') {
+                            btn.style.border = '2px solid #6b8e23';
+                            btn.style.boxShadow = '0 4px 12px rgba(107, 142, 35, 0.3)';
+                            btn.style.backgroundColor = '#e8f0e0';
+                        } else if (currentTheme === 'theme-pixel') {
+                            btn.style.border = '3px solid #fff';
+                            btn.style.boxShadow = '4px 4px 0 #4a3218';
+                            btn.style.transform = 'translate(-2px, -2px)';
+                        } else {
+                            btn.style.border = '2px solid #415fff';
+                            btn.style.boxShadow = '0 4px 12px rgba(65,95,255,0.2)';
+                            btn.style.backgroundColor = '#f0f4ff';
+                        }
+                        btn.style.transform = 'translateY(-2px)';
+                    } else {
+                        btn.onmouseover = () => {
+                            if (currentTheme === 'theme-original') {
+                                btn.style.borderColor = '#ff6b8b';
+                                btn.style.boxShadow = '0 4px 8px rgba(255, 107, 139, 0.2)';
+                            } else if (currentTheme === 'theme-candy') {
+                                btn.style.borderColor = '#ff6b8b';
+                                btn.style.boxShadow = '0 4px 8px rgba(255, 107, 139, 0.3)';
+                            } else if (currentTheme === 'theme-forest') {
+                                btn.style.borderColor = '#6b8e23';
+                                btn.style.boxShadow = '0 4px 8px rgba(107, 142, 35, 0.2)';
+                            } else if (currentTheme === 'theme-pixel') {
+                                btn.style.borderColor = '#fff';
+                                btn.style.transform = 'translate(-2px, -2px)';
+                                btn.style.boxShadow = '2px 2px 0 #4a3218';
+                            } else {
+                                btn.style.borderColor = '#94a3b8';
+                                btn.style.boxShadow = '0 4px 8px rgba(0,0,0,0.05)';
+                            }
+                            btn.style.transform = 'translateY(-2px)';
+                        };
+                        btn.onmouseout = () => {
+                            if (currentTheme === 'theme-original') {
+                                btn.style.borderColor = '#ff9eaa';
+                                btn.style.boxShadow = 'none';
+                            } else if (currentTheme === 'theme-candy') {
+                                btn.style.borderColor = '#ff85a2';
+                                btn.style.boxShadow = 'none';
+                            } else if (currentTheme === 'theme-forest') {
+                                btn.style.borderColor = '#8fbc8f';
+                                btn.style.boxShadow = 'none';
+                            } else if (currentTheme === 'theme-pixel') {
+                                btn.style.borderColor = '#000';
+                                btn.style.transform = 'translate(0, 0)';
+                                btn.style.boxShadow = 'none';
+                            } else {
+                                btn.style.borderColor = '#e2e8f0';
+                                btn.style.boxShadow = 'none';
+                            }
+                            btn.style.transform = 'translateY(0)';
+                        };
+                    }
+
+                    let colorDots = '';
+                    ['required-major', 'elective-major', 'required-public', 'pe'].forEach(type => {
+                        colorDots += `<span style="display:inline-block; width:16px; height:16px; border-radius:50%; background:${preset.colors[type].bgColor}; border: 1px solid rgba(0,0,0,0.08); margin:0 3px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);"></span>`;
+                    });
+                    btn.innerHTML = `<div style="font-weight:bold; margin-bottom:8px; font-size:14px;">${preset.name}</div><div style="display:flex;">${colorDots}</div>`;
+
+                    return btn;
+                }
+
+                function renderPresetGrid(target, selectedPresetId, onSelect) {
+                    target.innerHTML = '';
+                    target.style.display = 'grid';
+                    target.style.gridTemplateColumns = '1fr 1fr';
+                    target.style.gap = '10px';
+                    const normalizedSelected = normalizePresetId(selectedPresetId);
+                    for (const presetId in colorPresets) {
+                        const btn = createPresetButton(presetId, normalizedSelected);
+                        btn.addEventListener('click', function() {
+                            onSelect(presetId);
+                        });
+                        target.appendChild(btn);
+                    }
+                }
+
+                if (!isMergedSchedule) {
+                    renderPresetGrid(container, currentColorPreset, function(presetId) {
+                        currentColorPreset = normalizePresetId(presetId);
+                        localStorage.setItem('courseColorPreset', currentColorPreset);
+                        updateCourseTypeConfig();
+                        initColorPresetUI();
+
+                        const schedule = schedules[currentScheduleId];
+                        if (schedule && schedule.isMerged) {
+                            displayMergedSchedule(schedule);
+                        } else {
+                            const cells = document.querySelectorAll('.course-cell');
+                            cells.forEach(cell => {
+                                if (cell.dataset.name) {
+                                    updateCellDisplay(cell, cell.dataset.name, cell.dataset.location, cell.dataset.teacher, cell.dataset.type);
+                                }
+                            });
+                        }
+                    });
+                    return;
+                }
+
+                const preset1 = normalizePresetId(schedule.colorPreset1 || currentColorPreset);
+                const preset2 = normalizePresetId(schedule.colorPreset2 || findDifferentPresetId(preset1));
+                if (!schedule.colorPreset1 || !schedule.colorPreset2) {
+                    schedule.colorPreset1 = preset1;
+                    schedule.colorPreset2 = preset2;
+                    localStorage.setItem('courseSchedules', JSON.stringify(schedules));
+                }
+
+                container.style.display = 'grid';
+                container.style.gridTemplateColumns = '1fr 1fr';
+                container.style.gap = '12px';
+
+                const leftSection = document.createElement('div');
+                const rightSection = document.createElement('div');
+
+                const leftLabel = document.createElement('div');
+                leftLabel.textContent = '左侧课表色彩主题';
+                leftLabel.style.fontSize = '12px';
+                leftLabel.style.fontWeight = '600';
+                leftLabel.style.marginBottom = '8px';
+
+                const rightLabel = document.createElement('div');
+                rightLabel.textContent = '右侧课表色彩主题';
+                rightLabel.style.fontSize = '12px';
+                rightLabel.style.fontWeight = '600';
+                rightLabel.style.marginBottom = '8px';
+
+                const leftGrid = document.createElement('div');
+                const rightGrid = document.createElement('div');
+
+                renderPresetGrid(leftGrid, preset1, function(presetId) {
+                    schedule.colorPreset1 = normalizePresetId(presetId);
+                    localStorage.setItem('courseSchedules', JSON.stringify(schedules));
+                    initColorPresetUI();
+                    displayMergedSchedule(schedule);
+                });
+
+                renderPresetGrid(rightGrid, preset2, function(presetId) {
+                    schedule.colorPreset2 = normalizePresetId(presetId);
+                    if (schedule.colorPreset2 === schedule.colorPreset1) {
+                        schedule.colorPreset2 = findDifferentPresetId(schedule.colorPreset1);
+                    }
+                    localStorage.setItem('courseSchedules', JSON.stringify(schedules));
+                    initColorPresetUI();
+                    displayMergedSchedule(schedule);
+                });
+
+                leftSection.appendChild(leftLabel);
+                leftSection.appendChild(leftGrid);
+                rightSection.appendChild(rightLabel);
+                rightSection.appendChild(rightGrid);
+                container.appendChild(leftSection);
+                container.appendChild(rightSection);
+                return;
+            }
+
+            function openColorPresetModal() {
+                initColorPresetUI(); // 每次打开时重新初始化以反映当前选中状态
+                document.getElementById('colorPresetModal').style.display = 'flex';
+                document.getElementById('colorPresetModal').style.flexDirection = 'column';
+                document.getElementById('modalOverlay').style.display = 'block';
+            }
+
+            document.getElementById('closePresetModalBtn').addEventListener('click', function() {
+                document.getElementById('colorPresetModal').style.display = 'none';
+                document.getElementById('modalOverlay').style.display = 'none';
+            });
+            
+            // 为遮罩层也添加点击关闭功能
+            document.getElementById('modalOverlay').addEventListener('click', function(e) {
+                if (e.target.id === 'modalOverlay') {
+                    document.getElementById('colorPresetModal').style.display = 'none';
+                    this.style.display = 'none';
+                }
+            });
 
             // ========== 通用工具函数 ==========
             function escapeHtml(unsafe) {
                 if (!unsafe) return unsafe;
                 return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            }
+
+            // ========== 备注区功能 ==========
+            const notesBySchedule = {};
+
+            function loadNotes() {
+                const savedNotes = localStorage.getItem('courseNotesBySchedule');
+                if (!savedNotes) return;
+                try {
+                    const parsed = JSON.parse(savedNotes);
+                    if (parsed && typeof parsed === 'object') {
+                        Object.keys(parsed).forEach(key => {
+                            if (Array.isArray(parsed[key])) {
+                                notesBySchedule[key] = parsed[key];
+                            }
+                        });
+                    }
+                } catch (e) {
+                    return;
+                }
+            }
+
+            function saveNotes() {
+                localStorage.setItem('courseNotesBySchedule', JSON.stringify(notesBySchedule));
+            }
+
+            function getCurrentNotes() {
+                if (!notesBySchedule[currentScheduleId]) {
+                    notesBySchedule[currentScheduleId] = [];
+                }
+                return notesBySchedule[currentScheduleId];
+            }
+
+            function syncNotesHeight() {
+                const panel = document.getElementById('notesPanel');
+                const wrapper = document.querySelector('.table-wrapper');
+                const switcher = document.querySelector('.theme-switcher');
+                if (!panel || !wrapper) return;
+                const height = wrapper.getBoundingClientRect().height;
+                if (height && height > 0) {
+                    panel.style.height = height + 'px';
+                }
+                if (switcher) {
+                    const wrapperTop = wrapper.getBoundingClientRect().top;
+                    const switcherTop = switcher.getBoundingClientRect().top;
+                    const offsetTop = wrapperTop - switcherTop;
+                    if (offsetTop >= 0) {
+                        panel.style.top = offsetTop + 'px';
+                    }
+                }
+            }
+
+            function renderNotes() {
+                const list = document.getElementById('notesList');
+                if (!list) return;
+                list.innerHTML = '';
+                const notes = getCurrentNotes();
+                notes.forEach((note, index) => {
+                    const item = document.createElement('div');
+                    item.className = 'note-item';
+                    item.draggable = true;
+                    item.dataset.index = String(index);
+
+                    const text = document.createElement('div');
+                    text.className = 'note-text';
+                    text.textContent = note;
+
+                    const actions = document.createElement('div');
+                    actions.className = 'note-actions';
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'note-action-btn';
+                    deleteBtn.type = 'button';
+                    deleteBtn.textContent = '删除';
+                    deleteBtn.dataset.action = 'delete';
+                    deleteBtn.dataset.index = String(index);
+                    actions.appendChild(deleteBtn);
+
+                    item.appendChild(text);
+                    item.appendChild(actions);
+                    list.appendChild(item);
+                });
+                syncNotesHeight();
+            }
+
+            function addNote() {
+                const input = document.getElementById('noteInput');
+                if (!input) return;
+                const value = input.value.trim();
+                if (!value) return;
+                const notes = getCurrentNotes();
+                notes.push(value);
+                input.value = '';
+                saveNotes();
+                renderNotes();
+            }
+
+            function moveNote(fromIndex, toIndex) {
+                const notes = getCurrentNotes();
+                if (fromIndex < 0 || toIndex < 0 || fromIndex >= notes.length || toIndex >= notes.length) return;
+                const moved = notes.splice(fromIndex, 1)[0];
+                notes.splice(toIndex, 0, moved);
+                saveNotes();
+                renderNotes();
+            }
+
+            function deleteNote(index) {
+                const notes = getCurrentNotes();
+                if (index < 0 || index >= notes.length) return;
+                notes.splice(index, 1);
+                saveNotes();
+                renderNotes();
+            }
+
+            function initNotesPanel() {
+                loadNotes();
+                renderNotes();
+
+                const addBtn = document.getElementById('addNoteBtn');
+                const input = document.getElementById('noteInput');
+                const list = document.getElementById('notesList');
+
+                if (addBtn) {
+                    addBtn.addEventListener('click', addNote);
+                }
+                if (input) {
+                    input.addEventListener('keypress', function(e) {
+                        if (e.key === 'Enter') addNote();
+                    });
+                }
+                if (list) {
+                    list.addEventListener('click', function(e) {
+                        const btn = e.target.closest('button');
+                        if (!btn || btn.dataset.action !== 'delete') return;
+                        const index = parseInt(btn.dataset.index, 10);
+                        if (Number.isNaN(index)) return;
+                        deleteNote(index);
+                    });
+
+                    list.addEventListener('dragstart', function(e) {
+                        const item = e.target.closest('.note-item');
+                        if (!item) return;
+                        item.classList.add('dragging');
+                        e.dataTransfer.effectAllowed = 'move';
+                    });
+
+                    list.addEventListener('dragend', function(e) {
+                        const item = e.target.closest('.note-item');
+                        if (!item) return;
+                        item.classList.remove('dragging');
+                    });
+
+                    list.addEventListener('dragover', function(e) {
+                        e.preventDefault();
+                        const dragging = list.querySelector('.note-item.dragging');
+                        if (!dragging) return;
+                        const siblings = Array.from(list.querySelectorAll('.note-item:not(.dragging)'));
+                        let next = null;
+                        for (let i = 0; i < siblings.length; i++) {
+                            const rect = siblings[i].getBoundingClientRect();
+                            if (e.clientY <= rect.top + rect.height / 2) {
+                                next = siblings[i];
+                                break;
+                            }
+                        }
+                        if (next) {
+                            list.insertBefore(dragging, next);
+                        } else {
+                            list.appendChild(dragging);
+                        }
+                    });
+
+                    list.addEventListener('drop', function(e) {
+                        e.preventDefault();
+                        const items = Array.from(list.querySelectorAll('.note-item'));
+                        const notes = getCurrentNotes();
+                        const newOrder = [];
+                        items.forEach(item => {
+                            const idx = parseInt(item.dataset.index, 10);
+                            if (!Number.isNaN(idx) && notes[idx] !== undefined) {
+                                newOrder.push(notes[idx]);
+                            }
+                        });
+                        notesBySchedule[currentScheduleId] = newOrder;
+                        saveNotes();
+                        renderNotes();
+                    });
+                }
             }
 
             function updateCellDisplay(cell, name, location, teacher, type) {
@@ -1259,6 +2810,10 @@
                     cell.classList.remove('empty');
                     const contentDiv = document.createElement('div');
                     contentDiv.className = `course-content type-${type}`;
+                    contentDiv.style.height = '100%';
+                    contentDiv.style.boxSizing = 'border-box';
+                    // 动态应用背景色，覆盖原有CSS
+                    contentDiv.style.backgroundColor = courseTypeConfig[type].bgColor;
 
                     let locationTeacher = '';
                     if (location && teacher) {
@@ -1273,7 +2828,8 @@
 
                     let courseNameHtml = escapeHtml(name);
                     if (type !== 'none') {
-                        courseNameHtml += `<span class="course-type-tag ${courseTypeConfig[type].tagClass}">${courseTypeConfig[type].name}</span>`;
+                        // 动态应用标签颜色
+                        courseNameHtml += `<span class="course-type-tag" style="background-color: ${courseTypeConfig[type].textColor}">${courseTypeConfig[type].name}</span>`;
                     }
 
                     contentDiv.innerHTML = `
@@ -1368,13 +2924,30 @@
                     bottom = selected;
                 }
 
-                if (selected === bottom) {
-                    top.dataset.name = selected.dataset.name;
-                    top.dataset.location = selected.dataset.location;
-                    top.dataset.teacher = selected.dataset.teacher;
-                    top.dataset.type = selected.dataset.type;
-                    updateCellDisplay(top, top.dataset.name, top.dataset.location, top.dataset.teacher, top.dataset.type);
+                // 判断哪个单元格包含有效的课程信息（非空白）
+                const isSelectedEmpty = !selected.dataset.name || selected.dataset.name.trim() === '';
+                const isTargetEmpty = !target.dataset.name || target.dataset.name.trim() === '';
+                
+                // 决定保留哪个单元格的信息
+                let cellWithContent;
+                if (!isSelectedEmpty && isTargetEmpty) {
+                    cellWithContent = selected;
+                } else if (isSelectedEmpty && !isTargetEmpty) {
+                    cellWithContent = target;
+                } else if (!isSelectedEmpty && !isTargetEmpty) {
+                    // 两个都有内容，保留顶部单元格的内容
+                    cellWithContent = top;
+                } else {
+                    // 两个都为空，保留顶部单元格（默认行为）
+                    cellWithContent = top;
                 }
+
+                // 将有内容的单元格信息复制到顶部单元格
+                top.dataset.name = cellWithContent.dataset.name || '';
+                top.dataset.location = cellWithContent.dataset.location || '';
+                top.dataset.teacher = cellWithContent.dataset.teacher || '';
+                top.dataset.type = cellWithContent.dataset.type || 'none';
+                updateCellDisplay(top, top.dataset.name, top.dataset.location, top.dataset.teacher, top.dataset.type);
 
                 const newSize = parseInt(top.dataset.mergeSize) + parseInt(bottom.dataset.mergeSize);
                 top.rowSpan = newSize;
@@ -1393,18 +2966,41 @@
                 const mergeSize = parseInt(cell.dataset.mergeSize);
                 if (mergeSize <= 1) return;
 
-                const lesson = parseInt(cell.dataset.lesson);
-                const weekday = cell.dataset.weekday;
-                const mergeKey = lesson + '-' + weekday;
+                // 查找所有相关的被合并单元格（包括链式关系）
+                const allMergedCells = [];
+                
+                // 创建一个函数来查找所有被合并的单元格
+                function findMergedCells(startCell) {
+                    const lesson = parseInt(startCell.dataset.lesson);
+                    const weekday = startCell.dataset.weekday;
+                    const mergeKey = lesson + '-' + weekday;
+                    
+                    // 查找直接被这个单元格合并的单元格
+                    const mergedCells = document.querySelectorAll(`.course-cell[data-merged-by="${mergeKey}"]`);
+                    mergedCells.forEach(mergedCell => {
+                        // 如果这个单元格还没有被添加到列表中
+                        if (!allMergedCells.includes(mergedCell)) {
+                            allMergedCells.push(mergedCell);
+                            // 递归查找这个单元格还合并了哪些单元格
+                            findMergedCells(mergedCell);
+                        }
+                    });
+                }
+                
+                // 从当前单元格开始查找所有被合并的单元格
+                findMergedCells(cell);
 
+                // 重置主单元格
                 cell.rowSpan = 1;
                 cell.dataset.mergeSize = '1';
 
-                const mergedCells = document.querySelectorAll(`.course-cell[data-merged-by="${mergeKey}"]`);
-                mergedCells.forEach(mergedCell => {
+                // 恢复所有被合并的单元格
+                allMergedCells.forEach(mergedCell => {
+                    mergedCell.innerHTML = '';
                     mergedCell.dataset.mergedBy = '';
                     mergedCell.classList.remove('merged');
                     mergedCell.dataset.mergeSize = '1';
+                    mergedCell.rowSpan = 1;
                     mergedCell.dataset.name = '';
                     mergedCell.dataset.location = '';
                     mergedCell.dataset.teacher = '';
@@ -1443,6 +3039,7 @@
 
             function clearCell(cell) {
                 if (!cell) return;
+                cell.innerHTML = '';
                 cell.dataset.name = '';
                 cell.dataset.location = '';
                 cell.dataset.teacher = '';
@@ -1454,121 +3051,139 @@
             // ========== 底部按钮渲染 ==========
             function renderFooter() {
                 const footer = document.getElementById('footerButtons');
+                
+                // 检查当前是否为合并课表
+                const isMergedSchedule = schedules[currentScheduleId] && schedules[currentScheduleId].isMerged;
 
                 if (editingMode) {
-                    footer.innerHTML = `
-                        <button class="action-btn delete-btn" id="deleteBtn" disabled>删除选中</button>
-                        <button class="action-btn split-btn" id="splitBtn" disabled>拆分</button>
-                        <button class="action-btn clear-all" id="clearAllBtn">清空全部</button>
-                        <button class="action-btn save-all" id="saveAllBtn">保存课表</button>
-                        <button class="action-btn exit-edit" id="exitEditBtn">退出编辑</button>
-                    `;
+                    // 添加编辑模式类
+                    document.body.classList.add('editing');
+                    
+                    // 如果是合并课表，显示所有按钮但只有退出编辑可用
+                    if (isMergedSchedule) {
+                        footer.innerHTML = `
+                            <button class="action-btn color-preset-btn">色彩编辑</button>
+                            <button class="action-btn delete-btn" id="deleteBtn" disabled>删除选中</button>
+                            <button class="action-btn split-btn" id="splitBtn" disabled>拆分</button>
+                            <button class="action-btn clear-all" id="clearAllBtn" disabled>清空全部</button>
+                            <button class="action-btn save-all" id="saveAllBtn" disabled>保存课表</button>
+                            <button class="action-btn exit-edit" id="exitEditBtn">退出编辑</button>
+                        `;
 
-                    document.getElementById('deleteBtn').addEventListener('click', function() {
-                        if (selectedCell) {
-                            clearCell(selectedCell);
-                            updateButtonStates();
-                        }
-                    });
-
-                    document.getElementById('splitBtn').addEventListener('click', function() {
-                        if (selectedCell && parseInt(selectedCell.dataset.mergeSize) > 1) {
-                            splitCell(selectedCell);
-                        }
-                    });
-
-                    document.getElementById('saveAllBtn').addEventListener('click', function() {
-                        const cells = document.querySelectorAll('.course-cell');
-                        const data = [];
-                        cells.forEach(cell => {
-                            data.push({
-                                name: cell.dataset.name || '',
-                                location: cell.dataset.location || '',
-                                teacher: cell.dataset.teacher || '',
-                                type: cell.dataset.type || 'none',
-                                mergeSize: cell.dataset.mergeSize || '1',
-                                lesson: cell.dataset.lesson,
-                                weekday: cell.dataset.weekday,
-                                mergedBy: cell.dataset.mergedBy || ''
-                            });
+                        document.querySelector('.color-preset-btn').addEventListener('click', function() {
+                            openColorPresetModal();
                         });
-                        localStorage.setItem('courseTableData', JSON.stringify(data));
-                        alert('熊的课表已保存');
-                    });
 
-                    document.getElementById('clearAllBtn').addEventListener('click', function() {
-                        if (confirm('确定要清空所有课程吗？')) {
-                            document.querySelectorAll('.course-cell').forEach(cell => {
-                                cell.dataset.name = '';
-                                cell.dataset.location = '';
-                                cell.dataset.teacher = '';
-                                cell.dataset.type = 'none';
-                                cell.dataset.mergedBy = '';
-                                cell.classList.remove('merged');
-                                cell.dataset.mergeSize = '1';
-                                cell.rowSpan = 1;
-                                updateCellDisplay(cell, '', '', '', 'none');
-                            });
+                        document.getElementById('exitEditBtn').addEventListener('click', function() {
+                            // 退出编辑模式前先保存当前课表
+                            saveCurrentSchedule();
+                            
+                            editingMode = false;
+                            document.body.classList.remove('editing');
                             clearSelected();
                             hideEditPanel();
-                        }
-                    });
+                            hideAllModals();
+                            document.querySelectorAll('.course-cell').forEach(c => c.classList.remove('editable', 'selected', 'merge-hover', 'copy-hover'));
+                            renderFooter();
+                        });
+                    } else {
+                        footer.innerHTML = `
+                            <button class="action-btn color-preset-btn">色彩编辑</button>
+                            <button class="action-btn delete-btn" id="deleteBtn" disabled>删除选中</button>
+                            <button class="action-btn split-btn" id="splitBtn" disabled>拆分</button>
+                            <button class="action-btn clear-all" id="clearAllBtn">清空全部</button>
+                            <button class="action-btn save-all" id="saveAllBtn">保存课表</button>
+                            <button class="action-btn exit-edit" id="exitEditBtn">退出编辑</button>
+                        `;
 
-                    document.getElementById('exitEditBtn').addEventListener('click', function() {
-                        editingMode = false;
-                        clearSelected();
-                        hideEditPanel();
-                        hideAllModals();
-                        document.querySelectorAll('.course-cell').forEach(c => c.classList.remove('editable', 'selected', 'merge-hover', 'copy-hover'));
-                        renderFooter();
-                    });
+                        document.querySelector('.color-preset-btn').addEventListener('click', function() {
+                            openColorPresetModal();
+                        });
 
-                    updateButtonStates();
+                        document.getElementById('deleteBtn').addEventListener('click', function() {
+                            if (selectedCell) {
+                                clearCell(selectedCell);
+                                updateButtonStates();
+                            }
+                        });
+
+                        document.getElementById('splitBtn').addEventListener('click', function() {
+                            if (selectedCell && parseInt(selectedCell.dataset.mergeSize) > 1) {
+                                splitCell(selectedCell);
+                            }
+                        });
+
+                        document.getElementById('saveAllBtn').addEventListener('click', function() {
+                            saveCurrentSchedule();
+                            alert('熊的课表已保存');
+                        });
+
+                        document.getElementById('clearAllBtn').addEventListener('click', function() {
+                            if (confirm('确定要清空当前课表的所有课程吗？')) {
+                                document.querySelectorAll('.course-cell').forEach(cell => {
+                                    cell.innerHTML = '';
+                                    cell.dataset.name = '';
+                                    cell.dataset.location = '';
+                                    cell.dataset.teacher = '';
+                                    cell.dataset.type = 'none';
+                                    cell.dataset.mergedBy = '';
+                                    cell.classList.remove('merged');
+                                    cell.dataset.mergeSize = '1';
+                                    cell.rowSpan = 1;
+                                    updateCellDisplay(cell, '', '', '', 'none');
+                                });
+                                clearSelected();
+                                hideEditPanel();
+                                
+                                // 更新当前课表数据
+                                if (schedules[currentScheduleId]) {
+                                    schedules[currentScheduleId].data = [];
+                                }
+                            }
+                        });
+
+                        document.getElementById('exitEditBtn').addEventListener('click', function() {
+                            // 退出编辑模式前先保存当前课表
+                            saveCurrentSchedule();
+                            
+                            editingMode = false;
+                            document.body.classList.remove('editing');
+                            clearSelected();
+                            hideEditPanel();
+                            hideAllModals();
+                            document.querySelectorAll('.course-cell').forEach(c => c.classList.remove('editable', 'selected', 'merge-hover', 'copy-hover'));
+                            renderFooter();
+                        });
+
+                        updateButtonStates();
+                    }
                 } else {
+                    // 移除编辑模式类
+                    document.body.classList.remove('editing');
+                    
                     footer.innerHTML = `<button class="action-btn edit-btn" id="editModeBtn">编辑</button>`;
                     document.getElementById('editModeBtn').addEventListener('click', function() {
                         editingMode = true;
+                        document.body.classList.add('editing');
                         clearSelected();
-                        document.querySelectorAll('.course-cell').forEach(c => c.classList.add('editable'));
+                        
+                        // 检查当前是否为合并课表
+                        const isMergedSchedule = schedules[currentScheduleId] && schedules[currentScheduleId].isMerged;
+                        
+                        // 对于合并课表，不添加editable类
+                        if (!isMergedSchedule) {
+                            document.querySelectorAll('.course-cell').forEach(c => c.classList.add('editable'));
+                        }
+                        
                         renderFooter();
                     });
                 }
             }
 
-            // ========== 加载保存的数据 ==========
+            // 保留原有函数以保持兼容性，但实际使用新的多课表管理
             function loadFromStorage() {
-                const saved = localStorage.getItem('courseTableData');
-                if (!saved) return;
-                try {
-                    const data = JSON.parse(saved);
-                    const cells = document.querySelectorAll('.course-cell');
-                    cells.forEach((cell, i) => {
-                        if (data[i]) {
-                            cell.dataset.name = data[i].name || '';
-                            cell.dataset.location = data[i].location || '';
-                            cell.dataset.teacher = data[i].teacher || '';
-                            cell.dataset.type = data[i].type || 'none';
-                            cell.dataset.mergeSize = data[i].mergeSize || '1';
-                            cell.dataset.mergedBy = data[i].mergedBy || '';
-
-                            if (data[i].mergedBy) {
-                                cell.classList.add('merged');
-                            } else {
-                                cell.classList.remove('merged');
-                            }
-
-                            if (parseInt(cell.dataset.mergeSize) > 1) {
-                                cell.rowSpan = parseInt(cell.dataset.mergeSize);
-                            } else {
-                                cell.rowSpan = 1;
-                            }
-
-                            updateCellDisplay(cell, cell.dataset.name, cell.dataset.location, cell.dataset.teacher, cell.dataset.type);
-                        }
-                    });
-                } catch (e) {
-                    console.error('加载课表数据失败:', e);
-                }
+                // 此函数已由新的多课表管理系统替代
+                // 保持此函数是为了避免破坏其他可能依赖它的代码
             }
 
             // ========== 弹窗控制 ==========
@@ -1596,8 +3211,7 @@
                 overlay.classList.remove('show');
                 document.getElementById('actionModal').style.display = 'none';
                 document.getElementById('confirmModal').style.display = 'none';
-                document.body.style.overflow = '';
-                targetCell = null;
+                document.getElementById('colorPresetModal').style.display = 'none';
             }
 
             // ========== 事件监听初始化 ==========
@@ -1611,6 +3225,10 @@
                     const cell = e.target.closest('.course-cell');
                     if (!cell || !editingMode) return;
                     if (overlay.style.display === 'block') return;
+                    
+                    // 检查当前是否为合并课表
+                    const isMergedSchedule = schedules[currentScheduleId] && schedules[currentScheduleId].isMerged;
+                    if (isMergedSchedule) return; // 合并课表不允许编辑单元格
 
                     if (selectedCell === cell) {
                         clearSelected();
@@ -1647,6 +3265,10 @@
                     const cell = e.target.closest('.course-cell');
                     if (!cell || !editingMode || !selectedCell || cell === selectedCell) return;
                     if (overlay.style.display === 'block') return;
+                    
+                    // 检查当前是否为合并课表
+                    const isMergedSchedule = schedules[currentScheduleId] && schedules[currentScheduleId].isMerged;
+                    if (isMergedSchedule) return; // 合并课表不允许编辑单元格
 
                     if (canMerge(selectedCell, cell)) {
                         cell.classList.add('merge-hover');
@@ -1665,6 +3287,10 @@
                     const cell = e.target.closest('.course-cell');
                     if (!cell || !editingMode) return;
                     if (overlay.style.display === 'block') return;
+                    
+                    // 检查当前是否为合并课表
+                    const isMergedSchedule = schedules[currentScheduleId] && schedules[currentScheduleId].isMerged;
+                    if (isMergedSchedule) return; // 合并课表不允许编辑单元格
 
                     e.stopPropagation();
                     document.getElementById('editName').value = cell.dataset.name || '';
@@ -1756,6 +3382,842 @@
             const body = document.body;
             const allBtns = [btnOriginal, btnCandy, btnForest, btnPixel];
 
+            // ========== 多课表管理功能 ==========
+            let currentScheduleId = 'default';
+            let schedules = {};
+
+            // 初始化课表管理器
+            function initScheduleManager() {
+                // 从localStorage加载课表数据
+                const savedSchedules = localStorage.getItem('courseSchedules');
+                if (savedSchedules) {
+                    try {
+                        schedules = JSON.parse(savedSchedules);
+                    } catch (e) {
+                        console.error('加载课表数据失败:', e);
+                        schedules = {};
+                    }
+                }
+                
+                // 确保至少有一个默认课表
+                if (!schedules['default']) {
+                    schedules['default'] = {
+                        title: '默认课表',
+                        data: []
+                    };
+                }
+                
+                // 更新课表选择器
+                updateScheduleSelector();
+                
+                // 加载当前课表
+                loadCurrentSchedule();
+                
+                // 绑定事件
+                bindScheduleEvents();
+            }
+            
+            // 更新课表选择器
+            function updateScheduleSelector() {
+                const selector = document.getElementById('scheduleSelector');
+                selector.innerHTML = '';
+                
+                for (const id in schedules) {
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.textContent = schedules[id].title;
+                    if (id === currentScheduleId) {
+                        option.selected = true;
+                    }
+                    selector.appendChild(option);
+                }
+                resizeSelect(selector);
+            }
+
+            // 根据当前选中项动态调整select宽度
+            function resizeSelect(selector) {
+                if (!selector) return;
+                let tempSpan = document.getElementById('select-resize-temp-span');
+                if (!tempSpan) {
+                    tempSpan = document.createElement('span');
+                    tempSpan.id = 'select-resize-temp-span';
+                    tempSpan.style.visibility = 'hidden';
+                    tempSpan.style.position = 'absolute';
+                    tempSpan.style.whiteSpace = 'nowrap';
+                    document.body.appendChild(tempSpan);
+                }
+                
+                // 复制select的字体样式以保证测量准确
+                const style = window.getComputedStyle(selector);
+                tempSpan.style.fontFamily = style.fontFamily;
+                tempSpan.style.fontSize = style.fontSize;
+                tempSpan.style.fontWeight = style.fontWeight;
+                
+                // 获取当前选中的文本
+                const selectedText = selector.options[selector.selectedIndex] ? selector.options[selector.selectedIndex].text : '';
+                tempSpan.textContent = selectedText;
+                
+                // 计算所需宽度（文字宽度 + 右侧padding和箭头的空间 + 左侧padding + 一些缓冲）
+                // 这里的40px包含左右padding(约15px)和箭头图标空间(约25px)
+    const textWidth = tempSpan.getBoundingClientRect().width;
+    // 增加宽度缓冲值(从40改为70)，确保文字不被截断，且有足够空间显示下拉箭头
+    selector.style.width = Math.ceil(textWidth + 55) + 'px';
+            }
+            
+            // 加载当前课表数据
+            function loadCurrentSchedule() {
+                const schedule = schedules[currentScheduleId];
+                if (!schedule) return;
+                
+                // 更新标题显示
+                document.getElementById('currentScheduleTitle').textContent = schedule.title;
+                document.getElementById('currentScheduleTitle').style.display = 'inline-block';
+                document.getElementById('scheduleTitleInput').style.display = 'none';
+                
+                // 如果是编辑模式，先退出编辑模式
+                if (editingMode) {
+                    editingMode = false;
+                    document.body.classList.remove('editing');
+                    document.querySelectorAll('.course-cell').forEach(c => c.classList.remove('editable', 'selected', 'merge-hover', 'copy-hover'));
+                    renderFooter();
+                }
+                
+                // 检查是否为合并课表
+                if (schedule.isMerged) {
+                    // 禁用合并按钮
+                    document.getElementById('mergeScheduleBtn').disabled = true;
+                    document.getElementById('mergeScheduleBtn').style.opacity = '0.5';
+                    document.getElementById('mergeScheduleBtn').style.cursor = 'not-allowed';
+                    
+                    // 显示合并课表
+                    displayMergedSchedule(schedule);
+                } else {
+                    // 启用合并按钮
+                    document.getElementById('mergeScheduleBtn').disabled = false;
+                    document.getElementById('mergeScheduleBtn').style.opacity = '1';
+                    document.getElementById('mergeScheduleBtn').style.cursor = 'pointer';
+                    
+                    // 显示普通课表
+                    displayNormalSchedule(schedule);
+                }
+                
+                initMetadata();
+                syncNotesHeight();
+                renderNotes();
+            }
+            
+                // 显示普通课表
+                function displayNormalSchedule(schedule) {
+                    // 清空当前课表
+                    document.querySelectorAll('.course-cell').forEach(cell => {
+                        // 彻底清空内容
+                        cell.innerHTML = '';
+                        
+                        cell.dataset.name = '';
+                        cell.dataset.location = '';
+                        cell.dataset.teacher = '';
+                        cell.dataset.type = 'none';
+                        cell.dataset.mergedBy = '';
+                        cell.classList.remove('merged');
+                        cell.dataset.mergeSize = '1';
+                        cell.rowSpan = 1;
+                        updateCellDisplay(cell, '', '', '', 'none');
+                    });
+                
+                // 加载课表数据
+                if (schedule.data && schedule.data.length > 0) {
+                    const cells = document.querySelectorAll('.course-cell');
+                    cells.forEach((cell, i) => {
+                        if (schedule.data[i]) {
+                            cell.dataset.name = schedule.data[i].name || '';
+                            cell.dataset.location = schedule.data[i].location || '';
+                            cell.dataset.teacher = schedule.data[i].teacher || '';
+                            cell.dataset.type = schedule.data[i].type || 'none';
+                            cell.dataset.mergeSize = schedule.data[i].mergeSize || '1';
+                            cell.dataset.mergedBy = schedule.data[i].mergedBy || '';
+                            
+                            if (schedule.data[i].mergedBy) {
+                                cell.classList.add('merged');
+                            } else {
+                                cell.classList.remove('merged');
+                            }
+                            
+                            if (parseInt(cell.dataset.mergeSize) > 1) {
+                                cell.rowSpan = parseInt(cell.dataset.mergeSize);
+                            } else {
+                                cell.rowSpan = 1;
+                            }
+                            
+                            updateCellDisplay(cell, cell.dataset.name, cell.dataset.location, cell.dataset.teacher, cell.dataset.type);
+                        }
+                    });
+                }
+            }
+            
+            // 显示合并课表
+            function displayMergedSchedule(schedule) {
+                const mergedData = schedule.data;
+                
+                // 清空当前课表
+                document.querySelectorAll('.course-cell').forEach(cell => {
+                    // 彻底清空内容
+                    cell.innerHTML = '';
+                    
+                    cell.dataset.name = '';
+                    cell.dataset.location = '';
+                    cell.dataset.teacher = '';
+                    cell.dataset.type = 'none';
+                    cell.dataset.mergedBy = '';
+                    cell.classList.remove('merged');
+                    cell.dataset.mergeSize = '1';
+                    cell.rowSpan = 1;
+                    
+                    // 添加合并显示的容器
+                    const contentDiv = document.createElement('div');
+                    contentDiv.className = 'merged-course-content';
+                    contentDiv.style.display = 'flex';
+                    contentDiv.style.flexDirection = 'row';
+                    contentDiv.style.height = '100%';
+                    contentDiv.style.boxSizing = 'border-box';
+                    
+                        const topDiv = document.createElement('div');
+                        topDiv.className = 'course-part top';
+                        topDiv.style.flex = '1';
+                        topDiv.style.borderRight = 'none';
+                        topDiv.style.padding = '0';
+                        topDiv.style.overflow = 'hidden';
+                        topDiv.style.borderBottom = 'none';
+                        
+                        const bottomDiv = document.createElement('div');
+                        bottomDiv.className = 'course-part bottom';
+                        bottomDiv.style.flex = '1';
+                        bottomDiv.style.padding = '0';
+                        bottomDiv.style.overflow = 'hidden';
+                        bottomDiv.style.borderLeft = 'none';
+                        bottomDiv.style.borderTop = 'none';
+                    
+                    contentDiv.appendChild(topDiv);
+                    contentDiv.appendChild(bottomDiv);
+                    cell.appendChild(contentDiv);
+                });
+                
+                // 显示合并后的课表数据
+                const cells = document.querySelectorAll('.course-cell');
+                const side1ByDayLesson = {};
+                const side2ByDayLesson = {};
+
+                function getCourse(sideMap, weekday, lesson) {
+                    if (!sideMap[weekday]) return null;
+                    return sideMap[weekday][lesson] || null;
+                }
+
+                function parseMergeSize(course) {
+                    const size = parseInt(course && course.mergeSize ? course.mergeSize : '1', 10);
+                    return Number.isNaN(size) ? 1 : size;
+                }
+
+                function hasCourseName(course) {
+                    return !!(course && course.name && course.name.trim() !== '');
+                }
+
+                function isSpanStart(course) {
+                    if (!course || course.mergedBy) return false;
+                    const size = parseMergeSize(course);
+                    return size > 1 || hasCourseName(course);
+                }
+
+                function computeCombinedEnd(weekday, startLesson) {
+                    let endLesson = startLesson;
+                    let updated = true;
+                    while (updated) {
+                        updated = false;
+                        for (let l = startLesson; l <= endLesson; l++) {
+                            const c1 = getCourse(side1ByDayLesson, weekday, l);
+                            if (isSpanStart(c1)) {
+                                const end = l + parseMergeSize(c1) - 1;
+                                if (end > endLesson) {
+                                    endLesson = end;
+                                    updated = true;
+                                }
+                            }
+                            const c2 = getCourse(side2ByDayLesson, weekday, l);
+                            if (isSpanStart(c2)) {
+                                const end = l + parseMergeSize(c2) - 1;
+                                if (end > endLesson) {
+                                    endLesson = end;
+                                    updated = true;
+                                }
+                            }
+                        }
+                    }
+                    return endLesson;
+                }
+
+                function buildBlocks(sideMap, weekday, startLesson, endLesson) {
+                    const blocks = [];
+                    let cursor = startLesson;
+                    while (cursor <= endLesson) {
+                        const course = getCourse(sideMap, weekday, cursor);
+                        if (isSpanStart(course)) {
+                            const size = Math.min(parseMergeSize(course), endLesson - cursor + 1);
+                            if (hasCourseName(course)) {
+                                blocks.push({ type: 'course', size, course });
+                            } else {
+                                blocks.push({ type: 'gap', size });
+                            }
+                            cursor += size;
+                            continue;
+                        }
+
+                        let next = cursor + 1;
+                        while (next <= endLesson) {
+                            const nextCourse = getCourse(sideMap, weekday, next);
+                            if (isSpanStart(nextCourse)) break;
+                            next++;
+                        }
+                        const gapSize = (next <= endLesson ? next : endLesson + 1) - cursor;
+                        blocks.push({ type: 'gap', size: gapSize });
+                        cursor += gapSize;
+                    }
+                    return blocks;
+                }
+
+                function blocksToHtml(blocks, combinedMergeSize, presetId) {
+                    return blocks.map(block => {
+                        const heightPct = (block.size / combinedMergeSize) * 100;
+                        if (block.type === 'gap') {
+                            return `<div style="height: ${heightPct}%;"></div>`;
+                        }
+                        const colors = getCourseColorsForPreset(presetId, block.course.type);
+                        return `
+                            <div style="height: ${heightPct}%; background-color: ${colors.bgColor}; border-radius: 4px; padding: 2px; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; color: ${colors.textColor};">
+                                <div style="font-weight: bold; font-size: 11px;">${escapeHtml(block.course.name)}</div>
+                                <div style="font-size: 10px; color: #666;">${escapeHtml(block.course.location || '')} | ${escapeHtml(block.course.teacher || '')}</div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+
+                cells.forEach((cell, i) => {
+                    const weekday = cell.dataset.weekday;
+                    const lesson = parseInt(cell.dataset.lesson, 10);
+                    if (!weekday || Number.isNaN(lesson)) return;
+                    const data = mergedData[i] || { course1: {}, course2: {} };
+                    if (!side1ByDayLesson[weekday]) side1ByDayLesson[weekday] = {};
+                    if (!side2ByDayLesson[weekday]) side2ByDayLesson[weekday] = {};
+                    side1ByDayLesson[weekday][lesson] = data.course1 || {};
+                    side2ByDayLesson[weekday][lesson] = data.course2 || {};
+                });
+
+                const combinedSkip = {};
+
+                cells.forEach((cell, i) => {
+                    const weekday = cell.dataset.weekday;
+                    const lesson = parseInt(cell.dataset.lesson, 10);
+                    if (!weekday || Number.isNaN(lesson)) return;
+
+                    if (combinedSkip[weekday] && combinedSkip[weekday][lesson]) {
+                        cell.classList.add('merged');
+                        return;
+                    }
+
+                    const course1 = getCourse(side1ByDayLesson, weekday, lesson) || {};
+                    const course2 = getCourse(side2ByDayLesson, weekday, lesson) || {};
+                    const inMerge1 = !!course1.mergedBy;
+                    const inMerge2 = !!course2.mergedBy;
+                    if (inMerge1 || inMerge2) {
+                        cell.classList.add('merged');
+                        return;
+                    }
+
+                    const hasSpan1 = isSpanStart(course1);
+                    const hasSpan2 = isSpanStart(course2);
+                    const contentContainer = cell.querySelector('.merged-course-content');
+                    if (!contentContainer) return;
+                    const topPart = contentContainer.querySelector('.course-part.top');
+                    const bottomPart = contentContainer.querySelector('.course-part.bottom');
+                    if (!topPart || !bottomPart) return;
+
+                    if (!hasSpan1 && !hasSpan2) {
+                        cell.rowSpan = 1;
+                        cell.classList.remove('merged');
+                        topPart.style.borderRight = 'none';
+                        bottomPart.style.borderLeft = 'none';
+                        topPart.innerHTML = '';
+                        bottomPart.innerHTML = '';
+                        topPart.style.backgroundColor = 'transparent';
+                        bottomPart.style.backgroundColor = 'transparent';
+                        return;
+                    }
+
+                    const endLesson = computeCombinedEnd(weekday, lesson);
+                    const combinedMergeSize = endLesson - lesson + 1;
+                    cell.rowSpan = combinedMergeSize;
+                    cell.classList.remove('merged');
+
+                    if (!combinedSkip[weekday]) combinedSkip[weekday] = {};
+                    for (let l = lesson + 1; l <= endLesson; l++) {
+                        combinedSkip[weekday][l] = true;
+                    }
+
+                    contentContainer.style.flexDirection = 'row';
+                    topPart.style.borderRight = '1px dashed #ccc';
+                    bottomPart.style.borderLeft = '1px dashed #ccc';
+                    topPart.style.borderBottom = 'none';
+                    bottomPart.style.borderTop = 'none';
+                    topPart.style.backgroundColor = 'transparent';
+                    bottomPart.style.backgroundColor = 'transparent';
+                    topPart.style.display = 'flex';
+                    topPart.style.flexDirection = 'column';
+                    bottomPart.style.display = 'flex';
+                    bottomPart.style.flexDirection = 'column';
+
+                    const presetLeft = normalizePresetId(schedule.colorPreset1 || currentColorPreset);
+                    const presetRight = normalizePresetId(schedule.colorPreset2 || findDifferentPresetId(presetLeft));
+                    const blocks1 = buildBlocks(side1ByDayLesson, weekday, lesson, endLesson);
+                    const blocks2 = buildBlocks(side2ByDayLesson, weekday, lesson, endLesson);
+                    topPart.innerHTML = blocksToHtml(blocks1, combinedMergeSize, presetLeft);
+                    bottomPart.innerHTML = blocksToHtml(blocks2, combinedMergeSize, presetRight);
+                });
+            }
+            
+            // 保存当前课表数据
+            function saveCurrentSchedule() {
+                // 检查当前是否为合并课表
+                const isMergedSchedule = schedules[currentScheduleId] && schedules[currentScheduleId].isMerged;
+                
+                if (isMergedSchedule) {
+                    // 合并课表的数据已经在schedules中，不需要重新收集
+                    // 但是需要更新标题
+                    schedules[currentScheduleId].title = document.getElementById('currentScheduleTitle').textContent;
+                    
+                    // 直接保存到localStorage
+                    localStorage.setItem('courseSchedules', JSON.stringify(schedules));
+                } else {
+                    // 普通课表，收集数据
+                    const cells = document.querySelectorAll('.course-cell');
+                    const data = [];
+                    cells.forEach(cell => {
+                        data.push({
+                            name: cell.dataset.name || '',
+                            location: cell.dataset.location || '',
+                            teacher: cell.dataset.teacher || '',
+                            type: cell.dataset.type || 'none',
+                            mergeSize: cell.dataset.mergeSize || '1',
+                            lesson: cell.dataset.lesson,
+                            weekday: cell.dataset.weekday,
+                            mergedBy: cell.dataset.mergedBy || ''
+                        });
+                    });
+                    
+                    if (!schedules[currentScheduleId]) {
+                        schedules[currentScheduleId] = {
+                            title: currentScheduleId === 'default' ? '默认课表' : '新课表',
+                            data: []
+                        };
+                    }
+                    
+                    schedules[currentScheduleId].data = data;
+                    
+                    // 保存到localStorage
+                    localStorage.setItem('courseSchedules', JSON.stringify(schedules));
+                }
+            }
+            
+            // 创建新课表
+            function createNewSchedule() {
+                // 保存当前课表
+                saveCurrentSchedule();
+                
+                // 创建新课表
+                const newId = 'schedule_' + Date.now();
+                const newTitle = '新课表' + (Object.keys(schedules).length + 1);
+                schedules[newId] = {
+                    title: newTitle,
+                    data: []
+                };
+                
+                // 切换到新课表
+                switchSchedule(newId);
+            }
+            
+            // 删除当前课表
+            function deleteCurrentSchedule() {
+                if (currentScheduleId === 'default') {
+                    alert('不能删除默认课表');
+                    return;
+                }
+                
+                if (confirm('确定要删除当前课表 "' + schedules[currentScheduleId].title + '" 吗？')) {
+                    delete schedules[currentScheduleId];
+                    
+                    // 切换到默认课表
+                    switchSchedule('default', true);
+                }
+            }
+            
+            // 切换课表
+            let isSwitchingSchedule = false;
+            function switchSchedule(scheduleId, skipSave) {
+                if (isSwitchingSchedule) return;
+                isSwitchingSchedule = true;
+
+                // 保存当前课表
+                if (!skipSave) {
+                    saveCurrentSchedule();
+                }
+                
+                // 切换到指定课表
+                currentScheduleId = scheduleId;
+                updateScheduleSelector(); // 同步更新选择器显示
+                
+                // 如果之前隐藏了课表管理器，现在显示它
+                document.getElementById('scheduleManager').style.display = 'block';
+                
+                // 移除可能存在的返回按钮
+                const returnBtn = document.getElementById('returnToScheduleBtn');
+                if (returnBtn) {
+                    returnBtn.remove();
+                }
+
+                // 禁用下拉框并显示等待状态，防止快速点击导致的渲染错乱
+                const selector = document.getElementById('scheduleSelector');
+                if (selector) selector.disabled = true;
+                document.body.style.cursor = 'wait';
+
+                // 彻底清空所有单元格，防止DOM复用和样式残留导致偏移、课时错误等问题
+                document.querySelectorAll('.course-cell').forEach(cell => {
+                    cell.innerHTML = ''; 
+                    cell.className = 'course-cell empty';
+                    cell.dataset.name = '';
+                    cell.dataset.location = '';
+                    cell.dataset.teacher = '';
+                    cell.dataset.type = 'none';
+                    cell.dataset.mergedBy = '';
+                    cell.dataset.mergeSize = '1';
+                    cell.rowSpan = 1;
+                    cell.style.display = '';
+                });
+
+                // 强制触发浏览器重绘(Reflow)
+                void document.body.offsetHeight;
+
+                // 延迟加载，给浏览器充分的时间清除旧排版并渲染新排版
+                setTimeout(() => {
+                    loadCurrentSchedule();
+                    
+                    if (selector) selector.disabled = false;
+                    document.body.style.cursor = '';
+                    isSwitchingSchedule = false;
+                }, 150);
+            }
+            
+            // 重命名课表
+            function renameSchedule(scheduleId, newTitle) {
+                if (schedules[scheduleId]) {
+                    schedules[scheduleId].title = newTitle;
+                    updateScheduleSelector();
+                    // 如果是当前课表，更新标题显示
+                    if (scheduleId === currentScheduleId) {
+                        document.getElementById('currentScheduleTitle').textContent = newTitle;
+                    }
+                    // 保存到localStorage
+                    localStorage.setItem('courseSchedules', JSON.stringify(schedules));
+                }
+            }
+            
+            // 开始编辑课表标题
+            function startEditScheduleTitle() {
+                if (!editingMode) return;
+                
+                const titleElement = document.getElementById('currentScheduleTitle');
+                const inputElement = document.getElementById('scheduleTitleInput');
+                
+                // 设置输入框的值为当前标题
+                inputElement.value = titleElement.textContent;
+                
+                // 隐藏标题，显示输入框
+                titleElement.style.display = 'none';
+                inputElement.style.display = 'inline-block';
+                
+                // 聚焦到输入框并全选内容
+                inputElement.focus();
+                inputElement.select();
+            }
+            
+            // 完成编辑课表标题
+            function finishEditScheduleTitle() {
+                const titleElement = document.getElementById('currentScheduleTitle');
+                const inputElement = document.getElementById('scheduleTitleInput');
+                
+                // 获取输入框的值
+                const newTitle = inputElement.value.trim();
+                
+                // 如果输入不为空且与当前标题不同，则更新标题
+                if (newTitle && newTitle !== titleElement.textContent) {
+                    titleElement.textContent = newTitle;
+                    renameSchedule(currentScheduleId, newTitle);
+                }
+                
+                // 隐藏输入框，显示标题
+                inputElement.style.display = 'none';
+                titleElement.style.display = 'inline-block';
+            }
+            
+            // 绑定课表管理事件
+            function bindScheduleEvents() {
+                // 新建课表按钮
+                document.getElementById('newScheduleBtn').addEventListener('click', function() {
+                    createNewSchedule();
+                });
+                
+                // 课表选择器
+                document.getElementById('scheduleSelector').addEventListener('change', function() {
+                    switchSchedule(this.value);
+                });
+                
+                // 删除课表按钮
+                document.getElementById('deleteScheduleBtn').addEventListener('click', function() {
+                    deleteCurrentSchedule();
+                });
+                
+                // 合并课表按钮
+                document.getElementById('mergeScheduleBtn').addEventListener('click', function() {
+                    // 检查当前是否为合并课表
+                    const isMergedSchedule = schedules[currentScheduleId] && schedules[currentScheduleId].isMerged;
+                    if (!isMergedSchedule) {
+                        showMergeScheduleModal();
+                    }
+                });
+                
+                // 课表标题单击编辑
+                document.getElementById('currentScheduleTitle').addEventListener('click', function() {
+                    // 只在编辑模式下允许修改标题
+                    if (!editingMode) {
+                        // 在非编辑模式下不执行任何操作
+                        return;
+                    }
+                    startEditScheduleTitle();
+                });
+                
+                // 课表标题输入框失去焦点时完成编辑
+                document.getElementById('scheduleTitleInput').addEventListener('blur', function() {
+                    finishEditScheduleTitle();
+                });
+                
+                // 课表标题输入框按下回车键时完成编辑
+                document.getElementById('scheduleTitleInput').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        finishEditScheduleTitle();
+                    }
+                });
+            }
+
+            // ========== 合并课表功能 ==========
+            // 显示合并课表模态框
+            function showMergeScheduleModal() {
+                // 创建模态框元素
+                const modal = document.createElement('div');
+                modal.id = 'mergeScheduleModal';
+                modal.className = 'float-edit-panel'; // 使用浮动编辑面板样式
+                modal.style.display = 'flex';
+                modal.style.position = 'fixed';
+                modal.style.top = '50%';
+                modal.style.left = '50%';
+                modal.style.transform = 'translate(-50%, -50%)';
+                modal.style.zIndex = '2000';
+                modal.style.minWidth = '280px';
+                
+                // 获取所有课表选项（除了当前课表和已合并的课表）
+                let scheduleOptions = '';
+                for (const id in schedules) {
+                    if (id !== currentScheduleId && !schedules[id].isMerged) {
+                        scheduleOptions += `<option value="${id}">${schedules[id].title}</option>`;
+                    }
+                }
+                
+                // 如果没有其他课表，提示用户
+                if (!scheduleOptions) {
+                    modal.innerHTML = `
+                        <div class="modal-title" style="font-size: 16px; font-weight: 600; color: #333; text-align: center; margin-bottom: 15px;">无法合并</div>
+                        <div style="text-align: center; padding: 10px 0;">
+                            <p style="color: #666; font-size: 14px; margin: 0;">没有其他普通课表可供合并</p>
+                        </div>
+                        <div class="panel-buttons" style="margin-top: 15px;">
+                            <button class="modal-btn cancel" id="closeMergeModal" style="padding: 6px 16px;">关闭</button>
+                        </div>
+                    `;
+                } else {
+                    modal.innerHTML = `
+                        <div class="modal-title" style="font-size: 16px; font-weight: 600; color: #333; text-align: center; margin-bottom: 15px;">合并课表</div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="font-size: 12px; color: #4b5563; font-weight: 500; margin-bottom: 4px; display: block;">选择要合并的课表</label>
+                            <select id="mergeScheduleSelector" style="width: 100%; padding: 6px 8px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 13px; outline: none;">
+                                ${scheduleOptions}
+                            </select>
+                        </div>
+                        <div class="panel-buttons">
+                            <button class="modal-btn merge" id="confirmMergeBtn" style="padding: 6px 16px; background: #2e7d32; color: white;">确认合并</button>
+                            <button class="modal-btn cancel" id="closeMergeModal" style="padding: 6px 16px;">取消</button>
+                        </div>
+                    `;
+                }
+                
+                // 添加模态框到页面
+                document.body.appendChild(modal);
+                
+                // 显示遮罩层
+                const overlay = document.getElementById('modalOverlay');
+                overlay.style.display = 'block';
+                overlay.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                
+                // 绑定事件
+                document.getElementById('closeMergeModal').addEventListener('click', function() {
+                    document.body.removeChild(modal);
+                    overlay.style.display = 'none';
+                    overlay.classList.remove('show');
+                    document.body.style.overflow = '';
+                });
+                
+                // 如果有其他课表，绑定确认合并事件
+                if (scheduleOptions) {
+                    document.getElementById('confirmMergeBtn').addEventListener('click', function() {
+                        const selectedScheduleId = document.getElementById('mergeScheduleSelector').value;
+                        mergeTwoSchedules(currentScheduleId, selectedScheduleId);
+                        document.body.removeChild(modal);
+                        overlay.style.display = 'none';
+                        overlay.classList.remove('show');
+                        document.body.style.overflow = '';
+                    });
+                }
+            }
+            
+            // 合并两个课表
+            function mergeTwoSchedules(scheduleId1, scheduleId2) {
+                const schedule1 = schedules[scheduleId1];
+                const schedule2 = schedules[scheduleId2];
+                
+                if (!schedule1 || !schedule2) {
+                    alert('课表数据不完整，无法合并');
+                    return;
+                }
+                
+                // 保存当前课表（如果在编辑模式下）
+                if (editingMode) {
+                    saveCurrentSchedule();
+                }
+                
+                // 退出编辑模式
+                if (editingMode) {
+                    editingMode = false;
+                    document.body.classList.remove('editing');
+                    document.querySelectorAll('.course-cell').forEach(c => c.classList.remove('editable', 'selected', 'merge-hover', 'copy-hover'));
+                    renderFooter();
+                }
+                
+                // 创建合并后的课表数据
+                const mergedData = [];
+                
+                // 获取两个课表的数据长度（应该相同）
+                const dataLength = Math.max(
+                    schedule1.data ? schedule1.data.length : 0,
+                    schedule2.data ? schedule2.data.length : 0
+                );
+                
+                // 合并数据
+                for (let i = 0; i < dataLength; i++) {
+                    const course1 = schedule1.data && schedule1.data[i] ? schedule1.data[i] : {
+                        name: '',
+                        location: '',
+                        teacher: '',
+                        type: 'none'
+                    };
+                    
+                    const course2 = schedule2.data && schedule2.data[i] ? schedule2.data[i] : {
+                        name: '',
+                        location: '',
+                        teacher: '',
+                        type: 'none'
+                    };
+                    
+                    mergedData.push({
+                        course1: course1,
+                        course2: course2
+                    });
+                }
+                
+                // 生成合并课表名称
+                const mergeCount = Object.keys(schedules).filter(id => id.startsWith('merge_')).length + 1;
+                const mergedScheduleId = 'merge_' + Date.now();
+                const mergedScheduleTitle = `合并课表${mergeCount}`;
+                
+                // 保存合并后的课表数据
+                schedules[mergedScheduleId] = {
+                    title: mergedScheduleTitle,
+                    data: mergedData,
+                    isMerged: true // 标记为合并课表
+                };
+                
+                // 更新课表选择器
+                updateScheduleSelector();
+                
+                // 切换到合并后的课表
+                switchSchedule(mergedScheduleId);
+                
+                // 隐藏合并课表模态框
+                const modal = document.getElementById('mergeScheduleModal');
+                if (modal) {
+                    document.body.removeChild(modal);
+                }
+                const overlay = document.getElementById('modalOverlay');
+                if (overlay) {
+                    overlay.style.display = 'none';
+                    overlay.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+            }
+            
+            // 获取课程背景色
+            function getCourseBgColor(type) {
+                const config = courseTypeConfig[type] || courseTypeConfig['none'];
+                return config.bgColor;
+            }
+            
+            // 获取课程文字颜色
+            function getCourseTextColor(type) {
+                const config = courseTypeConfig[type] || courseTypeConfig['none'];
+                return config.textColor;
+            }
+            
+            // 添加返回按钮
+            function addReturnButton() {
+                // 检查是否已经存在返回按钮
+                if (document.getElementById('returnToScheduleBtn')) return;
+                
+                // 创建返回按钮
+                const returnBtn = document.createElement('div');
+                returnBtn.id = 'returnToScheduleBtn';
+                returnBtn.className = 'back-btn';
+                returnBtn.style.margin = '20px auto';
+                returnBtn.style.display = 'block';
+                returnBtn.style.width = 'fit-content';
+                returnBtn.textContent = '返回课表管理';
+                returnBtn.addEventListener('click', function() {
+                    // 移除返回按钮
+                    document.body.removeChild(returnBtn);
+                    
+                    // 显示课表管理器
+                    document.getElementById('scheduleManager').style.display = 'block';
+                    
+                    // 重新加载当前课表
+                    loadCurrentSchedule();
+                });
+                
+                // 添加到页面
+                document.querySelector('.container').appendChild(returnBtn);
+            }
+
             const savedTheme = localStorage.getItem('selectedTheme') || 'theme-original';
             body.className = savedTheme;
 
@@ -1793,11 +4255,151 @@
                 saveTheme('theme-pixel');
             });
 
+            // 导出PDF功能
+            const exportPdfBtn = document.getElementById('exportPdfBtn');
+            if (exportPdfBtn) {
+                exportPdfBtn.addEventListener('click', function() {
+                    const originalText = exportPdfBtn.textContent;
+                    exportPdfBtn.textContent = '正在导出...';
+                    exportPdfBtn.disabled = true;
+
+                    // 获取当前课表名称
+                    const titleText = document.getElementById('currentScheduleTitle').textContent || '课程表';
+
+                    // 添加导出专用样式
+                    let styleEl = document.getElementById('pdf-export-style');
+                    if (!styleEl) {
+                        styleEl = document.createElement('style');
+                        styleEl.id = 'pdf-export-style';
+                        document.head.appendChild(styleEl);
+                    }
+                    // 使用 CSS 隐藏不需要的元素，并强制固定课表宽度避免被截断
+                    styleEl.innerHTML = `
+                        body.exporting-pdf .nav,
+                        body.exporting-pdf .title-with-images,
+                        body.exporting-pdf .back-btn,
+                        body.exporting-pdf .instruction-text,
+                        body.exporting-pdf #scheduleManager,
+                        body.exporting-pdf .theme-switcher,
+                        body.exporting-pdf .table-footer,
+                        body.exporting-pdf img,
+                        body.exporting-pdf #returnToScheduleBtn {
+                            display: none !important;
+                        }
+                        body.exporting-pdf .container {
+                            max-width: none !important;
+                            width: max-content !important;
+                            margin: 0 !important;
+                            padding: 0 !important; /* 去除原本的 20px padding，避免被 html2canvas 捕获导致双重边距和尺寸溢出 */
+                            box-shadow: none !important;
+                            overflow: visible !important;
+                        }
+                        body.exporting-pdf .table-wrapper {
+                            overflow: visible !important;
+                            overflow-x: visible !important;
+                        }
+                        body.exporting-pdf p.edit-tips {
+                            display: none !important;
+                        }
+                    `;
+
+                    // 给提示文字加上一个 class 以便隐藏
+                    Array.from(document.querySelectorAll('div, p')).forEach(el => {
+                        if (el.textContent && (el.textContent.includes('点击"编辑"按钮进入编辑模式') || el.textContent.includes('双击单元格添加课程'))) {
+                            el.classList.add('edit-tips');
+                        }
+                    });
+
+                    // 开启导出模式
+                    document.body.classList.add('exporting-pdf');
+                    const container = document.querySelector('.container');
+                    
+                    // 保证背景色填充正确
+                    let bgColor = window.getComputedStyle(document.body).backgroundColor;
+                    if (bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') {
+                        bgColor = '#ffffff';
+                    }
+
+                    // 临时滚动到顶部，防止 html2canvas 视口偏移导致大面积空白
+                    window.scrollTo(0, 0);
+
+                    // 延迟 300ms 等待浏览器重新排版
+                    setTimeout(() => {
+                        // 强制将 wrapper 宽度固定，防止在渲染瞬间尺寸坍缩导致内容为空
+                        const tableWrapper = document.querySelector('.table-wrapper');
+                        const courseTable = document.getElementById('courseTable');
+                        
+                        // 记录原始内联样式
+                        const origWrapperWidth = tableWrapper.style.width;
+                        const origTableWidth = courseTable.style.width;
+                        const origContainerWidth = container.style.width;
+                        
+                        // 强制表格宽度，确保在 PDF 画布上能完整展开
+                        courseTable.style.width = '1390px';
+                        tableWrapper.style.width = '1390px';
+                        container.style.width = '1390px'; 
+                        
+                        // 让浏览器应用样式
+                        setTimeout(() => {
+                            // 计算容器实际宽高
+                            const containerRect = container.getBoundingClientRect();
+                            
+                            // jsPDF 的 format 定义纸张大小。
+                            // 实际需要的纸张大小 = 容器内容实际大小 + html2pdf 配置的上下左右各 10px margin (即宽和高各加 20) + 些许防溢出缓冲 (比如2px)
+                            const paperWidth = containerRect.width + 22; 
+                            const paperHeight = containerRect.height + 22; 
+                            
+                            const opt = {
+                                margin:       10, // 上下左右 10px
+                                filename:     titleText + '.pdf',
+                                image:        { type: 'jpeg', quality: 1},
+                                html2canvas:  { 
+                                    scale: 4, 
+                                    useCORS: true, 
+                                    allowTaint: false,
+                                    backgroundColor: bgColor,
+                                    windowWidth: containerRect.width + 20, // 稍微加大窗口宽度缓冲，防止 html2canvas 内部裁剪
+                                    scrollY: 0,
+                                    scrollX: 0,
+                                    x:10
+                                },
+                                // 动态设置PDF页面尺寸 [宽, 高]
+                                jsPDF:        { unit: 'px', format: [paperWidth, paperHeight], orientation: 'landscape', hotfixes: ["px_scaling"] }
+                            };
+
+                            html2pdf().set(opt).from(container).save().then(function() {
+                                // 恢复界面与内联样式
+                                document.body.classList.remove('exporting-pdf');
+                                courseTable.style.width = origTableWidth;
+                                tableWrapper.style.width = origWrapperWidth;
+                                container.style.width = origContainerWidth;
+                                
+                                exportPdfBtn.textContent = originalText;
+                                exportPdfBtn.disabled = false;
+                            }).catch(function(err) {
+                                console.error('PDF导出失败:', err);
+                                alert('导出PDF失败，请重试。' + err.message);
+                                // 恢复界面与内联样式
+                                document.body.classList.remove('exporting-pdf');
+                                courseTable.style.width = origTableWidth;
+                                tableWrapper.style.width = origWrapperWidth;
+                                container.style.width = origContainerWidth;
+                                
+                                exportPdfBtn.textContent = originalText;
+                                exportPdfBtn.disabled = false;
+                            });
+                        }, 50);
+                    }, 300); 
+                });
+            }
+
             // ========== 初始化课程表 ==========
             initMetadata();
-            loadFromStorage();
+            initScheduleManager(); // 初始化多课表管理器
             renderFooter();
             initEventListeners();
+            initNotesPanel();
+            window.addEventListener('resize', syncNotesHeight);
         })();
     </script>
 </body>
