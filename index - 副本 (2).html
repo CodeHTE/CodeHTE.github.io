@@ -26,7 +26,6 @@
             max-width: 1200px;
             margin: 0 auto;
             align-items: flex-start;
-            position: relative;
         }
 .theme-title {
     font-size: 18px;
@@ -45,12 +44,6 @@
             width: 120px;
             margin-top: 20px;
         }
-        .model-settings-block {
-            margin-top: 14px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
         .model-settings-btn {
             padding: 10px 8px;
             border: none;
@@ -66,29 +59,17 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        .model-settings-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.4);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-        }
-        .model-settings-modal.show {
-            display: flex;
-        }
         .model-settings-panel {
-            width: 360px;
-            max-width: 90vw;
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 12px;
             background: #fff;
             border: 3px solid #ff9eaa;
-            border-radius: 16px;
-            box-shadow: 0 10px 24px rgba(0,0,0,0.18);
-            padding: 16px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+        }
+        .model-settings-panel.show {
+            display: block;
         }
         .model-settings-panel label {
             font-size: 12px;
@@ -96,7 +77,7 @@
             display: flex;
             flex-direction: column;
             gap: 4px;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .model-settings-panel select,
         .model-settings-panel input {
@@ -109,28 +90,6 @@
         .model-settings-note {
             font-size: 12px;
             color: #777;
-        }
-        .model-settings-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 8px;
-            margin-top: 12px;
-        }
-        .model-settings-actions button {
-            padding: 8px 14px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            font-family: inherit;
-        }
-        .model-settings-cancel {
-            background: #eee;
-            color: #555;
-        }
-        .model-settings-save {
-            background: #4fc3f7;
-            color: #fff;
         }
         .theme-btn {
             padding: 12px 8px;
@@ -259,12 +218,11 @@
                 gap: 8px;
                 margin-top: 0;
             }
-            .model-settings-block {
-                width: 100%;
-                align-items: center;
-            }
             .model-settings-btn {
                 width: auto;
+            }
+            .model-settings-panel {
+                width: 100%;
             }
             .theme-btn {
                 padding: 10px 15px;
@@ -750,11 +708,10 @@
 
         /* ========== 熊熊助手对话窗口 ========== */
         .chat-widget {
-            position: absolute;
+            position: fixed;
             top: 20px;
             right: 20px;
             width: 320px;
-            max-width: 90vw;
             max-height: 520px;
             background: #fff;
             border: 3px solid #ff9eaa;
@@ -770,35 +727,8 @@
             color: #fff;
             font-weight: bold;
             border-radius: 12px 12px 0 0;
-            cursor: default;
+            cursor: move;
             user-select: none;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .chat-header-title {
-            display: inline-block;
-        }
-        .chat-fullscreen-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: #fff;
-            border-radius: 6px;
-            padding: 4px 8px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-        }
-        .chat-clear-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: #fff;
-            border-radius: 6px;
-            padding: 4px 8px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 6px;
         }
         .chat-body {
             display: flex;
@@ -856,17 +786,14 @@
         .chat-input {
             display: flex;
             gap: 6px;
-            align-items: stretch;
         }
         .chat-input input {
             flex: 1;
-            min-width: 0;
             padding: 8px 10px;
             border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 14px;
             font-family: inherit;
-            white-space: nowrap;
         }
         .chat-input button {
             padding: 8px 12px;
@@ -876,33 +803,6 @@
             color: #fff;
             font-weight: bold;
             cursor: pointer;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        .chat-widget.fullscreen .chat-body {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-        .chat-widget.fullscreen .chat-messages {
-            flex: 1;
-            max-height: none;
-        }
-        .chat-widget.fullscreen .chat-input {
-            margin-top: auto;
-        }
-        .chat-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 998;
-            display: none;
-        }
-        .chat-overlay.show {
-            display: block;
         }
         .chat-note {
             font-size: 12px;
@@ -913,191 +813,19 @@
             text-decoration: underline;
         }
 
-        @media (max-width: 900px) {
-            .chat-widget {
-                position: absolute !important;
-                top: auto !important;
-                right: 20px !important;
-                left: auto !important;
-                bottom: 20px !important;
-                width: calc(100% - 40px) !important;
-                max-width: none !important;
-            }
-            .model-settings-block {
-                margin-top: 14px;
-            }
-        }
         @media (max-width: 768px) {
-            .page-layout {
-                padding-bottom: 20px;
-            }
-            .container {
-                position: relative;
-            }
             .chat-widget {
-                position: static !important;
-                right: auto !important;
-                left: auto !important;
-                bottom: auto !important;
-                top: auto !important;
-                width: 100% !important;
-                max-width: none !important;
-                margin-top: 20px;
-            }
-            .model-settings-block {
-                position: static;
-                background: transparent;
-                border: none;
-                padding: 0;
-                margin-top: 14px;
-                flex-direction: column;
-                align-items: stretch;
+                top: auto;
+                right: 0;
+                left: 0;
+                bottom: 0;
                 width: 100%;
+                max-height: 60vh;
+                border-radius: 16px 16px 0 0;
             }
-            .model-settings-block .theme-title {
-                display: block;
+            .chat-header {
+                cursor: default;
             }
-            .model-settings-btn {
-                width: 100%;
-                padding: 10px 8px;
-            }
-            .container {
-                padding-bottom: 20px;
-            }
-        }
-        @media (max-width: 480px) {
-            .chat-widget {
-                max-height: 65vh;
-            }
-            .chat-messages {
-                max-height: 220px;
-            }
-        }
-        .chat-widget.fullscreen {
-            position: fixed;
-            width: 90vw;
-            height: 85vh;
-            max-width: 1000px;
-            max-height: 85vh;
-            top: 50%;
-            left: 50%;
-            right: auto;
-            bottom: auto;
-            transform: translate(-50%, -50%);
-            z-index: 999;
-        }
-        .chat-widget.fullscreen .chat-header {
-            cursor: default;
-        }
-        .chat-widget.fullscreen .chat-body {
-            display: flex;
-            flex-direction: column;
-            height: calc(100% - 50px);
-        }
-        .chat-widget.fullscreen .chat-messages {
-            flex: 1;
-            max-height: none;
-            overflow-y: auto;
-        }
-        .chat-widget.fullscreen .chat-input {
-            margin-top: auto;
-            flex-shrink: 0;
-        }
-
-        /* 主题化：熊熊助手与模型设置 */
-        .theme-original .chat-widget {
-            border-color: #ff9eaa;
-            background: #fff;
-        }
-        .theme-original .chat-header {
-            background: #ff6b8b;
-        }
-        .theme-original .chat-fullscreen-btn {
-            background: rgba(255,255,255,0.25);
-        }
-        .theme-original .chat-clear-btn {
-            background: rgba(255,255,255,0.25);
-        }
-        .theme-original .model-settings-panel {
-            border-color: #ff9eaa;
-        }
-        .theme-original .model-settings-save {
-            background: #4fc3f7;
-        }
-
-        .theme-candy .chat-widget {
-            border-color: #ff85a2;
-            background: #fff9fb;
-        }
-        .theme-candy .chat-header {
-            background: linear-gradient(90deg,#ff6b8b,#ff99cc,#87cefa);
-        }
-        .theme-candy .chat-fullscreen-btn {
-            background: rgba(255,255,255,0.3);
-        }
-        .theme-candy .chat-clear-btn {
-            background: rgba(255,255,255,0.3);
-        }
-        .theme-candy .model-settings-panel {
-            border-color: #ff85a2;
-            background: #fff9fb;
-        }
-        .theme-candy .model-settings-save {
-            background: #ff85a2;
-        }
-
-        .theme-forest .chat-widget {
-            border-color: #c19a6b;
-            background: #fff;
-        }
-        .theme-forest .chat-header {
-            background: #6b8e23;
-        }
-        .theme-forest .chat-fullscreen-btn {
-            background: rgba(255,255,255,0.25);
-        }
-        .theme-forest .chat-clear-btn {
-            background: rgba(255,255,255,0.25);
-        }
-        .theme-forest .model-settings-panel {
-            border-color: #c19a6b;
-            background: #f8f5f0;
-        }
-        .theme-forest .model-settings-save {
-            background: #7ccd7c;
-        }
-
-        .theme-pixel .chat-widget {
-            border-radius: 0;
-            border: 4px solid #000;
-            box-shadow: 6px 6px 0 #202080;
-            background: #f0f0f0;
-            font-family: "Minecraft AE", "幼圆", monospace;
-        }
-        .theme-pixel .chat-header {
-            border-radius: 0;
-            background: #6060c0;
-            text-shadow: 2px 2px 0 #000;
-        }
-        .theme-pixel .chat-fullscreen-btn {
-            border: 2px solid #000;
-            background: #7070d0;
-        }
-        .theme-pixel .chat-clear-btn {
-            border: 2px solid #000;
-            background: #7070d0;
-            text-shadow: 1px 1px 0 #000;
-        }
-        .theme-pixel .model-settings-panel {
-            border-radius: 0;
-            border: 4px solid #000;
-            background: #c69c6d;
-            box-shadow: 6px 6px 0 #4a3218;
-            font-family: "Minecraft AE", "幼圆", monospace;
-        }
-        .theme-pixel .model-settings-save {
-            background: #6060c0;
-            text-shadow: 1px 1px 0 #000;
         }
 </style>
 </head>
@@ -1109,9 +837,28 @@
             <button class="theme-btn" id="btn-candy" type="button">糖果缤纷</button>
             <button class="theme-btn" id="btn-forest" type="button">森林治愈</button>
             <button class="theme-btn" id="btn-pixel" type="button">复古像素</button>
-            <div class="model-settings-block">
-                <div class="theme-title">熊熊助手</div>
-                <button class="model-settings-btn" id="modelSettingsBtn" type="button">模型设置</button>
+            <button class="model-settings-btn" id="modelSettingsBtn" type="button">模型设置</button>
+            <div class="model-settings-panel" id="modelSettingsPanel">
+                <label>
+                    提供商
+                    <select id="chatProvider">
+                        <option value="longcat">Longcat</option>
+                        <option value="modelscope">ModelScope</option>
+                    </select>
+                </label>
+                <label>
+                    模型
+                    <select id="chatModel"></select>
+                </label>
+                <label>
+                    API Base URL
+                    <input type="text" id="chatBaseUrl" readonly>
+                </label>
+                <label>
+                    API Key
+                    <input type="password" id="chatApiKey" placeholder="Bearer Token">
+                </label>
+                <div class="model-settings-note">对话与配置仅保存在本地浏览器。</div>
             </div>
         </div>
         <div class="container">
@@ -1161,51 +908,15 @@
             <p>在手机屏幕上，导航菜单会变成垂直堆叠，文字大小也会微调。</p>
             <p>恩熊已经掌握制作网页的技术！以后可以在此大展手脚辣！</p>
         </div>
-        <div class="chat-widget" id="chatWidget">
-        <div class="chat-header" id="chatHeader">
-            <span class="chat-header-title">熊熊助手</span>
-            <div>
-                <button class="chat-fullscreen-btn" id="chatFullscreenBtn" type="button">全屏</button>
-                <button class="chat-clear-btn" id="chatClearBtn" type="button">清空</button>
-            </div>
-        </div>
-            <div class="chat-body">
-                <div class="chat-messages" id="chatMessages"></div>
-                <form class="chat-input" id="chatForm">
-                    <input type="text" id="chatInput" placeholder="问熊熊助手..." required>
-                    <button type="submit">发送</button>
-                </form>
-            </div>
-        </div>
     </div>
-    <div class="chat-overlay" id="chatOverlay"></div>
-    <div class="model-settings-modal" id="modelSettingsModal">
-        <div class="model-settings-panel">
-            <div class="theme-title">熊熊助手</div>
-            <label>
-                提供商
-                <select id="chatProvider">
-                    <option value="longcat">Longcat</option>
-                    <option value="modelscope">ModelScope</option>
-                </select>
-            </label>
-            <label>
-                模型
-                <select id="chatModel"></select>
-            </label>
-            <label>
-                API Base URL
-                <input type="text" id="chatBaseUrl" readonly>
-            </label>
-            <label>
-                API Key
-                <input type="password" id="chatApiKey" placeholder="Bearer Token">
-            </label>
-            <div class="model-settings-note">对话与配置仅保存在本地浏览器。</div>
-            <div class="model-settings-actions">
-                <button class="model-settings-cancel" id="modelSettingsCancel" type="button">取消</button>
-                <button class="model-settings-save" id="modelSettingsSave" type="button">保存</button>
-            </div>
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header" id="chatHeader">熊熊助手</div>
+        <div class="chat-body">
+            <div class="chat-messages" id="chatMessages"></div>
+            <form class="chat-input" id="chatForm">
+                <input type="text" id="chatInput" placeholder="问熊熊助手..." required>
+                <button type="submit">发送</button>
+            </form>
         </div>
     </div>
     <script>
@@ -1268,42 +979,34 @@
             });
 
             const chatWidget = document.getElementById('chatWidget');
-            const pageLayout = document.querySelector('.page-layout');
             const chatHeader = document.getElementById('chatHeader');
             const chatMessages = document.getElementById('chatMessages');
             const chatForm = document.getElementById('chatForm');
             const chatInput = document.getElementById('chatInput');
             const modelSettingsBtn = document.getElementById('modelSettingsBtn');
-            const modelSettingsModal = document.getElementById('modelSettingsModal');
-            const modelSettingsCancel = document.getElementById('modelSettingsCancel');
-            const modelSettingsSave = document.getElementById('modelSettingsSave');
-            const chatFullscreenBtn = document.getElementById('chatFullscreenBtn');
-            const chatClearBtn = document.getElementById('chatClearBtn');
-            const chatOverlay = document.getElementById('chatOverlay');
+            const modelSettingsPanel = document.getElementById('modelSettingsPanel');
             const chatProvider = document.getElementById('chatProvider');
             const chatModel = document.getElementById('chatModel');
             const chatBaseUrl = document.getElementById('chatBaseUrl');
             const chatApiKey = document.getElementById('chatApiKey');
-            let bodyOverflowBefore = '';
 
             const providerConfigs = {
                 longcat: {
                     baseUrl: 'https://api.longcat.chat/openai',
-                    models: ['LongCat-Flash-Chat', 'LongCat-Flash-Lite']
+                    models: ['LongCat-Flash-Chat']
                 },
                 modelscope: {
                     baseUrl: 'https://api-inference.modelscope.cn/v1',
-                    models: ['qwen/Qwen3.5-397B-A17B', 'qwen/Qwen3.5-122B-A10B']
+                    models: ['Qwen/Qwen2.5-7B-Instruct']
                 }
             };
 
             const savedProvider = localStorage.getItem('chatProvider') || 'longcat';
             const savedModel = localStorage.getItem('chatModel') || '';
-            const savedLongcatKey = localStorage.getItem('chatApiKey_longcat') || '';
-            const savedModelscopeKey = localStorage.getItem('chatApiKey_modelscope') || '';
+            const savedApiKey = localStorage.getItem('chatApiKey') || '';
 
             chatProvider.value = savedProvider;
-            chatApiKey.value = savedProvider === 'modelscope' ? savedModelscopeKey : savedLongcatKey;
+            chatApiKey.value = savedApiKey;
 
             function renderModels(provider, preferred) {
                 const config = providerConfigs[provider];
@@ -1327,80 +1030,20 @@
             function saveChatConfig() {
                 localStorage.setItem('chatProvider', chatProvider.value);
                 localStorage.setItem('chatModel', chatModel.value);
-                if (chatProvider.value === 'modelscope') {
-                    localStorage.setItem('chatApiKey_modelscope', chatApiKey.value.trim());
-                } else {
-                    localStorage.setItem('chatApiKey_longcat', chatApiKey.value.trim());
-                }
-            }
-
-            function positionChatUnderSettings() {
-                if (!modelSettingsBtn || !chatWidget || !pageLayout) {
-                    return;
-                }
-                if (chatWidget.classList.contains('fullscreen')) {
-                    return;
-                }
-                const isMobileNow = window.matchMedia('(max-width: 768px)').matches;
-                if (isMobileNow) {
-                    chatWidget.style.position = '';
-                    chatWidget.style.bottom = '';
-                    chatWidget.style.top = '';
-                    chatWidget.style.left = '';
-                    chatWidget.style.right = '';
-                    chatWidget.style.width = '';
-                    chatWidget.style.transform = '';
-                    return;
-                }
-                const isSmallScreen = window.matchMedia('(max-width: 900px)').matches;
-                if (isSmallScreen) {
-                    const rect = modelSettingsBtn.getBoundingClientRect();
-                    const layoutRect = pageLayout.getBoundingClientRect();
-                    const chatWidth = layoutRect.width - 40;
-                    chatWidget.style.position = 'absolute';
-                    chatWidget.style.top = (rect.bottom - layoutRect.top + 12) + 'px';
-                    chatWidget.style.left = 'auto';
-                    chatWidget.style.right = '20px';
-                    chatWidget.style.bottom = 'auto';
-                    chatWidget.style.width = chatWidth + 'px';
-                    chatWidget.style.transform = 'none';
-                    return;
-                }
-                const rect = modelSettingsBtn.getBoundingClientRect();
-                const layoutRect = pageLayout.getBoundingClientRect();
-                const chatWidth = chatWidget.offsetWidth || 320;
-                chatWidget.style.position = 'absolute';
-                chatWidget.style.top = (rect.bottom - layoutRect.top + 12) + 'px';
-                chatWidget.style.left = (rect.right - layoutRect.left - chatWidth) + 'px';
-                chatWidget.style.right = 'auto';
-                chatWidget.style.bottom = 'auto';
-                chatWidget.style.transform = 'none';
+                localStorage.setItem('chatApiKey', chatApiKey.value.trim());
             }
 
             modelSettingsBtn.addEventListener('click', function() {
-                chatProvider.value = localStorage.getItem('chatProvider') || 'longcat';
-                chatApiKey.value = chatProvider.value === 'modelscope'
-                    ? (localStorage.getItem('chatApiKey_modelscope') || '')
-                    : (localStorage.getItem('chatApiKey_longcat') || '');
-                syncProviderSettings(chatProvider.value, localStorage.getItem('chatModel') || '');
-                modelSettingsModal.classList.add('show');
-            });
-
-            modelSettingsCancel.addEventListener('click', function() {
-                modelSettingsModal.classList.remove('show');
-            });
-
-            modelSettingsSave.addEventListener('click', function() {
-                saveChatConfig();
-                modelSettingsModal.classList.remove('show');
+                modelSettingsPanel.classList.toggle('show');
             });
 
             chatProvider.addEventListener('change', function() {
                 syncProviderSettings(chatProvider.value, '');
-                chatApiKey.value = chatProvider.value === 'modelscope'
-                    ? (localStorage.getItem('chatApiKey_modelscope') || '')
-                    : (localStorage.getItem('chatApiKey_longcat') || '');
+                saveChatConfig();
             });
+
+            chatModel.addEventListener('change', saveChatConfig);
+            chatApiKey.addEventListener('input', saveChatConfig);
 
             syncProviderSettings(chatProvider.value, savedModel);
 
@@ -1411,25 +1054,6 @@
             const conversation = [
                 { role: 'system', content: systemPrompt }
             ];
-
-            const HISTORY_LIMIT = 40;
-            let chatHistory = [];
-
-            function loadChatHistory() {
-                try {
-                    const saved = localStorage.getItem('chatHistory');
-                    return saved ? JSON.parse(saved) : [];
-                } catch (e) {
-                    return [];
-                }
-            }
-
-            function saveChatHistory() {
-                if (chatHistory.length > HISTORY_LIMIT) {
-                    chatHistory = chatHistory.slice(-HISTORY_LIMIT);
-                }
-                localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-            }
 
             function appendMessage(role, content, isHtml) {
                 const msg = document.createElement('div');
@@ -1443,28 +1067,14 @@
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
-            function appendDefaultGreeting() {
-                appendMessage('assistant', '你好！我是熊熊助手。这里有这些入口：' +
-                    '<a href="index.html">首页</a>、' +
-                    '<a href="gallery.html">相册</a>、' +
-                    '<a href="videos.html">影集</a>、' +
-                    '<a href="maptest.html">地图</a>、' +
-                    '<a href="BNU/BNUindex.html">BNU</a>、' +
-                    '<a href="more/more_index.html">更多</a>。' +
-                    '也可以随便问我问题。', true);
-            }
-
-            chatHistory = loadChatHistory();
-            if (chatHistory.length === 0) {
-                appendDefaultGreeting();
-            } else {
-                chatHistory.forEach(item => {
-                    if (item && item.role && item.content) {
-                        conversation.push({ role: item.role, content: item.content });
-                        appendMessage(item.role, item.content, false);
-                    }
-                });
-            }
+            appendMessage('assistant', '你好！我是熊熊助手。这里有这些入口：' +
+                '<a href="index.html">首页</a>、' +
+                '<a href="gallery.html">相册</a>、' +
+                '<a href="videos.html">影集</a>、' +
+                '<a href="maptest.html">地图</a>、' +
+                '<a href="BNU/BNUindex.html">BNU</a>、' +
+                '<a href="more/more_index.html">更多</a>。' +
+                '也可以随便问我问题。', true);
 
             chatForm.addEventListener('submit', async function(event) {
                 event.preventDefault();
@@ -1477,8 +1087,6 @@
                 chatInput.value = '';
 
                 conversation.push({ role: 'user', content: userText });
-                chatHistory.push({ role: 'user', content: userText });
-                saveChatHistory();
 
             const baseUrl = chatBaseUrl.value.trim();
             const model = chatModel.value.trim();
@@ -1490,11 +1098,7 @@
                 }
 
                 try {
-                const endpointPath = chatProvider.value === 'modelscope'
-                    ? '/chat/completions'
-                    : '/v1/chat/completions';
-                const normalizedBase = baseUrl.replace(/\/$/, '');
-                const response = await fetch(normalizedBase + endpointPath, {
+                    const response = await fetch(baseUrl + '/v1/chat/completions', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1522,52 +1126,38 @@
 
                     conversation.push({ role: 'assistant', content: reply });
                     appendMessage('assistant', reply, false);
-                    chatHistory.push({ role: 'assistant', content: reply });
-                    saveChatHistory();
                 } catch (error) {
                     appendMessage('assistant', '请求出错，请检查配置或网络。', false);
                 }
             });
 
-            window.addEventListener('resize', positionChatUnderSettings);
-            requestAnimationFrame(positionChatUnderSettings);
+            const isMobile = window.matchMedia('(max-width: 768px)').matches;
+            if (!isMobile) {
+                let isDragging = false;
+                let offsetX = 0;
+                let offsetY = 0;
 
-            chatFullscreenBtn.addEventListener('click', function() {
-                const isFullscreen = chatWidget.classList.toggle('fullscreen');
-                if (isFullscreen) {
-                    bodyOverflowBefore = document.body.style.overflow;
-                    document.body.style.overflow = 'hidden';
-                    chatFullscreenBtn.textContent = '退出';
-                    chatWidget.style.top = null;
-                    chatWidget.style.left = null;
-                    chatWidget.style.right = null;
-                    chatWidget.style.bottom = null;
-                    chatWidget.style.transform = null;
-                    chatWidget.style.position = null;
-                    chatOverlay.classList.add('show');
-                } else {
-                    chatFullscreenBtn.textContent = '全屏';
-                    document.body.style.overflow = bodyOverflowBefore;
-                    chatOverlay.classList.remove('show');
-                    positionChatUnderSettings();
-                }
-            });
+                chatHeader.addEventListener('mousedown', function(event) {
+                    isDragging = true;
+                    const rect = chatWidget.getBoundingClientRect();
+                    offsetX = event.clientX - rect.left;
+                    offsetY = event.clientY - rect.top;
+                    chatWidget.style.right = 'auto';
+                    chatWidget.style.bottom = 'auto';
+                });
 
-            chatOverlay.addEventListener('click', function() {
-                chatWidget.classList.remove('fullscreen');
-                chatFullscreenBtn.textContent = '全屏';
-                document.body.style.overflow = bodyOverflowBefore;
-                chatOverlay.classList.remove('show');
-                positionChatUnderSettings();
-            });
+                document.addEventListener('mousemove', function(event) {
+                    if (!isDragging) {
+                        return;
+                    }
+                    chatWidget.style.left = (event.clientX - offsetX) + 'px';
+                    chatWidget.style.top = (event.clientY - offsetY) + 'px';
+                });
 
-            chatClearBtn.addEventListener('click', function() {
-                chatHistory = [];
-                saveChatHistory();
-                chatMessages.innerHTML = '';
-                conversation.length = 1;
-                appendDefaultGreeting();
-            });
+                document.addEventListener('mouseup', function() {
+                    isDragging = false;
+                });
+            }
         });
     </script>
 </body>

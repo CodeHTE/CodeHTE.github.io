@@ -18,7 +18,7 @@
             min-height: 100vh;
             padding: 20px;
             transition: all 0.3s ease;
-            font-family: "幼圆", "Comic Sans MS", monospace, sans-serif;
+            font-family: "幼圆", "Comic Sans MS", monospace;
         }
         .page-layout {
             display: flex;
@@ -75,7 +75,7 @@
             font-weight: bold;
             color: #fff;
             text-shadow: 0 0 2px #000;
-            font-family: "幼圆", sans-serif;
+            font-family: "幼圆";
         }
         @keyframes pulse {
             0% { transform: scale(1); box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
@@ -502,69 +502,6 @@
         
         #scheduleManager select.action-btn:focus {
             outline: none;
-        }
-
-        .custom-select {
-            position: relative;
-            display: inline-block;
-        }
-        .custom-select-trigger {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 30px 8px 15px;
-            position: relative;
-            border-radius: 20px;
-            background: #415fff;
-            color: #fff;
-            border: none;
-        }
-        .custom-select-trigger::after {
-            content: "";
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 6px solid #fff;
-        }
-        .custom-select-options {
-            position: absolute;
-            top: calc(100% + 6px);
-            left: 0;
-            min-width: 100%;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 6px;
-            display: none;
-            flex-direction: column;
-            gap: 6px;
-            z-index: 50;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
-        }
-        .custom-select.open .custom-select-options {
-            display: flex;
-        }
-        .custom-select-option {
-            border: none;
-            border-radius: 10px;
-            padding: 8px 12px;
-            background: #f8fafc;
-            color: #334155;
-            cursor: pointer;
-            font-size: 14px;
-            text-align: left;
-            transition: all 0.2s ease;
-        }
-        .custom-select-option:hover {
-            background: #e2e8f0;
-        }
-        .custom-select-option.selected {
-            outline: 2px solid rgba(0,0,0,0.08);
         }
         
         #scheduleManager h2 {
@@ -1200,41 +1137,6 @@
             -moz-appearance: none;
             appearance: none;
         }
-        .theme-original .custom-select-trigger {
-            background: #ff6b8b;
-            box-shadow: 0 4px 0 #d45e7a;
-        }
-        .theme-candy .custom-select-trigger {
-            background: linear-gradient(145deg,#ff85a2,#ff6b8b);
-            border: none;
-            box-shadow: 0 4px 0 #cc6a7a;
-            color: #fff;
-        }
-        .theme-forest .custom-select-trigger {
-            background: #6b8e23;
-            box-shadow: 0 4px 0 #4f7317;
-        }
-        .theme-pixel .custom-select-trigger {
-            background: #6060c0;
-            border: 3px solid #000;
-            box-shadow: 4px 4px 0 #2a2a2a;
-            color: #fff;
-            font-family: "Minecraft AE", monospace;
-            text-shadow: 1px 1px 0 #000;
-        }
-        .theme-candy .custom-select-options {
-            background: #fff0f5;
-            border: 2px solid #ff85a2;
-            box-shadow: 0 12px 24px rgba(255,133,162,0.2);
-        }
-        .theme-candy .custom-select-option {
-            background: linear-gradient(145deg,#ff9fba,#ff7fa2);
-            color: #fff;
-            box-shadow: 0 3px 0 #cc6a7a;
-        }
-        .theme-candy .custom-select-option:hover {
-            background: linear-gradient(145deg,#ff85a2,#ff6b8b);
-        }
 
         /* ---- 森林治愈 theme-forest ---- */
         body.theme-forest {
@@ -1863,10 +1765,6 @@
                 background-position: right 8px center;
                 background-size: 16px;
             }
-            .custom-select-trigger {
-                font-size: 12px;
-                padding: 6px 25px 6px 12px;
-            }
             
             /* 移动端各主题课表管理适配 */
             .theme-original #scheduleManager {
@@ -1954,8 +1852,6 @@
                 -moz-appearance: none;
                 appearance: none;
             }
-        }
-            
             
 
 @media (min-width:601px) and (max-width:768px) { .nav { flex-direction:row; } }
@@ -2035,10 +1931,10 @@
         <!-- 主题切换器 (与BNUindex完全一致) -->
         <div class="theme-switcher">
             <div class="theme-title">主题选择</div>
-            <button class="theme-btn" id="btn-original" type="button">卡通童趣</button>
-            <button class="theme-btn" id="btn-candy" type="button">糖果缤纷</button>
-            <button class="theme-btn" id="btn-forest" type="button">森林治愈</button>
-            <button class="theme-btn" id="btn-pixel" type="button">复古像素</button>
+            <button class="theme-btn" id="btn-original">卡通童趣</button>
+            <button class="theme-btn" id="btn-candy">糖果缤纷</button>
+            <button class="theme-btn" id="btn-forest">森林治愈</button>
+            <button class="theme-btn" id="btn-pixel">复古像素</button>
 
             <!-- 备注区 -->
             <div class="notes-panel" id="notesPanel">
@@ -2086,16 +1982,11 @@
                 <h2 id="currentScheduleTitle" style="margin-bottom: 10px; display: inline-block; min-width: 100px;"></h2>
                 <input type="text" id="scheduleTitleInput" style="display: none; font-size: 24px; padding: 5px; margin-bottom: 10px; border: 2px solid #415fff; border-radius: 5px; min-width: 200px;" />
                 <div>
-                    <button id="newScheduleBtn" class="action-btn edit-btn" type="button" style="margin: 0 5px;">新建课表</button>
-                    <div id="scheduleSelectorWrapper" class="custom-select" style="margin: 0 5px;">
-                        <button id="scheduleSelectorButton" class="custom-select-trigger action-btn" type="button">
-                            <span id="scheduleSelectorLabel"></span>
-                        </button>
-                        <div id="scheduleSelectorList" class="custom-select-options"></div>
-                    </div>
-                    <button id="deleteScheduleBtn" class="action-btn clear-all" type="button" style="margin: 0 5px;">删除课表</button>
-                    <button id="mergeScheduleBtn" class="action-btn edit-btn" type="button" style="margin: 0 5px;">合并课表</button>
-                    <button id="exportPdfBtn" class="action-btn save-all" type="button" style="margin: 0 5px;">导出为PDF</button>
+                    <button id="newScheduleBtn" class="action-btn edit-btn" style="margin: 0 5px;">新建课表</button>
+                    <select id="scheduleSelector" class="action-btn" style="margin: 0 5px; padding: 10px 20px;"></select>
+                    <button id="deleteScheduleBtn" class="action-btn clear-all" style="margin: 0 5px;">删除课表</button>
+                    <button id="mergeScheduleBtn" class="action-btn edit-btn" style="margin: 0 5px;">合并课表</button>
+                    <button id="exportPdfBtn" class="action-btn save-all" style="margin: 0 5px;">导出为PDF</button>
                 </div>
             </div>
 
@@ -2255,7 +2146,7 @@
 
             <!-- 底部按钮组 (动态渲染，初始为编辑按钮) -->
             <div class="table-footer" id="footerButtons">
-                <button class="action-btn edit-btn" id="editModeBtn" type="button">编辑</button>
+                <button class="action-btn edit-btn" id="editModeBtn">编辑</button>
             </div>
             
             <div style="text-align: center;">
@@ -2296,8 +2187,8 @@
             <input type="text" id="editTeacher" placeholder="例如：康永久">
         </div>
         <div class="panel-buttons">
-            <button class="modal-btn copy" id="panelSave" type="button">保存</button>
-            <button class="modal-btn cancel" id="panelCancel" type="button">取消</button>
+            <button class="modal-btn copy" id="panelSave">保存</button>
+            <button class="modal-btn cancel" id="panelCancel">取消</button>
         </div>
     </div>
 
@@ -2305,9 +2196,9 @@
     <div class="action-modal" id="actionModal" style="padding: 20px; gap: 16px;">
         <div class="modal-title">选择你要进行的操作</div>
         <div class="modal-buttons">
-            <button class="modal-btn merge" id="modalMergeBtn" type="button">合并</button>
-            <button class="modal-btn copy" id="modalCopyBtn" type="button">复制</button>
-            <button class="modal-btn cancel" id="modalCancelBtn" type="button">取消</button>
+            <button class="modal-btn merge" id="modalMergeBtn">合并</button>
+            <button class="modal-btn copy" id="modalCopyBtn">复制</button>
+            <button class="modal-btn cancel" id="modalCancelBtn">取消</button>
         </div>
     </div>
 
@@ -2315,8 +2206,8 @@
     <div class="confirm-modal" id="confirmModal" style="padding: 20px; gap: 16px;">
         <div class="modal-title">确定要复制课程信息吗？</div>
         <div class="modal-buttons">
-            <button class="modal-btn copy" id="confirmCopyBtn" type="button">确定</button>
-            <button class="modal-btn cancel" id="confirmCancelBtn" type="button">取消</button>
+            <button class="modal-btn copy" id="confirmCopyBtn">确定</button>
+            <button class="modal-btn cancel" id="confirmCancelBtn">取消</button>
         </div>
     </div>
 
@@ -2329,7 +2220,7 @@
             <!-- 动态生成 -->
         </div>
         <div class="modal-buttons" style="justify-content: center;">
-            <button class="modal-btn cancel" id="closePresetModalBtn" type="button">关闭</button>
+            <button class="modal-btn cancel" id="closePresetModalBtn">关闭</button>
         </div>
     </div>
 
@@ -3527,47 +3418,24 @@
             
             // 更新课表选择器
             function updateScheduleSelector() {
-                const list = document.getElementById('scheduleSelectorList');
-                const label = document.getElementById('scheduleSelectorLabel');
-                const button = document.getElementById('scheduleSelectorButton');
-                list.innerHTML = '';
-                label.textContent = '';
-
-                let firstOptionButton = null;
-                let firstId = '';
-                let firstTitle = '';
-
+                const selector = document.getElementById('scheduleSelector');
+                selector.innerHTML = '';
+                
                 for (const id in schedules) {
-                    const optionButton = document.createElement('button');
-                    optionButton.type = 'button';
-                    optionButton.className = 'custom-select-option';
-                    optionButton.dataset.value = id;
-                    optionButton.textContent = schedules[id].title;
-                    if (!firstOptionButton) {
-                        firstOptionButton = optionButton;
-                        firstId = id;
-                        firstTitle = schedules[id].title;
-                    }
+                    const option = document.createElement('option');
+                    option.value = id;
+                    option.textContent = schedules[id].title;
                     if (id === currentScheduleId) {
-                        optionButton.classList.add('selected');
-                        label.textContent = schedules[id].title;
-                        button.dataset.value = id;
+                        option.selected = true;
                     }
-                    list.appendChild(optionButton);
+                    selector.appendChild(option);
                 }
-
-                if (!label.textContent && firstOptionButton) {
-                    firstOptionButton.classList.add('selected');
-                    label.textContent = firstTitle;
-                    button.dataset.value = firstId;
-                }
-
-                resizeCustomSelect(button, label.textContent || '');
+                resizeSelect(selector);
             }
 
-            // 根据当前选中项动态调整自定义选择器宽度
-            function resizeCustomSelect(button, text) {
-                if (!button) return;
+            // 根据当前选中项动态调整select宽度
+            function resizeSelect(selector) {
+                if (!selector) return;
                 let tempSpan = document.getElementById('select-resize-temp-span');
                 if (!tempSpan) {
                     tempSpan = document.createElement('span');
@@ -3577,15 +3445,22 @@
                     tempSpan.style.whiteSpace = 'nowrap';
                     document.body.appendChild(tempSpan);
                 }
-
-                const style = window.getComputedStyle(button);
+                
+                // 复制select的字体样式以保证测量准确
+                const style = window.getComputedStyle(selector);
                 tempSpan.style.fontFamily = style.fontFamily;
                 tempSpan.style.fontSize = style.fontSize;
                 tempSpan.style.fontWeight = style.fontWeight;
-                tempSpan.textContent = text;
-
-                const textWidth = tempSpan.getBoundingClientRect().width;
-                button.style.width = Math.ceil(textWidth + 55) + 'px';
+                
+                // 获取当前选中的文本
+                const selectedText = selector.options[selector.selectedIndex] ? selector.options[selector.selectedIndex].text : '';
+                tempSpan.textContent = selectedText;
+                
+                // 计算所需宽度（文字宽度 + 右侧padding和箭头的空间 + 左侧padding + 一些缓冲）
+                // 这里的40px包含左右padding(约15px)和箭头图标空间(约25px)
+    const textWidth = tempSpan.getBoundingClientRect().width;
+    // 增加宽度缓冲值(从40改为70)，确保文字不被截断，且有足够空间显示下拉箭头
+    selector.style.width = Math.ceil(textWidth + 55) + 'px';
             }
             
             // 加载当前课表数据
@@ -4005,8 +3880,8 @@
                 }
 
                 // 禁用下拉框并显示等待状态，防止快速点击导致的渲染错乱
-                const selectorButton = document.getElementById('scheduleSelectorButton');
-                if (selectorButton) selectorButton.disabled = true;
+                const selector = document.getElementById('scheduleSelector');
+                if (selector) selector.disabled = true;
                 document.body.style.cursor = 'wait';
 
                 // 彻底清空所有单元格，防止DOM复用和样式残留导致偏移、课时错误等问题
@@ -4030,7 +3905,7 @@
                 setTimeout(() => {
                     loadCurrentSchedule();
                     
-                    if (selectorButton) selectorButton.disabled = false;
+                    if (selector) selector.disabled = false;
                     document.body.style.cursor = '';
                     isSwitchingSchedule = false;
                 }, 150);
@@ -4096,26 +3971,8 @@
                 });
                 
                 // 课表选择器
-                document.getElementById('scheduleSelectorButton').addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    if (this.disabled) return;
-                    const wrapper = document.getElementById('scheduleSelectorWrapper');
-                    wrapper.classList.toggle('open');
-                });
-                document.getElementById('scheduleSelectorList').addEventListener('click', function(e) {
-                    const option = e.target.closest('.custom-select-option');
-                    if (!option) return;
-                    const button = document.getElementById('scheduleSelectorButton');
-                    if (button.disabled) return;
-                    const newId = option.dataset.value;
-                    if (newId && newId !== currentScheduleId) {
-                        switchSchedule(newId);
-                    }
-                    document.getElementById('scheduleSelectorWrapper').classList.remove('open');
-                });
-                document.addEventListener('click', function() {
-                    const wrapper = document.getElementById('scheduleSelectorWrapper');
-                    wrapper.classList.remove('open');
+                document.getElementById('scheduleSelector').addEventListener('change', function() {
+                    switchSchedule(this.value);
                 });
                 
                 // 删除课表按钮

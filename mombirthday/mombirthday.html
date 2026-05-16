@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>献给最爱的妈妈 ❤️</title>
+    <link rel="stylesheet" href="./mombirthday.css">
+</head>
+<body>
+    <div class="app-container" id="appContainer">
+        <!-- 日历场景 -->
+        <div class="scene active" id="calendarScene">
+            <div class="calendar-header">
+                <div class="year">✨ 2026 ✨</div>
+                <div class="month">五 月</div>
+                <div class="hint-text" id="calendarHint">👇 拖拽箭头到 <strong>5月10日</strong>（母亲节）</div>
+            </div>
+            <div class="calendar-wrapper" id="calendarWrapper">
+                <div class="calendar-weekdays"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+                <div class="draggable-arrow" id="draggableArrow">📍</div>
+            </div>
+            <div class="progress-dots" id="progressDots">
+                <div class="progress-dot current"></div>
+                <div class="progress-dot"></div>
+                <div class="progress-dot"></div>
+            </div>
+        </div>
+
+        <!-- 母亲节 -->
+        <div class="scene hidden" id="mothersDayScene">
+            <button type="button" class="back-btn" id="backFromMothersDay">← 返回日历</button>
+            <div class="flowers-wrapper" id="flowersWrapper">
+                <div class="giant-bouquet" id="giantBouquet">
+                    <div class="bouquet-layer" style="width:180px;height:180px;top:10px;left:10px;">
+                        <span class="flower-emoji">🌸</span><span class="flower-emoji">🌺</span><span class="flower-emoji">💐</span>
+                        <span class="flower-emoji">🌷</span><span class="flower-emoji" style="font-size:5rem;">💮</span><span class="flower-emoji">🌸</span>
+                        <span class="flower-emoji">🌺</span><span class="flower-emoji">💐</span><span class="flower-emoji">🌷</span>
+                    </div>
+                </div>
+            </div>
+            <div class="banner-text" id="bannerText">献给世上最好的妈妈</div>
+            <div class="mothersday-title" id="mothersdayTitle">母亲节快乐</div>
+            <button type="button" class="btn-primary accept-flowers-btn" id="acceptFlowersBtn">💐 收下儿子的康乃馨</button>
+        </div>
+
+        <!-- 生日 -->
+        <div class="scene hidden" id="birthdayScene">
+            <button type="button" class="back-btn" id="backFromBirthday">← 返回日历</button>
+            <div class="scene-title">🎂 妈妈十八岁生日快乐 🎂</div>
+            <div class="scene-subtitle">祝您永远年轻漂亮，无忧无虑</div>
+            <div class="cake-container" id="cakeContainer">
+                <div class="cake-plate"></div>
+                <div class="cake-layer-bottom"></div>
+                <div class="cake-layer-top"></div>
+                <div class="cake-cream-top"></div>
+                <div class="cake-cherry">🍒</div>
+                <div class="candles-area" id="candlesArea">
+                    <div class="digit-candle" id="candle1">
+                        <div class="digit-body">1</div>
+                        <div class="digit-flame" data-blown="false"></div>
+                    </div>
+                    <div class="digit-candle" id="candle8">
+                        <div class="digit-body">8</div>
+                        <div class="digit-flame" data-blown="false"></div>
+                    </div>
+                </div>
+                <div class="blow-draggable" id="blowDraggable">💨</div>
+            </div>
+            <div class="blow-hint" id="blowHint">👆 拖动💨经过火焰吹灭它</div>
+            <div style="margin-top:8px;display:flex;gap:12px;">
+                <button type="button" class="btn-primary" id="btnWish">🌟 许愿</button>
+                <button type="button" class="btn-secondary" id="btnWishDone" style="display:none;">🙏 许愿完成</button>
+            </div>
+        </div>
+
+        <!-- 许愿覆盖层 -->
+        <div class="wish-overlay" id="wishOverlay">
+            <div class="wish-text">🌠 请闭上眼睛许愿吧... 🌠</div>
+            <button type="button" class="btn-wish-done" id="btnWishOverlayDone">✨ 许愿完成 ✨</button>
+        </div>
+
+        <!-- 愿望达成覆盖层 -->
+        <div class="wish-result-overlay" id="wishResultOverlay">
+            <div class="wish-result-box" id="wishResultBox">
+                <div class="wish-result-text">✨ 愿望一定能实现 ✨</div>
+                <button type="button" class="btn-wish-result-close" id="btnWishResultClose">❤️ 太好了</button>
+            </div>
+        </div>
+
+        <!-- 520摇钱树 -->
+        <div class="scene hidden" id="valentineScene">
+            <button type="button" class="back-btn" id="backFromValentine">← 返回日历</button>
+            <div class="scene-title">💰 摇钱树 💰</div>
+            <div class="scene-subtitle" id="valentineSubtitle">点击卡片翻开礼物吧！</div>
+            <div class="tree-container" id="treeContainer">
+                <div class="money-tree" id="moneyTree">
+                    <div class="tree-aura"></div>
+                    <div class="tree-glow-ring"></div>
+                    <div class="tree-crown">
+                        <div class="tree-branch tree-branch-left"></div>
+                        <div class="tree-branch tree-branch-right"></div>
+                        <div class="tree-leaf-cluster cluster-1"></div>
+                        <div class="tree-leaf-cluster cluster-2"></div>
+                        <div class="tree-leaf-cluster cluster-3"></div>
+                        <div class="tree-leaf-cluster cluster-4"></div>
+                        <div class="tree-leaf-cluster cluster-5"></div>
+                        <div class="tree-coin-ornament coin-1">🪙</div>
+                        <div class="tree-coin-ornament coin-2">💰</div>
+                        <div class="tree-coin-ornament coin-3">💎</div>
+                        <div class="tree-coin-ornament coin-4">🪙</div>
+                        <div class="tree-coin-ornament coin-5">✨</div>
+                        <div class="hanging-cards" id="hangingCards">
+                            <div class="card-hanger" data-card="0" style="top:12%;left:8%;"><div class="card-string"></div><div class="card-mini">🎁</div></div>
+                            <div class="card-hanger" data-card="1" style="top:5%;left:52%;"><div class="card-string"></div><div class="card-mini">🎁</div></div>
+                            <div class="card-hanger" data-card="2" style="top:18%;left:72%;"><div class="card-string"></div><div class="card-mini">🎁</div></div>
+                            <div class="card-hanger" data-card="3" style="top:2%;left:30%;"><div class="card-string"></div><div class="card-mini">🎁</div></div>
+                        </div>
+                    </div>
+                    <div class="tree-trunk">
+                        <div class="trunk-detail"></div>
+                        <div class="trunk-detail trunk-detail-2"></div>
+                    </div>
+                    <div class="tree-pot">
+                        <div class="pot-band"></div>
+                        <div class="pot-label">福</div>
+                    </div>
+                </div>
+                <div class="tree-sparkle" id="treeSparkle"></div>
+            </div>
+            <div class="shake-counter" id="shakeCounter" style="display:none;">
+                <div class="shake-bar-track"><div class="shake-bar-fill" id="shakeBarFill"></div></div>
+                <div class="shake-label">摇一摇：<span id="shakeCount">0</span> / 10</div>
+            </div>
+            <button type="button" class="btn-primary btn-gold" id="btnCatchWealth" style="display:none;">🧺 接住财富！</button>
+            <div id="wealthMessage" style="display:none;font-family:var(--font-title);font-size:1.3rem;color:#ffd700;margin-top:10px;text-shadow:0 0 20px rgba(255,215,0,0.6);">💎 祝妈妈财源广进、早日发财 💎</div>
+        </div>
+
+        <div class="falling-wealth" id="fallingWealth"></div>
+
+        <!-- END -->
+        <div class="scene hidden" id="endScene">
+            <div style="font-size:2rem;">💖 💕 💖</div>
+            <div class="end-emoji">🥰</div>
+            <div class="end-title">感 谢 您</div>
+            <div class="end-message">妈妈，您辛苦了！<br>愿您永远健康快乐，被世界温柔以待。<br>我永远爱您 ❤️</div>
+            <button type="button" class="btn-primary" id="btnRestart">🔄 再来一次</button>
+        </div>
+    </div>
+
+    <script src="./mombirthday.js"></script>
+</body>
+</html>
